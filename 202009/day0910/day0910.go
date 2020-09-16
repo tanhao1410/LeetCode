@@ -1,130 +1,169 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+	"sort"
+)
 
 func main() {
-	//fmt.Println(isUnique("letcod天天"))
-	a := [2]int{5, 6}
-	b := [2]int{5, 6}
-	if a == b {
-		fmt.Println("equal")
-	} else {
-		fmt.Println("not equal")
-	}
+	//nums:=[]int{2,5,2,1,2}
+	//fmt.Println(combinationSum2(nums,5))
 
-	//if a[:] == b[:] {
-	//	fmt.Println("equal")
-	//} else {
-	//	fmt.Println("not equal")
-	//}
+	//nums2:= []int{1,2,3}
+	//fmt.Println(minMoves(nums2))
+	fmt.Println(numSquares(53))
 }
 
-//判断所有字符都不相同--不使用额外的数据结构,0 <= len(s) <= 100
-func isUnique(astr string) bool {
-	//第一个思路，用map
-	//第二，长度不是很长，
-	nums := make([]byte, 128)
-	for i := 0; i < len(astr); i++ {
-		if nums[int(astr[i])] == 1 {
+//完全平方数
+func numSquares(n int) int {
+	//第一，肯定要先找离n最近的那个平方数，也不一定，12 = 4 + 4+ 4找不到才会这样的 18 = 9+9 16 +1 +1
+	//先找所有可能的平方数吧
+	squares := []int{}
+	for i := 1; i*i <= n; i++ {
+		squares = append(squares, i*i)
+	}
+	res := math.MaxInt32
+	selectedNum(squares, n, 0, &res)
+	return res
+}
+
+func selectedNum(candidates []int, target int, count int, res *int) {
+	if target == 0 {
+		//符合条件了
+		if count < *res {
+			*res = count
+		}
+		return
+	}
+
+	if target < 0 {
+		return
+	}
+
+	count++
+	for i := 0; i < len(candidates) && target-candidates[i] >= 0; i++ {
+		selectedNum(candidates, target-candidates[i], count, res)
+	}
+
+}
+
+func minMoves(nums []int) int {
+	res := 0
+	for !addMore2(nums, &res) {
+		//除了最大的数，其它全都加1
+		//优化：如果说最大的比第二大的数都大了很多，那么res可以直接加上这些数
+		//addOne(nums)
+		//res+=addMore(nums)
+		//继续优化，在相加的过程中判断是否已经全都相同了
+	}
+	return res
+}
+
+func addMore2(nums []int, res *int) bool {
+	max, second, min := 0, 0, 0
+	for k, v := range nums {
+		if v > nums[max] {
+			max, second = k, max
+		}
+		if v < nums[min] {
+			min = k
+		}
+	}
+
+	if min == max {
+		return true
+	}
+
+	count := nums[max] - nums[second]
+	if count == 0 {
+		count = 1 //最少增加1
+	}
+
+	for i := 0; i < len(nums); i++ {
+		if i != max {
+			nums[i] += count
+		}
+	}
+	*res += count
+
+	return false
+}
+
+func addMore(nums []int) int {
+	max, second := 0, 0
+	for k, v := range nums {
+		if v > nums[max] {
+			max, second = k, max
+		}
+	}
+	count := nums[max] - nums[second]
+	if count == 0 {
+		count = 1 //最少增加1
+	}
+
+	for i := 0; i < len(nums); i++ {
+		if i != max {
+			nums[i] += count
+		}
+	}
+	return count
+}
+
+func isOk(nums []int) bool {
+	temp := nums[0]
+	for _, v := range nums {
+		if v != temp {
 			return false
 		}
-		nums[int(astr[i])] = 1
 	}
 	return true
 }
 
-type ListNode struct {
-	Val  int
-	Next *ListNode
+func combinationSum2(candidates []int, target int) [][]int {
+	//难点在于如何避免重复的出现
+	//1.找到所有的后，从结果中去重
+	//2.在找的过程中去重。先排序，就不会出现重复情况了，但会出现。1，1 1 2
+	res := &[][]int{}
+
+	//先对原数组进行排序
+	slice := sort.IntSlice(candidates)
+	slice.Sort()
+
+	selected := []int{}
+	combination(selected, 0, candidates, target, res)
+
+	return *res
 }
 
-//要考虑0的情况
-func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
-	//双复制法，反转后的
-	ll1 := &ListNode{l1.Val, nil}
-	ll2 := &ListNode{l2.Val, nil}
+//index代表只能从哪一位开始找
+func combination(selected []int, index int, candidates []int, target int, res *[][]int) {
 
-	l1len, l2len := 1, 1
-	for l1 = l1.Next; l1 != nil; l1 = l1.Next {
-		//前插法
-		node := &ListNode{l1.Val, ll1}
-		ll1 = node
-		l1len++
+	if target == 0 {
+		*res = append(*res, selected)
+		return
 	}
 
-	for l2 = l2.Next; l2 != nil; l2 = l2.Next {
-		//前插法
-		node := &ListNode{l2.Val, ll2}
-		ll2 = node
-		l2len++
+	//如果没有候选数了，target不为0,直接退出
+	if len(candidates) == index {
+		return
 	}
-
-	//l1为最长的，以l1为基准返回
-	if l1len < l2len {
-		ll1, ll2 = ll2, ll1
+	//如果候选的中最小的都超过了想要的数了，直接返回
+	if candidates[index] > target {
+		return
 	}
-	head := ll1
-
-	//开始相加
-	flag := 0
-	for ; ll2 != nil; ll2 = ll2.Next {
-		ll1.Val = ll1.Val + ll2.Val + flag
-		if ll1.Val > 9 {
-			ll1.Val %= 10
-			flag = 1
-		} else {
-			flag = 0
+	//如果能从中找到,就返回了
+	preNum := -1
+	for i := index; i < len(candidates) && candidates[i] <= target; i++ {
+		if candidates[i] == preNum {
+			continue
 		}
-		ll1 = ll1.Next
-	}
-
-	for ; ll1 != nil; ll1 = ll1.Next {
-		ll1.Val = ll1.Val + flag
-		if ll1.Val > 9 {
-			ll1.Val %= 10
-			flag = 1
-		} else {
-			break
+		preNum = candidates[i]
+		selected2 := []int{}
+		for _, v := range selected {
+			selected2 = append(selected2, v)
 		}
+		selected2 = append(selected2, candidates[i])
+		combination(selected2, i+1, candidates, target-candidates[i], res)
 	}
-
-	//逆置结果返回即可
-	var pre *ListNode = nil
-	for head != nil {
-		pre, head.Next, head = head, pre, head.Next
-	}
-
-	if flag == 1 {
-		//最后一位有进位
-		node := &ListNode{1, pre}
-		pre = node
-	}
-	return pre
 }
-
-//输入链表不能修改 都不会以0开头，非空非负 (7 -> 2 -> 4 -> 3) + (5 -> 6 -> 4) --->7 -> 8 -> 0 -> 7
-func addTwoNumbers2(l1 *ListNode, l2 *ListNode) *ListNode {
-	var res *ListNode = nil
-	//转成整数，相加，再生成链表=======>这种方式会越界的。不行
-	num1 := 0
-	for ; l1 != nil; l1 = l1.Next {
-		num1 = num1*10 + l1.Val
-	}
-	num2 := 0
-	for ; l2 != nil; l2 = l2.Next {
-		num2 = num2*10 + l2.Val
-	}
-	sum := num1 + num2
-	for ; sum != 0; sum = sum / 10 {
-		val := sum % 10
-		node := &ListNode{
-			Val:  val,
-			Next: res,
-		}
-		res = node
-	}
-
-	return res
-}
-
-//

@@ -1,66 +1,58 @@
 package main
 
-import (
-	"fmt"
-	"math"
-)
+import "fmt"
 
 func main() {
-	matrix := [][]int{{2, 3, 8, 11, 15, 19, 20, 20}, {4, 8, 12, 15, 18, 21, 25, 28}, {5, 8, 17, 20, 22, 23, 30, 34}, {6, 12, 18, 20, 25, 25, 34, 34}, {9, 14, 21, 24, 25, 29, 39, 40}}
-	fmt.Println(findNumberIn2DArray(matrix, 12))
+	//fmt.Println(combinationSum3(0,2))
+
+	nums := []int{1, 2, 2, 3, 4, 5}
+	fmt.Println(containsNearbyAlmostDuplicate(nums, 3, 0))
 }
 
-//二维数组中的查找
-//思路：先找对应的行，再查对应的列
-func findNumberIn2DArray(matrix [][]int, target int) bool {
-	//1.确定该数可能在哪一行？数比头一个大，比最后一个小，即是有可能的。
-	m := len(matrix) // 行数
-	if m == 0 {
-		return false
-	}
-	n := len(matrix[0]) // 列数
-	if n == 0 {
-		return false
-	}
-
-	//找可能的行 ，行首小于 等于target,行尾大于target
-	rowStart, rowEnd := math.MaxInt32, 0
-	for i := 0; i < m; i++ {
-
-		if matrix[i][0] == target || matrix[i][n-1] == target {
-			return true
-		}
-
-		if matrix[i][0] < target && matrix[i][n-1] > target && rowStart > i {
-			rowStart, rowEnd = i, i
-		}
-
-		if matrix[i][0] > target {
-			rowEnd = i - 1
-			break
-		} else {
-			rowEnd = i
-		}
-
-	}
-
-	//开始二分查找
-	for ; rowStart <= rowEnd; rowStart++ {
-
-		start, end := 0, n-1
-		for middle := (start + end) / 2; start <= end; middle = (start + end) / 2 {
-			if matrix[rowStart][middle] == target {
+// i 和 j，使得 nums [i] 和 nums [j] 的差的绝对值小于等于 t ，且满足 i 和 j 的差的绝对值也小于等于 ķ
+func containsNearbyAlmostDuplicate(nums []int, k int, t int) bool {
+	//思路：暴力法的话，便是o(n * k)
+	//问题的关键在于如何不回溯，每一次向前比较k个数之后，还需要回去，两个指针呢？想法一样，思路没变
+	for i := 1; i < len(nums); i++ {
+		for j := i - k; j < i; j++ {
+			if j < 0 {
+				continue
+			}
+			if (nums[i]-nums[j] <= t && nums[i] >= nums[j]) || (nums[j]-nums[i] <= t && nums[j] >= nums[i]) {
+				//符合条件的
 				return true
 			}
-			if matrix[rowStart][middle] < target {
-				start = middle + 1
-			}
-			if matrix[rowStart][middle] > target {
-				end = middle - 1
-			}
 		}
-
 	}
-
 	return false
+}
+
+//组合总数
+//找出所有相加之和为 n 的 k 个数的组合。组合中只允许含有 1 - 9 的正整数，并且每种组合中不存在重复
+func combinationSum3(k int, n int) [][]int {
+	//思路：遍历，大于9的不要，选N个数，依旧是N重递归
+	res := &[][]int{}
+	//为了保证唯一，选择的数的方式，先选小的，下一个选的必须比前一个大
+	selectNextNum(make([]int, 0), k, 0, n, res)
+	return *res
+}
+
+func selectNextNum(nums []int, k, pre, target int, res *[][]int) {
+	if target == 0 && len(nums) == k {
+		//说明找到了
+		*res = append(*res, nums)
+		return
+	}
+	if target < 0 || len(nums) >= k {
+		//该组合找不到
+		return
+	}
+	for i := pre + 1; i <= 9; i++ {
+		nums2 := []int{}
+		for _, v := range nums {
+			nums2 = append(nums2, v)
+		}
+		nums2 = append(nums2, i)
+		selectNextNum(nums2, k, i, target-i, res)
+	}
 }

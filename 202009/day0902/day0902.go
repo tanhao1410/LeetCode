@@ -2,86 +2,104 @@ package main
 
 import (
 	"fmt"
-	"strings"
+	"strconv"
 )
 
 func main() {
-	fmt.Println(isNumber("12e+5.4"))
+	//nums := []int{0,1,2,4,5,7}
+	//fmt.Println(summaryRanges(nums))
+	grid := [][]int{{1, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}
+	fmt.Println(countServers(grid))
 }
 
-//表示数值的字符串：采用最原始的方法
-func isNumber(s string) bool {
-	s = strings.ReplaceAll(s, "E", "e")
-	s = strings.Trim(s, " ")
+//三角形的最小路径和
+func minimumTotal(triangle [][]int) int {
+	//动态规划算法：dp[i] 第i步走的哪dp[0]=0,dp[i]  val 代表数组的下标
+	//方法不行，每一步的最小，不代表最后一步最小，解决方式，看这一行中最小的
+	dp := make([]int, len(triangle))
+	dp[0] = 0
 
-	//思路：1.先看e/E,如果有它的话，后面必须要跟一个整数 测试 e+2 属于,e0属于。前面必须要有数，不能为空 0e2属于。
-	eIndex := strings.Index(s, "e")
-	if eIndex == len(s)-1 {
-		return false
+	for i := 1; i < len(triangle); i++ {
+		//dp[i]依赖于dp[i-1],若
+
 	}
+	return 0
+}
 
-	if eIndex != -1 {
-		eAferS := s[eIndex+1:]
-		if !isZhengShu(eAferS, true) {
-			return false //e后面必须跟个数 可以带正负号
-		}
-		s = s[:eIndex]
-	}
-
-	//2.看点：在去掉e之后的所有的字符中查看。.前后必须至少一个有数。判断.之后，只能有整数或空，注意 空的话，.的前面必须有数字
-	//看是否存在小数点
-	pointIndex := strings.Index(s, ".")
-	pointPreHaveNum := false
-	if pointIndex != -1 {
-		//判断.后的情况
-		pointAfterS := s[pointIndex+1:]
-		if pointAfterS == "" {
-			//点之后后为空，那么点之前必须有数字
-			pointPreHaveNum = true
-		} else {
-			if !isZhengShu(pointAfterS, false) {
-				return false
+//统计参与通信的服务器
+func countServers(grid [][]int) int {
+	//思路：统计每一行有两个及以上的数量，统计每一列有两个以上的数量。问题在于可能会重复计算了
+	//1.用一个map做记录key:251*i + j 2.思路，将已统计的矩阵中的数改为2
+	//先统计行
+	count := 0
+	for i := 0; i < len(grid); i++ {
+		rowNum, overOne, tempPosition := 0, false, 0
+		for j := 0; j < len(grid[0]); j++ {
+			if grid[i][j] == 1 {
+				if overOne {
+					grid[i][j] = 2 //不能直接给2的，超过一个才能给
+					rowNum++
+				} else {
+					//说明是每一行的第一个，处理一下
+					overOne = true
+					tempPosition = i*251 + j
+				}
 			}
 		}
-		s = s[:pointIndex]
-	} else {
-		//没有点
-		pointPreHaveNum = true //没有点的话，前面也必须有数字了
-	}
-
-	//3.去掉.之后，看前面是否符合整数或空。空的话，若点后有数，可以的。
-	if s == "" || s == "+" || s == "-" {
-		if pointPreHaveNum {
-			//如果.之前要求必须有数，但没有
-			return false
-		} else {
-			return true
+		if rowNum > 0 {
+			count += rowNum + 1
+			grid[tempPosition/251][tempPosition%251] = 2
 		}
 	}
 
-	if !isZhengShu(s, true) {
-		return false // 如果前面不为数的话，返回false
+	//再统计列
+	for i := 0; i < len(grid[0]); i++ {
+		colNum, haveJoin := 0, 0
+		for j := 0; j < len(grid); j++ {
+			if grid[j][i] == 1 {
+				colNum++
+			} else if grid[j][i] == 2 {
+				haveJoin++
+			}
+		}
+		if haveJoin+colNum > 1 {
+			count += colNum
+		}
 	}
-	return true
+
+	return count
 }
 
-//是否包括isContainSign符号位
-func isZhengShu(s string, isContainSign bool) bool {
-	if len(s) == 0 {
-		return false
-	}
-	if isContainSign && (s[0] == '-' || s[0] == '+') { //可能带有符号位
-		//看第一位是否是+-号
-		if len(s) == 1 {
-			return false
-		}
-		s = s[1:]
-	}
+//[0,1,2,4,5,7,8] 无重复，有序 ["0->2","4->5","7"]
+func summaryRanges(nums []int) []string {
+	res := []string{}
+	//i每次走一步，j只有i走到了新连续时，j跟随i
+	for i, j, s := 0, 0, ""; i < len(nums); i++ {
 
-	for _, v := range s {
-		if v > '9' || v < '0' {
-			return false
+		if i == j {
+			s = strconv.Itoa(nums[i])
+		}
+
+		if i-j != nums[i]-nums[j] {
+			//不连续了
+			if i-j > 1 {
+				s = s + "->" + strconv.Itoa(nums[i-1])
+			}
+			res = append(res, s)
+			j, i, s = i, i-1, ""
+		}
+
+		//看j是否是最后一个
+		if j == len(nums)-1 {
+			s = strconv.Itoa(nums[j])
+			res = append(res, s)
+			break
+		}
+		if i == len(nums)-1 {
+			s = s + "->" + strconv.Itoa(nums[i])
+			res = append(res, s)
+			break
 		}
 	}
-	return true
+	return res
 }

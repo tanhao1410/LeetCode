@@ -1,67 +1,100 @@
 package main
 
-import (
-	"math"
-)
+import "fmt"
 
-func main2() {
-	//nums := []int{1,2,3,4}
-	//fmt.Println(maximumProduct(nums))
+//返回 1 ... n 中所有可能的 k 个数的组合
+func combine(n int, k int) [][]int {
+	//思路：k个数即k重循环，用递归的方式，一层递归加一个数
+	//如果是加入的第k个数，那么加入返回列表中，如果不是，继续递归，组合下一个数
+	//保证顺序？下一个数要比之前的数大，这样能保证顺序和不重复。
+	res := &[][]int{}
+	if k > n || k <= 0 || n <= 0 {
+		return *res
+	}
+
+	for i := 1; i < n-k+2; i++ {
+		nums := []int{}
+		nums = append(nums, i)
+		createNum(nums, k, n, res)
+	}
+	return *res
 }
 
-//三个数的最大乘积
-func maximumProduct(nums []int) int {
-	//思路：刚好三个数，直接返回
-	if len(nums) == 3 {
-		return nums[0] * nums[1] * nums[2]
+func createNum(nums []int, k, n int, res *[][]int) {
+	if len(nums) == k {
+		*res = append(*res, nums)
+		return
 	}
+	numsLen := len(nums)
+	for i := nums[numsLen-1] + 1; i < n-k+len(nums)+2; i++ {
+		//nums = append(nums, i) 不能这样用，会影响原来的数组的
+		//重新创建一个的话，每一层都会创建一系列数组，也不好。
+		nums2 := []int{}
+		for _, v := range nums {
+			nums2 = append(nums2, v)
+		}
+		nums2 = append(nums2, i)
+		createNum(nums2, k, n, res)
+	}
+}
 
-	//先找最大的三个数
-	max1, max2, max3 := math.MinInt32, math.MinInt32, math.MinInt32
-
-	//最小的两个数（负数的情况）
-	min1, min2 := math.MaxInt32, math.MaxInt32
-
-	fuCount, zhCount := 0, 0
-	for i := 0; i < len(nums); i++ {
-
-		if nums[i] < 0 {
-			fuCount++
+//想法就错了。
+func findLengthOfShortestSubarray2(arr []int) int {
+	if len(arr) == 0 {
+		return 0
+	}
+	//思路：采用动态规划呢？dp[i]代表以自己为结尾的最大连续非递减子串的长度
+	dp, max := make([]int, len(arr)), 1 //最大的子串长度
+	dp[0] = 1
+	for i := 1; i < len(arr); i++ {
+		//dp[i] dp[i-j]+1
+		//找到前面比arr[i]小的数
+		j := i - 1
+		for ; j >= 0 && arr[j] > arr[i]; j-- {
+		}
+		if j < 0 {
+			dp[i] = 1
 		} else {
-			zhCount++
-		}
-
-		//最大的三个数
-		if nums[i] >= max1 {
-			max1, max2, max3 = nums[i], max1, max2
-		} else if nums[i] >= max2 {
-			max2, max3 = nums[i], max2
-		} else if nums[i] >= max3 {
-			max3 = nums[i]
-		}
-
-		//最小的两个数
-		if nums[i] <= min1 {
-			min1, min2 = nums[i], min1
-		} else if nums[i] < min2 {
-			min2 = nums[i]
+			dp[i] = dp[j] + 1
+			if dp[i] > max {
+				max = dp[i] //找最大的子串长度
+			}
 		}
 	}
+	return len(arr) - max
+}
 
-	if fuCount < 2 || zhCount == 0 {
-		//负数的个数小于2个或没有正数时，返回最大的三个数之积
-		return max1 * max2 * max3
+//对角线打印
+func findDiagonalOrder(nums [][]int) []int {
+	res := []int{}
+
+	maxlen := 0
+
+	//暴力法
+	for i := 0; i < len(nums); i++ {
+		for j := 0; j <= i; j++ {
+			if j < len(nums[i-j]) {
+				res = append(res, nums[i-j][j])
+			}
+		}
+		if len(nums[i]) > maxlen {
+			maxlen = len(nums[i])
+		}
+	}
+	//右下部分
+	for i := len(nums) - 1; i > len(nums)-1-maxlen; i-- {
+		for j := 1; j < maxlen; j++ {
+			if i-j+1 < len(nums) && i-j+1 >= 0 && j < len(nums[i-j+1]) {
+				res = append(res, nums[i-j+1][j])
+			}
+		}
 	}
 
-	if zhCount < 3 {
-		//正数小于3的时候
-		return min1 * min2 * max1
-	}
+	return res
+}
 
-	//最后只剩下一种情况，至少三个正数，至少2个负数了
-	if min1*min2 > max3*max2 {
-		return min1 * min2 * max1
-	}
-
-	return max3 * max2 * max1
+func main() {
+	//fmt.Println(combine(4, 4))
+	arr := [][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}
+	fmt.Println(findDiagonalOrder(arr))
 }

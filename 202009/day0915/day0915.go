@@ -3,109 +3,128 @@ package main
 import "fmt"
 
 func main() {
-	board := [][]byte{
-		{'5', '3', '.', '.', '7', '.', '.', '.', '.'},
-		{'6', '.', '.', '1', '9', '5', '.', '.', '.'},
-		{'.', '9', '8', '.', '.', '.', '.', '6', '.'},
-		{'8', '.', '.', '.', '6', '.', '.', '.', '3'},
-		{'4', '.', '.', '8', '.', '3', '.', '.', '1'},
-		{'7', '.', '.', '.', '2', '.', '.', '.', '6'},
-		{'.', '6', '.', '.', '.', '.', '2', '8', '.'},
-		{'.', '.', '.', '4', '1', '9', '.', '.', '5'},
-		{'.', '.', '.', '.', '8', '.', '.', '7', '9'}}
+	//height := []int{65,70,56,75,60,68}
+	//weight := []int{100,150,90,190,95,110}
+	//fmt.Println(bestSeqAtIndex(height,weight))
 
-	solveSudoku(board)
-
-	for i := 0; i < 9; i++ {
-		for k := 0; k < 9; k++ {
-			fmt.Print(int(board[i][k])-'0', " ")
-		}
-		fmt.Println()
-	}
-
-	fmt.Println("....")
+	//fmt.Println(oneEditAway("mart","karma"))
+	fmt.Println(reverseWords("the sky is bule"))
 }
 
-func solveSudoku(board [][]byte) {
-	solveSudoku2(board)
-}
+//翻转单词顺序
+func reverseWords(s string) string {
+	resBytes := make([]byte, 0)
+	for i := len(s) - 1; i >= 0; {
 
-//解数独1-9和. 里面存的是字符1-9
-func solveSudoku2(board [][]byte) bool {
-	//思路：先从第一行开始，
-	for i := 0; i < 9; i++ {
-
-		rowNums := []int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-		//board[i]代表第一行，先填第一行可以填的
-		rowFlag := false
-		for j := 0; j < 9; j++ {
-			if board[i][j] != '.' { //说明是空位
-				rowNums[board[i][j]-'0'] = 0 //代表这个数出现过
-			} else {
-				rowFlag = true
-			}
-		}
-
-		//这一行都填满了，直接看下一行了
-		if !rowFlag {
+		if s[i] == ' ' {
+			//为空格的几个情形：1.末尾的空格，2.单词的间隔3.单词的多余空格4.开头的空格
+			i--
 			continue
 		}
+		j := i
+		for ; j >= 0 && s[j] != ' '; j-- {
 
-		//往空位上填数字。只能填rowNums和smallSquare中没出现过的数
-		//要填的位置在哪呢？
-		for j := 0; j < 9; j++ {
-			if board[i][j] == '.' {
-				//要填的位置所在的小矩形中
-				smallSquare := []int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-				for k := (i / 3) * 3; k < (i/3)*3+3; k++ {
-					for l := (j / 3) * 3; l < (j/3)*3+3; l++ {
-						if board[k][l] != '.' {
-							smallSquare[board[k][l]-'0'] = 0 //说明在校小矩形中数字出现了
-						}
-					}
+		}
+		//走到这说明j-i之间夹了一个单词了，j指向空格或j已经<0
+		resBytes = append(resBytes, s[j+1:i+1]...)
+
+		resBytes = append(resBytes, ' ')
+
+		i = j
+	}
+
+	if len(resBytes) == 0 {
+		return ""
+	}
+	return string(resBytes[:len(resBytes)-1])
+}
+
+//一次编辑，插入，删除，替换
+func oneEditAway(first string, second string) bool {
+	if len(second)-len(first) > 1 || len(second)-len(first) < -1 {
+		return false
+	}
+	//替换一个相同的情况,字符串长度相等
+	if len(second) == len(first) {
+		//从第一个开始比较，如果只有一个不同，返回true
+		count := 0
+		for i := 0; i < len(second); i++ {
+			if second[i] != first[i] {
+				count++
+				if count > 1 {
+					return false
 				}
+			}
+		}
+		if count > 1 {
+			return false
+		} else {
+			return true
+		}
+	}
 
-				//要填的位置所在的列中
-				colNums := []int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-				for k := 0; k < 9; k++ {
-					if board[k][j] != '.' {
-						colNums[board[k][j]-'0'] = 0 //在列中出现了
-					}
-				}
-
-				//即该位置只能填三个数组中都为出现过的，即值为1的下标值
-				canSelected := []int{}
-				for i := 1; i < 10; i++ {
-					if rowNums[i] == 1 && colNums[i] == 1 && smallSquare[i] == 1 {
-						canSelected = append(canSelected, i)
-					}
-				}
-
-				//难点：回退时，有些数已经被更改了？？，如果要填的数没了，但还有空，说明，前面的肯定填错了。开始回退
-				//if len(canSelected)== 0{
-				//	return false
-				//}
-
-				flag := false
-				//否则开始填下一个数字
-				for _, v := range canSelected {
-					board[i][j] = byte(v + '0')
-					//开始填下一个
-					flag = solveSudoku2(board)
-					if flag {
-						return flag
-					}
-				}
-
-				//判断条件是什么呢？
-				if !flag {
-					board[i][j] = '.' // 都循环结束了，还是不行的话，需要将这个位置重新改为“."
-				}
+	//思路：两者相差一个，从开始相等的位置开始找
+	//判断第一位是否相等，如果相等，从首位对齐，不然，短的添加一个，首位对其
+	//让second为长的那个
+	if len(first) > len(second) {
+		first, second = second, first
+	}
+	//首位对其
+	count := 0
+	for i, j := 0, 0; i < len(first) && j < len(second); {
+		if first[i] != second[j] {
+			//遇到不相等的了，则需要插入一个,即j往前走，i不变，相等于在first上插入一个字母。
+			count++
+			j++
+			if count > 1 {
 				return false
+			}
+		} else {
+			j++
+			i++
+		}
+	}
+	if count > 1 {
+		return false
+	}
 
+	return true
+}
+
+//在上面的人要比下面的人矮一点且轻一点。height.length == weight.length <= 10000
+func bestSeqAtIndex(height []int, weight []int) int {
+	//思路：主要是选哪一个，可能有些人矮点，但是重，
+	if len(height) < 2 {
+		return len(height)
+	}
+
+	//体重按从高到低排序
+	for i := 0; i < len(height)-1; i++ {
+		for j := i + 1; j < len(height); j++ {
+			if height[j] > height[i] {
+				height[i], height[j] = height[j], height[i]
+				weight[i], weight[j] = weight[j], weight[i]
+			}
+		}
+	}
+	//动态规划呢？dp[i]表示i放在最上面，若i=1能放在它上面，则dp[i+1]=dp[i]+1
+	//若不能，从前面找到能放在它上面的，都不能，则为1，但是这样的话，体重需要排序。从高往低排。
+	dp := make([]int, len(height))
+	res := 1
+	for i := 0; i < len(height); i++ {
+		dp[i] = 1
+		for j := i - 1; j >= 0; j-- {
+			//需要找最大的dp[i]而不是前面的哪个就好了
+			if height[j] > height[i] && weight[j] > weight[i] && dp[j] >= dp[i] {
+				dp[i] = dp[j] + 1 //即可以放在前面的上面
 			}
 		}
 
+		//找最大的结果返回
+		if dp[i] > res {
+			res = dp[i]
+		}
 	}
-	return true
+
+	return res
 }

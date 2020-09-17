@@ -1,7 +1,121 @@
 package main
 
-func main() {
+import "fmt"
 
+func main() {
+	edges := [][]int{{1, 2}, {2, 3}, {3, 4}, {4, 1}, {1, 5}}
+	fmt.Print(findRedundantDirectedConnection(edges))
+}
+
+//冗余连接2
+//[[1,2], [1,3], [2,3]]，一个节点只能有一个前驱，只能有一个根，根节点无父节点
+func findRedundantDirectedConnection(edges [][]int) []int {
+
+	if len(edges) == 3 {
+		return edges[2]
+	}
+
+	//如果一个节点存在两个父节点，那么记录这两条线，其中必有一个是添加的
+	line1 := []int{0, 0}
+	line2 := []int{0, 0}
+
+	var line2_index int
+	//先找有两个父节点的节点
+	m := make(map[int]int)
+	for i := 0; i < len(edges); i++ {
+		if p1, ok := m[edges[i][1]]; ok {
+			//之前出现过了，现在又出现，说明它有两个父
+			line1[0], line1[1] = p1, edges[i][1]
+			line2[0], line2[1] = edges[i][0], edges[i][1]
+			line2_index = i
+		} else {
+			m[edges[i][1]] = edges[i][0]
+		}
+	}
+
+	if line1[0] != 0 {
+		//去除哪一个呢？1.如果没成环，去除line2
+		if !isCycle(edges) {
+			return line2
+		}
+		//2.如果成环了，需要去除一个使它不能成环的
+		//先去line2_看能否去掉环
+		edges[line2_index][0] = 0
+		if isCycle(edges) {
+			return line1
+		} else {
+			return line2
+		}
+	} else {
+
+		for i := len(edges) - 1; i > 0; i-- {
+			temp := edges[i][0]
+			edges[i][0] = 0
+			if !isCycle(edges) {
+				edges[i][0] = temp
+				return edges[i]
+			} else {
+				edges[i][0] = temp
+			}
+		}
+	}
+
+	//3.两个line不存在，说明成环了，需要去除
+	return nil
+}
+
+//判断有没有环
+func isCycle(edges [][]int) bool {
+
+	allNodes := make(map[int]bool) //所有的节点
+
+	map_node_childs := make(map[int][]int)
+	for i := 0; i < len(edges); i++ {
+
+		if edges[i][0] == 0 {
+			continue
+		}
+
+		if _, ok := map_node_childs[edges[i][1]]; !ok {
+			map_node_childs[edges[i][1]] = []int{}
+		}
+
+		if v, ok := map_node_childs[edges[i][0]]; ok { //
+			v = append(v, edges[i][1])
+			map_node_childs[edges[i][0]] = v
+			//fmt.Println(len(v))
+		} else {
+			map_node_childs[edges[i][0]] = []int{edges[i][1]}
+		}
+		allNodes[edges[i][1]] = true
+		allNodes[edges[i][0]] = true
+	}
+
+	alreadyDeleteValue := make(map[int]bool)
+	alreadyDeleteValue[0] = true
+
+	for {
+		size := len(alreadyDeleteValue)
+		for k, v := range map_node_childs {
+			//如果说没有子节点就删除
+
+			haveChild := false
+			for _, child := range v {
+				if !alreadyDeleteValue[child] {
+					haveChild = true
+				}
+			}
+
+			if !haveChild {
+				alreadyDeleteValue[k] = true
+			}
+
+		}
+		if size == len(alreadyDeleteValue) {
+			break
+		}
+	}
+	return (len(alreadyDeleteValue) - 1) != len(allNodes)
 }
 
 type ListNode struct {
@@ -49,67 +163,4 @@ func deleteNode(node *ListNode) {
 		next = next.Next
 	}
 	pre.Next = nil
-}
-
-//冗余连接2
-//[[1,2], [1,3], [2,3]]，一个节点只能有一个前驱，只能有一个根，根节点无父节点
-func findRedundantDirectedConnection(edges [][]int) []int {
-
-	if len(edges) < 1 {
-		return nil
-	}
-
-	//思路：第一，根据一个节点只能有一个父节点，如果有个节点含两个前驱，删除一个即可。
-	//第二，如果不存在这样的，可能是因为，存在环了，即有节点指向了根节点。问题就是找根节点了
-	//删除哪一个呢？任意删除一个，只要不成环即可，即删除环路上的任意一个。
-	m := make(map[int]int) //记录的是它的父节点
-	node_childsCount := make(map[int]int)
-	for i := 0; i < len(edges); i++ {
-		if _, ok := m[edges[i][1]]; ok {
-			//说明这个节点在前面已经有节点指向了，这个为重复指向的
-			return edges[i]
-		} else {
-			m[edges[i][0]] = edges[i][0]
-		}
-		if _, ok := node_childsCount[edges[i][0]]; ok {
-			node_childsCount[edges[i][0]]++
-		} else {
-			node_childsCount[edges[i][0]] = 1
-		}
-
-	}
-
-	//说明是因为环路的存在了
-	//问题就是找环路了。切枝，去掉没有子节点的节点，因为他们肯定不会是环路上的，递归去，最后剩的就是环路。
-	//没有子节点，即没有出现在edges[i][0]的位置。所有的节点已经保存在了m中。
-	for deleteComplete := false; !deleteComplete; {
-		deleteComplete = true
-		for k, v := range m {
-			if counts, ok := node_childsCount[k]; ok {
-				if counts < 0 {
-					delete(node_childsCount, k)
-					node_childsCount[v]--
-					delete(m, k)
-					deleteComplete = false
-				}
-				//这个节点有子节点
-			} else {
-				//把m去掉时，它的父节点的孩子数应该-1
-				node_childsCount[v]--
-				delete(m, k)
-				//只要删除了一个，就得再循环删一遍
-				deleteComplete = false
-			}
-		}
-	}
-	//现在m中剩下的就是都是有子节点的了
-	for i := len(edges) - 1; i >= 0; i-- {
-		if _, ok := m[edges[i][0]]; ok {
-			if _, ok2 := m[edges[i][0]]; ok2 {
-				return edges[i]
-			}
-		}
-	}
-
-	return nil
 }

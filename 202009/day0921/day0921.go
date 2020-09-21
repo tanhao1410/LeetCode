@@ -3,10 +3,49 @@ package main
 import "fmt"
 
 func main() {
-	myList := Constructor()
-	linkedList := &myList
-	linkedList.AddAtTail(9)
-	fmt.Println(linkedList.Get(0))
+	//myList := Constructor()
+	//linkedList := &myList
+	//linkedList.AddAtTail(9)
+	//fmt.Println(linkedList.Get(0))
+	fmt.Println(reverseBetween(createListByNums([]int{1, 2, 3, 4, 5}), 1, 4))
+}
+
+func createListByNums(nums []int) *ListNode {
+
+	var head *ListNode = nil
+	for i := len(nums) - 1; i >= 0; i-- {
+		node := &ListNode{nums[i], head}
+		head = node
+	}
+	return head
+}
+
+//反转从位置 m 到 n 的链表，一趟扫描完成
+func reverseBetween(head *ListNode, m int, n int) *ListNode {
+
+	//三个指针，前插法插入second指向的节点即可完成。用三个指针做记录
+	var pre *ListNode = &ListNode{
+		Val:  0,
+		Next: head,
+	}
+	first, second := head, head.Next
+	//先走向需要反转的位置，注意，当m为1的时候，不进入循环。
+	for mm := m; mm > 1; mm-- {
+		pre, first, second = first, first.Next, second.Next
+		n--
+	}
+
+	//记录first节点，它为反转开始的第一个节点
+	mNode := first
+	for ; n > 1; n-- {
+		pre.Next, second.Next, mNode.Next = second, first, second.Next
+		second, first = mNode.Next, pre.Next
+	}
+
+	if m == 1 {
+		return pre.Next
+	}
+	return head
 }
 
 type MyLinkedList struct {

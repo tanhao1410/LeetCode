@@ -22,7 +22,28 @@ type ListNode struct {
 //链表组件：
 
 func numComponents(head *ListNode, G []int) int {
-	return 0
+	m := make(map[int]bool, len(G))
+	for _, v := range G {
+		m[v] = true
+	}
+	//思路：从头开始走
+	res := 0
+	flag := false //组件的开头是否已经有了
+	for ; head != nil; head = head.Next {
+		if m[head.Val] {
+			//如果存在
+			flag = true
+		} else {
+			if flag {
+				res++
+			}
+			flag = false
+		}
+	}
+	if flag {
+		res++
+	}
+	return res
 }
 
 /** Initialize your data structure here. */
@@ -120,26 +141,24 @@ type TreeNode struct {
 
 //给定一个二叉搜索树（Binary Search Tree），把它转换成为累加树（Greater Tree)，
 //使得每个节点的值是原来的节点值加上所有大于它的节点值之和
-var temp int = 0
+//var temp int = 0
+//问题：LeetCode测试的时候，测到下一个用例的时候，没有将该值清0
 
 func convertBST(root *TreeNode) *TreeNode {
 	//后序遍历
-	if root == nil {
-		return root
-	}
-	convertBST(root.Right)
-	root.Val += temp
-	temp = root.Val
-	convertBST(root.Left)
+	var temp int = 0
+	convertBST2(root, &temp)
 	return root
 }
 
-func rightMiddleLeft(root *TreeNode) {
+func convertBST2(root *TreeNode, temp *int) *TreeNode {
 	if root == nil {
-		return
+		return root
 	}
-	convertBST(root.Right)
-	fmt.Println(root.Val)
+	convertBST2(root.Right, temp)
+	root.Val += *temp
+	*temp = root.Val
+	convertBST2(root.Left, temp)
 
-	convertBST(root.Left)
+	return root
 }

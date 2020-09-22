@@ -4,6 +4,48 @@ func main() {
 
 }
 
+//链表中更大的结点
+func nextLargerNodes(head *ListNode) []int {
+	res := []int{}
+
+	if head == nil {
+		return res
+	}
+	//从后往前比较容易，将list转化成数组
+	for ; head != nil; head = head.Next {
+		res = append(res, head.Val)
+	}
+
+	temp := res[len(res)-1] //最后一个数的值
+	res[len(res)-1] = 0
+	for i := len(res) - 2; i >= 0; i-- {
+
+		//如果temp不比res[i]大，而且res[i+1]也不比它大，就为0,
+		if temp > res[i] {
+			res[i], temp = temp, res[i]
+		} else if res[i+1] > res[i] {
+			res[i], temp = res[i+1], res[i]
+		} else {
+			//还是无法保证结果的。
+			temp = res[i]
+			flag := false
+			for j := i + 1; j < len(res); j++ {
+				if res[j] > res[i] {
+					res[i] = res[j]
+					flag = true
+					break
+				}
+			}
+			if !flag {
+				res[i] = 0
+			}
+
+		}
+	}
+
+	return res
+}
+
 func isSubPath2(head *ListNode, root *TreeNode) bool {
 	return isSubPathFunc2(head, head, root)
 }

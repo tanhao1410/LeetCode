@@ -4,6 +4,48 @@ func main() {
 
 }
 
+//链表求和
+func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
+	if l1 == nil {
+		return l2
+	}
+	flag := 0 //进位标识
+	pre, p1, p2 := l1, l1, l2
+	for p1 != nil && p2 != nil {
+		p1.Val += (p2.Val + flag)
+		if p1.Val > 9 {
+			p1.Val %= 10
+			flag = 1
+		} else {
+			flag = 0
+		}
+		pre, p1, p2 = p1, p1.Next, p2.Next
+	}
+
+	//让p1指向不为nil的剩余节点
+	if p1 == nil {
+		p1 = p2
+	}
+	pre.Next = p1
+
+	if flag == 1 {
+		for ; p1 != nil; p1 = p1.Next {
+			pre = p1
+			p1.Val += flag
+			if p1.Val > 9 {
+				p1.Val %= 10
+				flag = 1
+			} else {
+				return l1
+			}
+		}
+		newNode := &ListNode{1, nil}
+		pre.Next = newNode
+	}
+
+	return l1
+}
+
 //链表中更大的结点
 func nextLargerNodes(head *ListNode) []int {
 	res := []int{}

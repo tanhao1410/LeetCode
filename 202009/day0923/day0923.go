@@ -1,7 +1,83 @@
 package main
 
-func main() {
+import (
+	"fmt"
+	"sort"
+)
 
+func main() {
+	nums := []int{0, -1, 1}
+	fmt.Println(threeSum(nums))
+}
+
+//三数之和
+func threeSum(nums []int) [][]int {
+	//思路：先用一个map记录存在的数，然后，从数中取不相同的两个，判断缺的负的是否存在。
+	//问题，从数组中取的数，可能在map中已经出现了，导致重复的发生
+
+	res := [][]int{}
+
+	//1.排序
+	numSlice := sort.IntSlice(nums)
+	numSlice.Sort()
+
+	temp1 := 1
+	//2.取前两个数
+	for i := 0; i < len(numSlice)-1; i++ {
+
+		if numSlice[i] > 0 {
+			break
+		}
+
+		if temp1 == numSlice[i] {
+			continue
+		}
+
+		num1 := numSlice[i]
+		temp1 = num1
+
+		temp2 := numSlice[i]
+
+		for j := i + 1; j < len(numSlice); j++ {
+
+			num2 := numSlice[j]
+			if temp2 == num2 && j != i+1 {
+				continue
+			}
+
+			temp2 = num2
+
+			num3 := num1 + num2
+			if num3 > 0 {
+				break
+			}
+
+			//找合适的下一个数
+			if existNum(-num3, numSlice[j+1:]) {
+				item := []int{num1, num2, -num3}
+				res = append(res, item)
+			}
+		}
+	}
+	return res
+}
+
+//二分法查找
+func existNum(target int, nums []int) bool {
+	start, end := 0, len(nums)-1
+	middle := (start + end) / 2
+	for start <= end {
+		if nums[middle] == target {
+			return true
+		} else if nums[middle] > target {
+			end = middle - 1
+		} else {
+			start = middle + 1
+		}
+		middle = (start + end) / 2
+	}
+
+	return false
 }
 
 //链表求和

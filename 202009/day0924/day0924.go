@@ -3,12 +3,50 @@ package main
 import "fmt"
 
 func main() {
-	nums := []int{4, 2, 1, 3}
-	list := createListByNums(nums)
+	//nums := []int{4, 2, 1, 3}
+	//list := createListByNums(nums)
+	//
+	//insertionSortList(list)
+	//
+	//fmt.Println(list)
+	fmt.Println(generateParenthesis(10))
+}
 
-	insertionSortList(list)
+//括号生成
+func generateParenthesis(n int) []string {
+	res := &[]string{}
+	m := make(map[string]bool)
+	create("", n, n, res,true,m)
+	return *res
+}
 
-	fmt.Println(list)
+func create(s string, l int, r int, res *[]string, canL bool,m map[string]bool) {
+
+	if l == 0 && r == 0 {
+		if !m[s]{
+			*res = append(*res, s)
+			m[s] = true
+		}
+	}
+
+	//可以补（，
+	for i := 1; i <= l && canL; i++ {
+		ls := ""
+		for j := 0; j < i; j++ {
+			ls += "("
+		}
+		create(s+ls, l-i, r, res,false,m)
+	}
+
+	// 可以补 ）
+	for i := 1; i <= r-l; i++ {
+		ls := ""
+		for j := 0; j < i; j++ {
+			ls += ")"
+		}
+		create(s+ls, l, r-i, res,true,m)
+	}
+
 }
 
 //跳跃游戏

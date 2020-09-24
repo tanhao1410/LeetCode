@@ -9,21 +9,79 @@ func main() {
 	//insertionSortList(list)
 	//
 	//fmt.Println(list)
-	fmt.Println(generateParenthesis(10))
+	//fmt.Println(generateParenthesis(10))
+	array := []string{"A", "1"}
+	fmt.Println(findLongestSubarray(array))
+}
+
+func findLongestSubarray(array []string) []string {
+	//先把array转化成 array[i] 的value 代表前面（包括自己）有多少字符
+	dp := make([]int, len(array))
+	for i := 0; i < len(array); i++ {
+		if !(array[i][0] >= '0' && array[i][0] <= '9') {
+			if i-1 < 0 {
+				dp[i] = 1
+			} else {
+				dp[i] = dp[i-1] + 1
+			}
+		} else {
+			if i-1 < 0 {
+				dp[i] = 0
+			} else {
+				dp[i] = dp[i-1]
+			}
+		}
+	}
+
+	isNumCountEquChar := func(start, end int) bool {
+
+		charCount := 0
+		if start == 0 {
+			charCount = dp[end]
+		} else {
+			charCount = dp[end] - dp[start-1]
+		}
+
+		numCount := end - start + 1 - charCount
+
+		return charCount == numCount
+	}
+
+	maxSize, start := 0, 0
+	for i := 0; i < len(array)-1; i++ {
+		for j := i + maxSize + 1; j < len(array); j++ {
+			if isNumCountEquChar(i, j) {
+				if j-i > maxSize {
+					maxSize = j - i + 1
+					start = i
+				}
+			}
+		}
+		if maxSize > len(array)-i {
+			break
+		}
+	}
+
+	res := []string{}
+	for i := start; i < start+maxSize; i++ {
+		res = append(res, array[i])
+	}
+
+	return res
 }
 
 //括号生成
 func generateParenthesis(n int) []string {
 	res := &[]string{}
 	m := make(map[string]bool)
-	create("", n, n, res,true,m)
+	create("", n, n, res, true, m)
 	return *res
 }
 
-func create(s string, l int, r int, res *[]string, canL bool,m map[string]bool) {
+func create(s string, l int, r int, res *[]string, canL bool, m map[string]bool) {
 
 	if l == 0 && r == 0 {
-		if !m[s]{
+		if !m[s] {
 			*res = append(*res, s)
 			m[s] = true
 		}
@@ -35,7 +93,7 @@ func create(s string, l int, r int, res *[]string, canL bool,m map[string]bool) 
 		for j := 0; j < i; j++ {
 			ls += "("
 		}
-		create(s+ls, l-i, r, res,false,m)
+		create(s+ls, l-i, r, res, false, m)
 	}
 
 	// 可以补 ）
@@ -44,7 +102,7 @@ func create(s string, l int, r int, res *[]string, canL bool,m map[string]bool) 
 		for j := 0; j < i; j++ {
 			ls += ")"
 		}
-		create(s+ls, l, r-i, res,true,m)
+		create(s+ls, l, r-i, res, true, m)
 	}
 
 }

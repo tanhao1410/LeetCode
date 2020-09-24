@@ -11,6 +11,41 @@ func main() {
 	fmt.Println(list)
 }
 
+//跳跃游戏
+func canJump(nums []int) bool {
+	if len(nums) < 2 {
+		return true
+	}
+
+	//思路：从后往前看，该位置能否到达末尾，
+	nums[len(nums)-1] = 1
+	for i := len(nums) - 2; i >= 0; i-- {
+		if nums[i] == 0 {
+			continue
+		}
+
+		if i+nums[i] >= len(nums)-1 {
+			nums[i] = 1
+			continue
+		}
+
+		//如果说它后面能到达的都是0,那么它也是0
+		flag := false
+		for j := 1; j <= nums[i]; j++ {
+			if nums[i+j] != 0 {
+				flag = true
+				break
+			}
+		}
+		if flag {
+			nums[i] = 1
+		} else {
+			nums[i] = 0
+		}
+	}
+	return nums[0] != 0
+}
+
 func createListByNums(nums []int) *ListNode {
 
 	var head *ListNode = nil

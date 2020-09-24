@@ -1,7 +1,24 @@
 package main
 
-func main() {
+import "fmt"
 
+func main() {
+	nums := []int{4, 2, 1, 3}
+	list := createListByNums(nums)
+
+	insertionSortList(list)
+
+	fmt.Println(list)
+}
+
+func createListByNums(nums []int) *ListNode {
+
+	var head *ListNode = nil
+	for i := len(nums) - 1; i >= 0; i-- {
+		node := &ListNode{nums[i], head}
+		head = node
+	}
+	return head
 }
 
 //数组中重复的元素，不用额外的空间，时间复杂度o(n)
@@ -16,7 +33,32 @@ type ListNode struct {
 
 //对链表进行插入排序
 func insertionSortList(head *ListNode) *ListNode {
-	return nil
+	if head == nil {
+		return head
+	}
+
+	for pPre, p := head, head.Next; p != nil; {
+
+		//走到比p大的位置
+		pp, ppPre := head, head
+		for ; pp != nil && pp.Val < p.Val && pp != p; pp = pp.Next {
+			ppPre = pp
+		}
+
+		//开头就比它大，所以应该放在最前面
+		if pp == head {
+			p.Next, p, head = pp, p.Next, p
+			pPre.Next = p
+		} else if pp == p {
+			p, pPre = p.Next, p
+		} else {
+			ppPre.Next, p.Next, p = p, pp, p.Next
+			pPre.Next = p
+		}
+
+	}
+
+	return head
 }
 
 type TreeNode struct {

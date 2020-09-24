@@ -1,7 +1,39 @@
 package main
 
 func main() {
+	matrix := [][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}
+	rotate(matrix)
+}
 
+//旋转矩阵，不占用额外空间
+func rotate(matrix [][]int) {
+
+
+	n := len(matrix)
+
+	//先旋转外圈：
+	//for i := 0; i < n-1; i++ {
+	//	matrix[i][n-1], matrix[n-1][n-1-i], matrix[n-1-i][0], matrix[0][i] =
+	//		matrix[0][i], matrix[i][n-1], matrix[n-1][n-1-i], matrix[n-1-i][0]
+	//}
+
+	////如何补内圈
+	for j := 0; j < n/2 -1; j++ {
+
+		for i := 0; i < n-j*2 -1; i++ {
+			matrix[i][n-1], matrix[n-1][n-1-i], matrix[n-1-i][0], matrix[0][i] =
+				matrix[j][i+j], matrix[i+j][n-j-1], matrix[n-j-1][n-j-1-i], matrix[n-i-1-i][j]
+		}
+
+	}
+	//递归的方式旋转内圈吧
+	//if n > 3 {
+	//	inner := matrix[1:n-1]
+	//	for i :=0;i < len(inner);i ++{
+	//		inner[i] = inner[i][1:n-1]
+	//	}
+	//	rotate(inner)
+	//}
 }
 
 type ListNode struct {

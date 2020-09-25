@@ -12,28 +12,29 @@ func rotate(matrix [][]int) {
 	n := len(matrix)
 
 	//先旋转外圈：
-	//for i := 0; i < n-1; i++ {
-	//	matrix[i][n-1], matrix[n-1][n-1-i], matrix[n-1-i][0], matrix[0][i] =
-	//		matrix[0][i], matrix[i][n-1], matrix[n-1][n-1-i], matrix[n-1-i][0]
-	//}
+	for i := 0; i < n-1; i++ {
+		matrix[i][n-1], matrix[n-1][n-1-i], matrix[n-1-i][0], matrix[0][i] =
+			matrix[0][i], matrix[i][n-1], matrix[n-1][n-1-i], matrix[n-1-i][0]
+	}
 
 	////如何补内圈
-	for j := 0; j < n/2 -1; j++ {
-
-		for i := 0; i < n-j*2 -1; i++ {
-			matrix[i][n-1], matrix[n-1][n-1-i], matrix[n-1-i][0], matrix[0][i] =
-				matrix[j][i+j], matrix[i+j][n-j-1], matrix[n-j-1][n-j-1-i], matrix[n-i-1-i][j]
-		}
-
-	}
-	//递归的方式旋转内圈吧
-	//if n > 3 {
-	//	inner := matrix[1:n-1]
-	//	for i :=0;i < len(inner);i ++{
-	//		inner[i] = inner[i][1:n-1]
+	//for j := 0; j < n/2 -1; j++ {
+	//
+	//	for i := 0; i < n-j*2 -1; i++ {
+	//		matrix[i][n-1], matrix[n-1][n-1-i], matrix[n-1-i][0], matrix[0][i] =
+	//			matrix[j][i+j], matrix[i+j][n-j-1], matrix[n-j-1][n-j-1-i], matrix[n-i-1-i][j]
 	//	}
-	//	rotate(inner)
+	//
 	//}
+	//递归的方式旋转内圈吧
+	if n > 3 {
+		inner := make([][]int,n-2)
+		for i :=0;i < n-2;i ++{
+			inner[i] = (matrix[i+1])[1:n-1]
+		}
+		rotate(inner)
+		//问题？因为在这里进行了切割，导致少了一些东西
+	}
 }
 
 type ListNode struct {

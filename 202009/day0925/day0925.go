@@ -5,9 +5,47 @@ func main() {
 	rotate(matrix)
 }
 
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+func buildTree(inorder []int, postorder []int) *TreeNode {
+
+	size := len(inorder)
+	if size == 0 {
+		return nil
+	} else if size == 1 {
+		return &TreeNode{inorder[0], nil, nil}
+	}
+
+	rootValue := postorder[size-1]
+	//确立左右子树的中序和后序
+	i := 0
+	for ; i < size && inorder[i] != rootValue; i++ {
+	}
+
+	//根据postorder确立根节点
+	root := &TreeNode{rootValue, nil, nil}
+
+	if i != 0 {
+		//有左子树
+		leftChildInorder := inorder[:i]
+		leftChildPostorder := postorder[:i]
+		root.Left = buildTree(leftChildInorder, leftChildPostorder)
+	}
+	if i != size-1 {
+		//有右子树
+		rightChildInorder := inorder[i+1:]
+		rightChildPostorder := postorder[size-1-len(rightChildInorder) : size-1]
+		root.Right = buildTree(rightChildInorder, rightChildPostorder)
+	}
+	return root
+}
+
 //旋转矩阵，不占用额外空间
 func rotate(matrix [][]int) {
-
 
 	n := len(matrix)
 
@@ -28,9 +66,9 @@ func rotate(matrix [][]int) {
 	//}
 	//递归的方式旋转内圈吧
 	if n > 3 {
-		inner := make([][]int,n-2)
-		for i :=0;i < n-2;i ++{
-			inner[i] = (matrix[i+1])[1:n-1]
+		inner := make([][]int, n-2)
+		for i := 0; i < n-2; i++ {
+			inner[i] = (matrix[i+1])[1 : n-1]
 		}
 		rotate(inner)
 		//问题？因为在这里进行了切割，导致少了一些东西

@@ -7,6 +7,59 @@ func main() {
 	nextPermutation(nums)
 }
 
+//k个一组反转链表
+func reverseKGroup(head *ListNode, k int) *ListNode {
+
+	if k == 1 {
+		return head
+	}
+
+	//k个一组进行反转链表
+	newHead, tail := head, head
+	//记录目前访问了第多少个元素了
+	count := 0
+	for p := head; p != nil; {
+		count++
+		if count == k {
+			//第一次反转，返回的头节点为本次反转后的头
+			temp := p.Next
+			p, p.Next = p.Next, nil
+			newHead, tail = reverseList(head)
+			//下一次进行反转的头
+			head = temp
+		} else if count%k == 0 {
+			//第二次及之后的反转
+			temp := p.Next
+			p, p.Next = p.Next, nil
+			h, t := reverseList(head)
+			//之前的尾部接上这次反转的链表
+			tail.Next = h
+			tail = t
+			head = temp
+		} else {
+			p = p.Next
+		}
+	}
+
+	if head != newHead{
+		//说明反转了至少一次，而head中可能还有没被反转的剩余的节点，接上
+		tail.Next = head
+	}
+	//如果相等说明没进行任何反转，直接返回头节点即可
+
+	return newHead
+}
+
+//反转链表，返回头和尾
+func reverseList(head *ListNode) (*ListNode, *ListNode) {
+	temp := head
+	var pre *ListNode
+	for ; head != nil; {
+		head.Next, head, pre = pre, head.Next, head
+	}
+	return pre, temp
+}
+
 //下一个排列
 func nextPermutation(nums []int) {
 	//思路：从后往前找一个 前面比它小的数，找不到的话，说明，是按降序 排列的，颠倒顺序返回即可。

@@ -1,8 +1,54 @@
 package main
 
 func main() {
-	matrix := [][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}
-	rotate(matrix)
+	//matrix := [][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}
+	//rotate(matrix)
+	nums := []int{1, 3, 2}
+	nextPermutation(nums)
+}
+
+//下一个排列
+func nextPermutation(nums []int) {
+	//思路：从后往前找一个 前面比它小的数，找不到的话，说明，是按降序 排列的，颠倒顺序返回即可。
+	//若找到了，和前面的进行交换，然后，它后面的数字按照从小到大进行排序返回即可。
+
+	//上述想法错误！不能是直接交换，而应该是选择一个比前面大，的最小的进行交换。
+	if len(nums) < 2 {
+		return
+	}
+
+	for i := len(nums) - 1; i > 0; i-- {
+		if nums[i-1] < nums[i] {
+			//说明找到了这个数了,交换这两个数
+			//nums[i-1], nums[i] = nums[i], nums[i-1]
+
+			exchange := i
+			for min := i + 1; min < len(nums); min-- {
+				if nums[min] > nums[i-1] && nums[min] < nums[exchange] {
+					exchange = min
+				}
+			}
+			nums[i-1], nums[exchange] = nums[exchange], nums[i-1]
+
+			sortNum(nums[i:])
+			return
+		}
+	}
+
+	//如果都没有
+	for i := 0; i < len(nums)/2; i++ {
+		nums[i], nums[len(nums)-i-1] = nums[len(nums)-i-1], nums[i]
+	}
+}
+
+func sortNum(nums []int) {
+	for i := 0; i < len(nums)-1; i++ {
+		for j := i + 1; j < len(nums); j++ {
+			if nums[j] < nums[i] {
+				nums[i], nums[j] = nums[j], nums[i]
+			}
+		}
+	}
 }
 
 type TreeNode struct {

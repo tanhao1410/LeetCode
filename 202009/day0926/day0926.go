@@ -9,6 +9,36 @@ type TreeNode struct {
 	Left  *TreeNode
 	Right *TreeNode
 }
+//二叉树的前序遍历 ：中左右
+func preorderTraversal(root *TreeNode) []int {
+	res := &[]int{}
+	preorderTraversal2(root,res)
+	return *res
+}
+
+func preorderTraversal2(root *TreeNode,res *[]int){
+	if root == nil{
+		return
+	}
+	*res = append(*res, root.Val)
+	preorderTraversal2(root.Left,res)
+	preorderTraversal2(root.Right,res)
+}
+//二叉树的后序遍历 ：左右中
+func postorderTraversal(root *TreeNode) []int {
+	res := &[]int{}
+	postorderTraversal2(root,res)
+	return *res
+}
+
+func postorderTraversal2(root *TreeNode,res *[]int){
+	if root == nil{
+		return
+	}
+	postorderTraversal2(root.Left,res)
+	postorderTraversal2(root.Right,res)
+	*res = append(*res, root.Val)
+}
 
 //路径总和2
 func pathSum(root *TreeNode, sum int) [][]int {

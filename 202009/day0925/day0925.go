@@ -14,7 +14,7 @@ func reverseKGroup(head *ListNode, k int) *ListNode {
 		return head
 	}
 
-	//k个一组进行反转链表
+	//k个一组进行反转链表，用newHead记录需要返回的新头，tail记录临时的尾，用于拼接下一个部分片段。
 	newHead, tail := head, head
 	//记录目前访问了第多少个元素了
 	count := 0
@@ -33,20 +33,16 @@ func reverseKGroup(head *ListNode, k int) *ListNode {
 			p, p.Next = p.Next, nil
 			h, t := reverseList(head)
 			//之前的尾部接上这次反转的链表
-			tail.Next = h
-			tail = t
-			head = temp
+			tail.Next,tail,head = h,t,temp
 		} else {
 			p = p.Next
 		}
 	}
-
 	if head != newHead{
 		//说明反转了至少一次，而head中可能还有没被反转的剩余的节点，接上
 		tail.Next = head
 	}
 	//如果相等说明没进行任何反转，直接返回头节点即可
-
 	return newHead
 }
 

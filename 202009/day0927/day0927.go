@@ -9,6 +9,31 @@ func main() {
 	fmt.Println(calculate("14/3-2"))
 }
 
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+//删除指定的节点
+func deleteNode(head *ListNode, val int) *ListNode {
+	//找到该节点，让它的前一个节点指向它的后一个节点即可
+	if head == nil{
+		return head
+	}
+	if head.Val == val{
+		return head.Next
+	}
+
+	pre := head
+	for p := head;p != nil;{
+		pre,p = p,p.Next
+		if p.Val == val{
+			pre.Next = p.Next
+			return head
+		}
+	}
+	return head
+}
+
 //计算器 + - * / 3+2*2
 func calculate(s string) int {
 	//思路：难点在于优先级。一个栈用来存数，先读一个数进栈，再读一个符号，如果是+-,那么，数接着 入站，再读一个 符号，

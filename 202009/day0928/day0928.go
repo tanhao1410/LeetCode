@@ -11,6 +11,35 @@ type Node struct {
 	Next  *Node
 }
 
+//合并两个有序数组,将nums2中的放入到1中
+func merge(nums1 []int, m int, nums2 []int, n int) {
+	//思路：从最后一位开始放，
+	mm, nn := m-1, n-1
+	for i := m + n - 1; i >= 0; i-- {
+		if mm < 0{
+			nums1[i] = nums2[nn]
+			nn--
+			continue
+		}
+		if nn < 0{
+			nums1[i] = nums1[mm]
+			mm--
+			continue
+		}
+
+		if  nums1[mm] > nums2[nn]{
+			nums1[i] = nums1[mm]
+			mm--
+			continue
+		}
+		if nums1[mm] <= nums2[nn]{
+			nums1[i] = nums2[nn]
+			nn--
+			continue
+		}
+	}
+}
+
 /**螺旋矩阵2,rust解决
 pub fn generate_matrix(n: i32) -> Vec<Vec<i32>> {
         //let mut res: Vec<Vec<i32>> = Vec::new();
@@ -69,7 +98,7 @@ pub fn generate_matrix(n: i32) -> Vec<Vec<i32>> {
 
         return res;
     }
- */
+*/
 
 func connect(root *Node) *Node {
 	if root == nil {

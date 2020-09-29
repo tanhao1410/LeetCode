@@ -1,7 +1,56 @@
 package main
 
-func main() {
+import "fmt"
 
+func main() {
+	fmt.Println(searchRange([]int{8},8))
+}
+
+//34. 在排序数组中查找元素的第一个和最后一个位置
+func searchRange(nums []int, target int) []int {
+	res := []int{-1, -1}
+
+	//-1代表没有，其他的说明为下标
+	haveNum := func(start, end int) int {
+		for start <= end {
+			middle := (start + end) / 2
+			if nums[middle] == target {
+				return middle
+			} else if nums[middle] < target {
+				start = middle + 1
+			} else {
+				end = middle - 1
+			}
+		}
+		return -1
+	}
+
+	//思路：先二分法查找，没找到，直接返回
+	middleIndex :=  haveNum(0,len(nums)-1)
+	if -1 == middleIndex {
+		return res
+	}
+
+	//找到了，再在前面二分查找，没找到，说明，该次找到的为头，找到了，继续往前二分查找头。尾同样的思路
+	for pre,end := middleIndex,middleIndex;;{
+		pre = end
+		end = haveNum(0, end)
+		if end == -1 || end == pre{
+			res[0] = pre
+			break;
+		}
+	}
+
+	for pre,end := middleIndex,middleIndex;;{
+		pre = end
+		end = haveNum(end + 1, len(nums) -1)
+		if end == -1 || end == pre{
+			res[1] = pre
+			break;
+		}
+	}
+
+	return res
 }
 
 //数字转罗马数字 1-3999

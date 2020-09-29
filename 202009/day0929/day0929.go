@@ -6,6 +6,28 @@ func main() {
 	fmt.Println(searchRange([]int{8},8))
 }
 
+//13.罗马数字转整数 "MMMXLV"
+func romanToInt(s string) int {
+
+	res := 0
+	//采用hash的算法吧  I， V， X， L，C，D 和 M。
+	m := map[string]int{"I":1,"IV":4,"V":5,"IX":9,"X":10,
+		"XL":40,"L":50,"XC":90,"C":100,
+		"CD":400,"D":500,"CM":900,"M":1000}
+	//切割，
+	for i :=0;i < len(s);i ++{
+		if i < len(s) -1  && m[string(s[i])] < m[string(s[i + 1])]{
+			//说明是单字母的
+			res += m[string(s[i:i + 2])]
+			i++
+		}else{
+			res += m[string(s[i])]
+		}
+	}
+
+	return res
+}
+
 //34. 在排序数组中查找元素的第一个和最后一个位置
 func searchRange(nums []int, target int) []int {
 	res := []int{-1, -1}

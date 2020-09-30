@@ -7,8 +7,41 @@ import (
 
 func main() {
 	//fmt.Println(countAndSay(5))
-	fmt.Println(permute([]int{1,2,3}))
+	fmt.Println(permute([]int{1, 2, 3}))
 }
+
+//rust实现全排列
+//pub fn permute(nums: Vec<i32>) -> Vec<Vec<i32>> {
+//	let mut res:Vec<Vec<i32>> = vec![];
+//
+//	fn next_num(already: Vec<i32>, remain: Vec<i32>, res: &mut Vec<Vec<i32>>) {
+//		if remain.is_empty() {
+//			res.push(already);
+//			return;
+//		}
+//
+//		for i in remain.iter() {
+//			let mut newAlready = vec![];
+//			let mut newRemain = vec![];
+//
+//			for j in already.iter() {
+//				newAlready.push(*j)
+//			}
+//			newAlready.push(*i);
+//
+//			for j in remain.iter(){
+//				if *j == *i{
+//					continue;
+//				}
+//				newRemain.push(*j);
+//			}
+//			next_num(newAlready, newRemain, res);
+//		}
+//	}
+//
+//	next_num(vec![], nums,&mut res);
+//	return res;
+//}
 
 //全排列，nums 中无重复
 func permute(nums []int) [][]int {
@@ -27,8 +60,8 @@ func permute(nums []int) [][]int {
 			newNums = append(newNums, remain[i])
 
 			newRemain := []int{}
-			for j := 0 ;j < len(remain);j ++{
-				if j == i{
+			for j := 0; j < len(remain); j++ {
+				if j == i {
 					continue
 				}
 				newRemain = append(newRemain, remain[j])

@@ -6,7 +6,58 @@ import (
 )
 
 func main() {
-	fmt.Println(multiply("9", "9"))
+	//fmt.Println(multiply("9", "9"))
+	fmt.Println(search([]int{0, 1, 2}, 3))
+}
+
+//搜索旋转排序数组，O(log n) 级别，数组中不存在重复元素
+func search(nums []int, target int) int {
+	//思路：先找到旋转的地方，然后再进行二分查找即可。
+	if len(nums) == 0 {
+		return -1
+	}
+
+	head, tail := 0, len(nums)-1
+	middle := (head + tail) / 2
+	//是否经过旋转
+	flag := false
+	for nums[head] > nums[tail] {
+		flag = true
+		//比较head和middle
+		if nums[middle] > nums[head] {
+			head = middle
+		} else {
+			tail = middle
+		}
+		middle = (head + tail) / 2
+	}
+	if flag {
+		head += 1
+	}
+
+	//开始二分查找
+	//先判断最后一个数与target的关系
+	if nums[len(nums)-1] > target {
+		//在head 与 结尾之间找
+		head, tail = head, len(nums)-1
+	} else if nums[len(nums)-1] < target {
+		head, tail = 0, head
+	} else {
+		return len(nums) - 1
+	}
+	middle = (head + tail) / 2
+	for head <= tail {
+		if nums[middle] == target {
+			return middle
+		}
+		if nums[middle] < target {
+			head = middle + 1
+		} else {
+			tail = middle - 1
+		}
+		middle = (head + tail) / 2
+	}
+	return -1
 }
 
 //字符串相乘
@@ -33,7 +84,7 @@ func multiply(num1 string, num2 string) string {
 			flag = item / 10
 			res = append(res, item%10)
 		}
-		if flag != 0{
+		if flag != 0 {
 			res = append(res, flag)
 		}
 		return res
@@ -51,11 +102,11 @@ func multiply(num1 string, num2 string) string {
 		for j := len(resMatrix) - 1; j >= 0 && len(resMatrix[j]) > i; j-- {
 			num += resMatrix[j][i]
 		}
-		flag,num = num / 10,num % 10
+		flag, num = num/10, num%10
 		res = strconv.Itoa(num) + res
 	}
 
-	if flag != 0{
+	if flag != 0 {
 		res = strconv.Itoa(flag) + res
 	}
 

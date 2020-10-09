@@ -7,7 +7,74 @@ import (
 
 func main() {
 	//fmt.Println(multiply("9", "9"))
-	fmt.Println(search([]int{0, 1, 2}, 3))
+	//fmt.Println(search([]int{0, 1, 2}, 3))
+	fmt.Println(addBinary("101011","1001011"))
+}
+
+//二进制求和
+func addBinary(a string, b string) string {
+	res := ""
+	//先对其
+	flag := 0
+	i, j := len(a)-1, len(b)-1
+
+	for ; i >= 0 && j >= 0; {
+		if a[i] == '1' && b[j] == '1' {
+			if flag == 1 {
+				res = "1" + res
+			} else {
+				res = "0" + res
+			}
+			flag = 1
+		} else if a[i] == '0' && b[j] == '0' {
+			if flag == 1 {
+				res = "1" + res
+			} else {
+				res = "0" + res
+			}
+			flag = 0
+		} else {
+			if flag == 1 {
+				res = "0" + res
+			} else {
+				res = "1" + res
+			}
+		}
+		i--
+		j--
+	}
+
+	for ; i >= 0; i-- {
+		if a[i] == '1' && flag == 1{
+			res = "0" + res
+		}else if a[i] == '1' && flag == 0{
+			res = "1" + res
+		}else if a[i] == '0' && flag == 1{
+			res = "1" + res
+			flag = 0
+		}else{
+			res = "0" + res
+		}
+	}
+
+	for ; j >= 0; j-- {
+		if b[j] == '1' && flag == 1{
+			res = "0" + res
+		}else if b[j] == '1' && flag == 0{
+			res = "1" + res
+		}else if b[j] == '0' && flag == 1{
+			res = "1" + res
+			flag = 0
+		}else{
+			res = "0" + res
+		}
+	}
+
+	if flag == 1{
+		res = "1" + res
+	}
+
+	return res
 }
 
 //搜索旋转排序数组，O(log n) 级别，数组中不存在重复元素

@@ -8,6 +8,68 @@ func main() {
 	fmt.Println(groupAnagrams(strs))
 }
 
+//54.螺旋矩阵
+func spiralOrder(matrix [][]int) []int {
+	res := []int{}
+	m:=len(matrix)
+	if m == 0{
+		return res
+	}
+	n := len(matrix[0])
+	if n == 0{
+		return res
+	}
+
+	x,y := 0,-1
+	for {
+
+		//向右走n步
+		if n <= 0{
+			break
+		}
+
+		for j:=0;j < n;j ++{
+			y++
+			res = append(res,matrix[x][y])
+		}
+
+		if m -1 <= 0{
+			break
+		}
+
+		//向下走m -1步
+		for j := 0;j < m -1;j ++{
+			x++
+			res = append(res,matrix[x][y])
+		}
+
+		if  n-1 <= 0{
+			break
+		}
+
+		//向左走n-1步
+		for j := 0;j < n-1;j ++{
+			y--
+			res = append(res,matrix[x][y])
+		}
+
+		if   m -2 <= 0{
+			break
+		}
+
+		//向上走m -2步
+		for j := 0;j < m -2;j++{
+			x--
+			res = append(res,matrix[x][y])
+		}
+
+		m-=2
+		n-=2
+	}
+
+	return res
+}
+
 //字母异味词分组
 func groupAnagrams(strs []string) [][]string {
 	//打散，排序，hash

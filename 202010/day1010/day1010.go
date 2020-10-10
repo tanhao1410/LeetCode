@@ -8,6 +8,27 @@ func main() {
 	fmt.Println(groupAnagrams(strs))
 }
 
+//62.不同路径
+func uniquePaths(m int, n int) int {
+	//动态规划的算法
+	dp := make([][]int,n)
+	for i := 0;i < n;i ++{
+		dp[i] = make([]int,m)
+	}
+	dp[0][0] = 1
+	for i := 0;i < n;i ++{
+		for j := 0;j < m ;j ++{
+			if i -1 >=0{
+				dp[i][j] += dp[i-1][j]
+			}
+			if j -1 >=0{
+				dp[i][j] += dp[i][j-1]
+			}
+		}
+	}
+	return dp[n-1][m-1]
+}
+
 //54.螺旋矩阵
 func spiralOrder(matrix [][]int) []int {
 	res := []int{}

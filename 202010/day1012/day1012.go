@@ -6,8 +6,66 @@ import (
 )
 
 func main() {
-	nums := [][]int{{0,0,0}, {0,1,0},{0,0,0}}
-	fmt.Println(uniquePathsWithObstacles(nums))
+	//nums := [][]int{{0, 0, 0}, {0, 1, 0}, {0, 0, 0}}
+	//fmt.Println(uniquePathsWithObstacles(nums))
+	fmt.Println(simplifyPath("/..aa/...hidden/"))
+}
+
+//有大于两个点的话算路径名
+//71.简化路径 "/a//b////c/d//././/../"-->/a/b/c
+func simplifyPath(path string) string {
+	res := []byte{'/'}
+	pre := path[0]
+	for i := 1; i < len(path); i++ {
+		//消除多余的“/”
+		if path[i] == '/' && path[i] == pre {
+			continue
+		}
+
+		//处理./
+		if path[i] == '/' && pre == '.' {
+			pre = path[i]
+			continue
+		}
+
+		//处理../
+		if path[i] == '.' && pre == '.' {
+			i++ // 看..后面是什么
+			if (i < len(path) && path[i] == '/') || i == len(path) {
+				//要从结果中取出上一级
+				if len(res) != 1 {
+					j := len(res) - 2
+					for ; res[j] != '/' && i >= 0; j-- {
+					}
+					res = res[0 : j+1]
+				}
+			} else {
+				res = append(res, '.', '.')
+				for ; i < len(path) && path[i] != '/'; i++ {
+					res = append(res, path[i])
+				}
+				res = append(res, '/')
+			}
+			pre = '/'
+			continue
+		}
+
+		//以.作为文件名
+		if pre == '.' && path[i] != '/' {
+			res = append(res, '.')
+		}
+
+		if path[i] != '.' {
+			res = append(res, path[i])
+		}
+
+		pre = path[i]
+	}
+
+	if len(res) != 1 && res[len(res)-1] == '/' {
+		res = res[0 : len(res)-1]
+	}
+	return string(res)
 }
 
 //63. 不同路径 II
@@ -23,7 +81,7 @@ func uniquePathsWithObstacles(obstacleGrid [][]int) int {
 	m := len(obstacleGrid[0])
 
 	//永远到不了
-	if obstacleGrid[n-1][m-1] == 1{
+	if obstacleGrid[n-1][m-1] == 1 {
 		return 0
 	}
 

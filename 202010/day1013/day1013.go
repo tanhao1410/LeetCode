@@ -4,6 +4,35 @@ func main() {
 
 }
 
+//74.搜索二维矩阵
+func searchMatrix(matrix [][]int, target int) bool {
+	//直接二分
+	m := len(matrix)
+	if m == 0{
+		return false
+	}
+	n := len(matrix[0])
+	if n == 0{
+		return false
+	}
+
+	start,end := 0,m*n-1
+	middle := (start+end)/2
+	for start <= end{
+		middleValue := matrix[middle/n][middle%n]
+		if middleValue == target{
+			return true
+		}else if middleValue > target{
+			end = middle -1
+		}else{
+			start = middle +1
+		}
+		middle = (start+end)/2
+	}
+
+	return false
+}
+
 type ListNode struct {
 	Val  int
 	Next *ListNode

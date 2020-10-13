@@ -3,8 +3,27 @@ package main
 import "fmt"
 
 func main() {
-	nums:=[]int{1,2,3}
-	fmt.Println(subsets(nums))
+	//nums:=[]int{1,2,3}
+	//fmt.Println(subsets(nums))
+	fmt.Println(mySqrt(100))
+}
+
+//69.x的平方根
+func mySqrt(x int) int {
+	//二分法
+	start,end := 0,x
+	middle := (start+end)/2
+	for start <= end {
+		if middle * middle == x{
+			return middle
+		}else if middle * middle > x{
+			end = middle -1
+		}else{
+			start = middle +1
+		}
+		middle = (start+end)/2
+	}
+	return end
 }
 
 //78.子集

@@ -1,7 +1,28 @@
 package main
 
-func main() {
+import "fmt"
 
+func main() {
+	nums:=[]int{1,2,3}
+	fmt.Println(subsets(nums))
+}
+
+//78.子集
+func subsets(nums []int) [][]int {
+	//不重复元素
+	res := new([][]int)
+	nextNum(0,nums,[]int{},res)
+	return *res
+}
+
+func nextNum(next int,nums,already []int,res *[][]int){
+	*res = append(*res,already)
+	for ;next< len(nums);next++{
+		newAlready := make([]int,len(already))
+		copy(newAlready,already)
+		newAlready = append(newAlready, nums[next])
+		nextNum(next+1,nums,newAlready,res)
+	}
 }
 
 //74.搜索二维矩阵

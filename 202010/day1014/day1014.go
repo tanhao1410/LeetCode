@@ -3,11 +3,49 @@ package main
 import (
 	"fmt"
 	"math"
+	"strconv"
 )
 
 func main() {
 	//fmt.Println(commonChars([]string{"cool", "lock", "cook"}))
-	fmt.Println(removeDuplicates([]int{1,1,1,2,2,3}))
+	//fmt.Println(removeDuplicates([]int{1, 1, 1, 2, 2, 3}))
+	fmt.Println(getPermutation(3,5))
+}
+
+//60.第k个排列
+func getPermutation(n int, k int) string {
+	res := ""
+	k--//从0开始排序的，而k是从1开始数的
+	canSelected := make([]int, n)
+	for i := 0; i < n; i++ {
+		canSelected[i] = i + 1
+	}
+	for i := 0; i < n; i++ {
+		index := getStartNum(canSelected, k)
+		k = k % getN(len(canSelected)-1)
+		res += strconv.Itoa(canSelected[index])
+		for i :=0 ;i < len(canSelected)-1;i ++{
+			if i < index{
+				continue
+			}
+			canSelected[i] = canSelected[i+1]
+		}
+		canSelected = canSelected[:len(canSelected)-1]
+	}
+
+	return res
+}
+
+func getStartNum(canSelected []int, k int) int {
+	index := k / getN(len(canSelected)-1)
+	return index
+}
+
+func getN(n int) int {
+	if n <= 1 {
+		return 1
+	}
+	return getN(n-1) * n
 }
 
 //80.删除排序数组中的重复项 II
@@ -19,23 +57,23 @@ func removeDuplicates(nums []int) int {
 	//记录前面的出现的次数，当出现2次了，和当前又相同，说明，该数需要删除
 	//需要双指针了
 	flag := math.MaxInt32
-	j,i := 1,0
+	j, i := 1, 0
 	for ; j < len(nums); {
-		if nums[j] != nums[i]{
+		if nums[j] != nums[i] {
 			flag = nums[i]
 			nums[i+1] = nums[j]
 			j++
 			i++
-		}else if nums[i] == nums[j] && flag != nums[j]{
+		} else if nums[i] == nums[j] && flag != nums[j] {
 			flag = nums[i]
 			nums[i+1] = nums[j]
 			j++
 			i++
-		}else{
+		} else {
 			j++
 		}
 	}
-	return i+1
+	return i + 1
 }
 
 //1002.查找常用字符

@@ -3,9 +3,71 @@ package main
 import "fmt"
 
 func main() {
-	nums := []int{1,3,1,1,1}
-	fmt.Println(search(nums, 3))
+	//nums := []int{1,3,1,1,1}
+	//fmt.Println(search(nums, 3))
+	board := [][]byte{{'A','B','C','E'},{'S','F','C','S'},{'A','D','E','E'}}
+	fmt.Println(exist(board,"ABCB"))
 }
+
+//79.单词搜索
+func exist(board [][]byte, word string) bool {
+	//用完的时候，置零，回溯后，回复
+	first := []int{}
+	firstLetter := word[0]
+	//找可以的
+	for i := 0;i < len(board);i ++{
+		for j := 0;j < len(board[0]);j ++{
+			if board[i][j] == word[0]{
+				first = append(first, i,j)
+			}
+		}
+	}
+
+	for i:=0;i < len(first);i+=2{
+		board[first[i]][first[i+1]] = '0'
+		if !next(board,first[i],first[i+1],word[1:]){
+			board[first[i]][first[i+1]] = firstLetter
+		}else{
+			return true
+		}
+	}
+
+	return false
+}
+
+func next(board [][]byte,i,j int,word string)bool{
+	if len(word) == 0{
+		return true
+	}
+	//看它周围有多少可以的，最多三个
+	can := []int{}
+	//左边
+	fisrtLetter := word[0]
+	if i + 1 < len(board) && board[i+1][j] == fisrtLetter {
+		can = append(can, i+1,j)
+	}
+	if i - 1 >= 0 && board[i-1][j] == fisrtLetter {
+		can = append(can, i-1,j)
+	}
+	if j + 1 < len(board[0]) && board[i][j+1] == fisrtLetter {
+		can = append(can, i,j+1)
+	}
+	if j - 1 >= 0 && board[i][j-1] == fisrtLetter {
+		can = append(can, i,j-1)
+	}
+
+	for i:=0;i < len(can);i+=2{
+		board[can[i]][can[i+1]] = '0'
+		if !next(board,can[i],can[i+1],word[1:]){
+			board[can[i]][can[i+1]] = fisrtLetter
+		}else{
+			return true
+		}
+	}
+	return false
+}
+
+
 
 //81.搜索旋转排序数组 II
 func search(nums []int, target int) bool {

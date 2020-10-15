@@ -141,6 +141,37 @@ type Node struct {
 	Next  *Node
 }
 
+func connect2(root *Node) *Node {
+	queue := []*Node{root}
+	prehead, curhead := root, root
+	for len(queue) > 0 {
+		//# 当前队列长度
+		fmt.Println(len(queue))
+		length := len(queue)
+		for i := 0; i < length; i++ {
+			curhead = queue[0]
+			queue = queue[1:]
+			if i == 0 {
+				prehead = curhead
+			} else if i < length-1 {
+				prehead.Next = curhead
+				prehead = curhead
+			} else {
+				prehead.Next = curhead
+				curhead.Next = nil
+			}
+			if curhead.Left != nil {
+				queue = append(queue, curhead.Left)
+			}
+			if curhead.Right != nil {
+				queue = append(queue, curhead.Right)
+			}
+		}
+	}
+	return root
+
+}
+
 //116.填充每个节点的下一个右侧节点指针
 func connect(root *Node) *Node {
 	//思路：左孩子-->右孩子，右孩子指向父节点右边的左孩子（没有？指向它的右）

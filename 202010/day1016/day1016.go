@@ -7,6 +7,38 @@ func main() {
 	fmt.Println(subsetsWithDup(nums))
 }
 
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+//102.二叉树的层序遍历
+func levelOrder(root *TreeNode) [][]int {
+	res := [][]int{}
+	if root == nil{
+		return res
+	}
+	queue := []*TreeNode{root}
+	for len(queue) != 0{
+
+		item:= []int{}
+		size := len(queue)
+		for i:=0;i < size;i++{
+			item = append(item, queue[i].Val)
+			if queue[i].Left != nil{
+				queue = append(queue, queue[i].Left)
+			}
+			if queue[i].Right != nil{
+				queue = append(queue,queue[i].Right)
+			}
+		}
+		res = append(res, item)
+		queue = queue[size:]
+	}
+
+	return res
+}
+
 type ListNode struct {
 	Val  int
 	Next *ListNode
@@ -16,14 +48,14 @@ type ListNode struct {
 func removeElements(head *ListNode, val int) *ListNode {
 
 	var res *ListNode
-	for ;head != nil && head.Val == val;head = head.Next{
+	for ; head != nil && head.Val == val; head = head.Next {
 	}
 	res = head
 	pre := res
-	for p:=res;p != nil;p = p.Next{
-		if p.Val == val{
+	for p := res; p != nil; p = p.Next {
+		if p.Val == val {
 			pre.Next = p.Next
-		}else{
+		} else {
 			pre = p
 		}
 	}

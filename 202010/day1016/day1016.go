@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 func main() {
-	nums := []int{1, 2, 2, 3}
+	nums := []int{1,2,2,3,3}
 	fmt.Println(subsetsWithDup(nums))
 }
 
@@ -78,9 +78,11 @@ func nextNum(have, remain []int, res *[][]int) {
 		return
 	}
 	for i := 0; i < len(remain); i++ {
+
 		if i != 0 && remain[i] == remain[i-1] {
 			continue
 		}
+
 		if len(have) != 0 && remain[i] < have[len(have)-1] {
 			continue
 		}
@@ -88,13 +90,13 @@ func nextNum(have, remain []int, res *[][]int) {
 		copy(have2, have)
 		have2 = append(have2, remain[i])
 		*res = append(*res, have2)
-		var remain2 []int
-		if i == 0 {
-			remain2 = remain[1:]
-		} else if i == len(remain)-1 {
-			remain2 = remain[:i]
-		} else {
-			remain2 = append(remain[:i], remain[i+1:]...)
+		remain2 := make([]int,len(remain)-1)
+		for j := 0;j < len(remain);j++{
+			if j > i{
+				remain2[j-1] = remain[j]
+			}else if j < i{
+				remain2[j] = remain[j]
+			}
 		}
 		nextNum(have2, remain2, res)
 	}

@@ -10,6 +10,26 @@ func main() {
 	fmt.Println(minMoves([]int{1, 2, 3, 4}))
 }
 
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+//876.链表的中间结点
+func middleNode(head *ListNode) *ListNode {
+	//双指针法
+	one,two := head,head.Next
+	for two != nil{
+		two = two.Next
+		if two == nil{
+			break
+		}
+		two = two.Next
+		one = one.Next
+	}
+	return one
+}
+
 //1.每次+1,判断是否可以
 //2.优化1：每次+可以+更多
 //3.优化2：如果最大和最小相等，跳出

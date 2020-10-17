@@ -1,9 +1,49 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
 
 func main() {
-	fmt.Println(totalNQueens(10))
+	//fmt.Println(totalNQueens(10))
+	fmt.Println(minMoves([]int{1, 2, 3, 4}))
+}
+
+//1.每次+1,判断是否可以
+//2.优化1：每次+可以+更多
+//3.优化2：如果最大和最小相等，跳出
+//4.新方法最大的数比最小的数大多少，则先移动这么多步，直到最大和最小的数相等
+//5.优化：少一次循环
+//453.最小移动次数使数组元素相等
+func minMoves(nums []int) int {
+	res := 0
+	//用自带的排序来排序
+	sort.Ints(nums)
+	//先排序
+	//sortNums(nums)
+	maxIndex, min := len(nums)-1, nums[0]
+	dis := nums[maxIndex] - min
+	for dis != 0 {
+		res += dis
+
+		nums[maxIndex] -= dis
+		//每一个都加，相当于只是一个来减
+		min = nums[maxIndex]
+		maxIndex = maxIndex - 1
+		dis = nums[maxIndex] - min
+	}
+	return res
+}
+
+func sortNums(nums []int) {
+	for i := 0; i < len(nums)-1; i++ {
+		for j := i + 1; j < len(nums); j++ {
+			if nums[i] > nums[j] {
+				nums[i], nums[j] = nums[j], nums[i]
+			}
+		}
+	}
 }
 
 //52.N皇后 II

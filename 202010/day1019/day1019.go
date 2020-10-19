@@ -6,6 +6,72 @@ func main() {
 	fmt.Println(numTrees(100))
 }
 
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+//95.不同的二叉搜索树 II
+func generateTrees(n int) []*TreeNode {
+
+	nums := make([]int, n)
+	for i := 0; i < n; i++ {
+		nums[i] = i + 1
+	}
+	return generateTreesByNums(nums)
+}
+
+func generateTreesByNums(nums []int) []*TreeNode {
+	res := []*TreeNode{}
+	//根据数字生成n个树返回
+	for k := 0; k < len(nums); k++ {
+		left := generateTreesByNums(nums[:k])
+		right := generateTreesByNums(nums[k+1:])
+		if len(left)==0 && len(right)==0{
+			root := TreeNode{nums[k], nil, nil}
+			res = append(res, &root)
+		}else if len(left) == 0 {
+			for j := 0; j < len(right); j++ {
+				root := TreeNode{nums[k], nil, nil}
+				root.Right = right[j]
+				res = append(res, &root)
+			}
+		}else if len(right) == 0 {
+			for i := 0; i < len(left); i++ {
+				root := TreeNode{nums[k], nil, nil}
+				root.Left = left[i]
+				res = append(res, &root)
+			}
+		}else{
+			for i := 0; i < len(left); i++ {
+				for j := 0; j < len(right); j++ {
+					root := TreeNode{nums[k], nil, nil}
+					root.Left = left[i]
+					root.Right = right[j]
+					res = append(res, &root)
+				}
+			}
+		}
+	}
+	return res
+}
+
+//复制树
+func copyTree(head *TreeNode) *TreeNode {
+	if head == nil {
+		return nil
+	}
+	res := TreeNode{head.Val, nil, nil}
+	if head.Left != nil {
+		res.Right = copyTree(head.Left)
+	}
+	if head.Right != nil {
+		res.Left = copyTree(head.Right)
+	}
+	return &res
+}
+
 //96.不同的二叉搜索树
 func numTrees(n int) int {
 	//思路：递归的方式，只有一个数的时候，生成的树只有一种。选择以某个树为根，则剩余的子节点能形成的树，左，右，应该是相乘的关系，时间超时。
@@ -27,10 +93,10 @@ func numTrees(n int) int {
 	//}
 	//return res
 
-	dp:= []int{1,1}
-	for i:=2;i <= n;i ++{
-		res :=0
-		for j:=1;j <= i;j ++{
+	dp := []int{1, 1}
+	for i := 2; i <= n; i++ {
+		res := 0
+		for j := 1; j <= i; j++ {
 			left := dp[j-1]
 			right := dp[i-j]
 			res += (left * right)

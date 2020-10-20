@@ -4,6 +4,20 @@ func main() {
 
 }
 
+//100.相同的树
+func isSameTree(p *TreeNode, q *TreeNode) bool {
+	if p != nil && q != nil{
+		if p.Val != q.Val{
+			return false
+		}
+		return isSameTree(p.Right,q.Right)&&isSameTree(p.Left,q.Left)
+	}else if p == nil && q == nil{
+		return true
+	}else{
+		return false
+	}
+}
+
 type TreeNode struct {
 	Val   int
 	Left  *TreeNode

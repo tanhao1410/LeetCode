@@ -4,6 +4,21 @@ func main() {
 
 }
 
+//189.旋转数组
+func rotate(nums []int, k int)  {
+	if len(nums) < 2{
+		return
+	}
+	k = k % len(nums)
+	for ;k > 0;k--{
+		temp := nums[len(nums) -1]
+		for i:=len(nums) -1;i > 0;i--{
+			nums[i] = nums[i-1]
+		}
+		nums[0] = temp
+	}
+}
+
 //91.解码方法
 func numDecodings(s string) int {
 	//用动态规划算法了

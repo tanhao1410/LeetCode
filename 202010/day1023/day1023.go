@@ -4,11 +4,25 @@ func main() {
 
 }
 
+
+//108.将有序数组转换为二叉搜索树
+func sortedArrayToBST(nums []int) *TreeNode {
+	//将一个按照升序排列的有序数组，转换为一棵高度平衡二叉搜索树
+	var root *TreeNode
+	if len(nums) == 0{
+		return root
+	}
+	root = &TreeNode{nums[len(nums)/2],nil,nil}
+	root.Right = sortedArrayToBST(nums[len(nums)/2+1:])
+	root.Left = sortedArrayToBST(nums[:len(nums)/2])
+	return root
+}
 type TreeNode struct {
 	Val   int
 	Left  *TreeNode
 	Right *TreeNode
 }
+
 //105.从前序与中序遍历序列构造二叉树
 func buildTree(preorder []int, inorder []int) *TreeNode {
 	var root *TreeNode = nil

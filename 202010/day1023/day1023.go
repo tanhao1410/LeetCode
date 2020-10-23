@@ -4,6 +4,27 @@ func main() {
 
 }
 
+//114.二叉树展开为链表
+func flatten(root *TreeNode)  {
+	//递归方式，将左边展开，然后放入到右边
+	if root == nil{
+		return
+	}
+
+	if root.Left == nil{
+		flatten(root.Right)
+		return
+	}
+
+	flatten(root.Left)
+	flatten(root.Right)
+	temp := root.Right
+	root.Right,root.Left = root.Left,nil
+	for root = root.Right;root.Right != nil;root= root.Right{
+	}
+	root.Right = temp
+
+}
 
 //108.将有序数组转换为二叉搜索树
 func sortedArrayToBST(nums []int) *TreeNode {

@@ -1,10 +1,47 @@
 package main
 
+import "fmt"
+
 func main() {
 	//nums := []int{5, 0, 10, 0, 10, 6}
 	//print(smallerNumbersThanCurrent(nums))
 	matrix := [][]int{{5, 1, 9, 11}, {2, 4, 8, 10}, {13, 3, 6, 7}, {15, 14, 12, 16}}
 	rotate(matrix)
+}
+
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+//110.平衡二叉树
+func isBalanced(root *TreeNode) bool {
+	if root == nil{
+		return true
+	}
+	leftHight := getHight(root.Left)
+	rightHight := getHight(root.Right)
+	fmt.Println(leftHight,rightHight)
+	if leftHight - 1 > rightHight || rightHight - 1 > leftHight{
+		return false
+	}
+	return isBalanced(root.Left) && isBalanced(root.Right)
+}
+
+func getHight(root *TreeNode) int{
+	if root == nil{
+		return 0
+	}
+	if root.Right== nil && root.Left == nil{
+		return 1
+	}
+	right := getHight(root.Right)
+	left := getHight(root.Left)
+	if right> left{
+		return right+1
+	}
+	return left +1
 }
 
 //48.旋转图像

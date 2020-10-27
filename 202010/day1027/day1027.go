@@ -1,6 +1,38 @@
 package main
 
+import "fmt"
+
 func main() {
+	fmt.Println(reverseWords("  hello   world i s ha   "))
+}
+
+//151.翻转字符串里的单词
+func reverseWords(s string) string {
+	res := ""
+	for i,j:=len(s)-1,len(s) -1 ;j >=0;{
+		if s[i] == ' '{
+			i--
+			j = i
+			continue
+		}
+		if s[j] == ' ' {
+			//说明可以生成一个单词了
+			word := s[j+1:i+1]
+			res = res + word + " "
+			i = j-1
+			j = i
+			continue
+		}
+		if j == 0{
+			word := s[:i+1]
+			return res+word
+		}
+		j --
+	}
+	if len(res) > 0{
+		return res[:len(res)-1]
+	}
+	return res
 
 }
 

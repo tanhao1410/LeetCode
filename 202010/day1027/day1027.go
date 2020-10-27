@@ -4,6 +4,42 @@ func main() {
 
 }
 
+//111.二叉树的最小深度
+func minDepth(root *TreeNode) int {
+	//思路：求左边，求右边，然后返回最小的。效率有点低。一旦超过了，就应该不继续往下求了。
+	m := make(map[*TreeNode]int,0)
+	var getMinDepth func(root *TreeNode) int
+	getMinDepth = func(root *TreeNode) int{
+		if root == nil{
+			return 0
+		}
+		if root.Right == nil && root.Left == nil{
+			return 1
+		}
+		var left int
+		var right int
+		if v,ok := m[root.Left];ok{
+			left = v
+		}else{
+			left = getMinDepth(root.Left)
+		}
+		if v,ok := m[root.Right];ok{
+			right = v
+		}else{
+			right = getMinDepth(root.Right)
+		}
+
+		if left == 0 || (left > right && right != 0){
+			m[root] = right +1
+			return right+1
+		}else{
+			m[root] = left +1
+			return left +1
+		}
+	}
+	return getMinDepth(root)
+}
+
 type TreeNode struct {
 	Val   int
 	Left  *TreeNode

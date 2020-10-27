@@ -4,6 +4,20 @@ func main() {
 
 }
 
+func minDepth2(root *TreeNode) int {
+	//思路：
+	if root == nil{
+		return 0
+	}
+	left := minDepth2(root.Left)
+	right := minDepth2(root.Right)
+
+	if left == 0 || (left > right && right != 0){
+		return right+1
+	}
+	return left +1
+}
+
 //111.二叉树的最小深度
 func minDepth(root *TreeNode) int {
 	//思路：求左边，求右边，然后返回最小的。效率有点低。一旦超过了，就应该不继续往下求了。

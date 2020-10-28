@@ -45,6 +45,48 @@ impl Solution {
         }
         res
     }
+
+    pub fn level_order2(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        // Passed 0ms 2.1mb
+        let (mut root, mut res, mut arr) = (root, Vec::new(), Vec::new());
+        if root.is_some() { arr.push(root); }
+        while !arr.is_empty() {
+            let mut children = Vec::new();
+            for mut node in arr {
+                let mut node = node.as_mut().unwrap().borrow_mut();
+                res.push(node.val);
+                if node.left.is_some() { children.push(node.left.take()); }
+                if node.right.is_some() { children.push(node.right.take()); }
+            }
+            arr = children;
+        }
+        res
+    }
+
+    //剑指 Offer 07. 重建二叉树
+    pub fn build_tree(preorder: Vec<i32>, inorder: Vec<i32>) -> Option<Rc<RefCell<TreeNode>>> {
+        if preorder.is_empty(){
+            return None;
+        }
+        let mut root = TreeNode{val:preorder[0],left:None,right:None};
+
+        //切割inorder和preorder
+        //先切中序
+        let mut index = 0;
+        while inorder[index] != preorder[0]{
+            index += 1;
+        }
+        let inorder_left = inorder[..index].to_vec();
+        let inorder_right = inorder[index+1..].to_vec();
+
+        let preorder_left = preorder[1..1+inorder_left.len()].to_vec();
+        let preorder_right = preorder[1+inorder_left.len()..].to_vec();
+
+        root.left = Solution::build_tree(preorder_left,inorder_left);
+        root.right = Solution::build_tree(preorder_right,inorder_right);
+        return Some(Rc::new(RefCell::new(root)));
+    }
+
 }
 
 struct Solution {}

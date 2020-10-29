@@ -1,5 +1,26 @@
 fn main() {
-    println!("Hello, world!");
+    //println!("Hello, world!");
+    //Solution::count_digit_one(16);
+    let start = std::time::SystemTime::now();
+    for _ in 0..100000000 {
+        let mut arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];//速度比vec快4倍以上
+        BubbleSort(&mut arr);
+    }
+
+    let end = SystemTime::now().duration_since(start).unwrap().as_nanos();
+    println!("{}", end);
+}
+
+fn BubbleSort(arr:&mut [i32;9]) {
+    for i in 0..arr.len() - 1 {
+        for j in 0..arr.len() - 1 - i {
+            if arr[j] < arr[j + 1] {
+                let temp = arr[j];
+                arr[j] = arr[j +1];
+                arr[j +1] = temp;
+            }
+        }
+    }
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -22,6 +43,9 @@ impl TreeNode {
 
 use std::rc::Rc;
 use std::cell::RefCell;
+use std::collections::HashMap;
+use std::time::SystemTime;
+use std::mem::swap;
 
 impl Solution {
     //剑指 Offer 32 - I. 从上到下打印二叉树
@@ -36,10 +60,10 @@ impl Solution {
             //从队列中弹出一个
             let node = queue.remove(0);
             res.push(node.borrow().val);
-            if node.borrow().left.is_some(){
+            if node.borrow().left.is_some() {
                 queue.push(node.borrow_mut().left.clone().unwrap());
             }
-            if node.borrow().right.is_some(){
+            if node.borrow().right.is_some() {
                 queue.push(node.borrow().right.clone().unwrap());
             }
         }
@@ -65,28 +89,27 @@ impl Solution {
 
     //剑指 Offer 07. 重建二叉树
     pub fn build_tree(preorder: Vec<i32>, inorder: Vec<i32>) -> Option<Rc<RefCell<TreeNode>>> {
-        if preorder.is_empty(){
+        if preorder.is_empty() {
             return None;
         }
-        let mut root = TreeNode{val:preorder[0],left:None,right:None};
+        let mut root = TreeNode { val: preorder[0], left: None, right: None };
 
         //切割inorder和preorder
         //先切中序
         let mut index = 0;
-        while inorder[index] != preorder[0]{
+        while inorder[index] != preorder[0] {
             index += 1;
         }
         let inorder_left = inorder[..index].to_vec();
-        let inorder_right = inorder[index+1..].to_vec();
+        let inorder_right = inorder[index + 1..].to_vec();
 
-        let preorder_left = preorder[1..1+inorder_left.len()].to_vec();
-        let preorder_right = preorder[1+inorder_left.len()..].to_vec();
+        let preorder_left = preorder[1..1 + inorder_left.len()].to_vec();
+        let preorder_right = preorder[1 + inorder_left.len()..].to_vec();
 
-        root.left = Solution::build_tree(preorder_left,inorder_left);
-        root.right = Solution::build_tree(preorder_right,inorder_right);
+        root.left = Solution::build_tree(preorder_left, inorder_left);
+        root.right = Solution::build_tree(preorder_right, inorder_right);
         return Some(Rc::new(RefCell::new(root)));
     }
-
 }
 
 struct Solution {}

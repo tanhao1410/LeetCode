@@ -7,6 +7,34 @@ struct Solution {}
 
 
 impl Solution {
+    //剑指 Offer 66. 构建乘积数组
+    pub fn construct_arr(a: Vec<i32>) -> Vec<i32> {
+        let mut res = a.clone();
+        //不能采用除法，必然会存在许多相同的数字，特别是1，不然肯定会突破32位最大限制
+        //那就用一个map来做记录
+        let mut m = std::collections::HashMap::new();
+
+        fn get_construct(a: &Vec<i32>, index: usize) -> i32 {
+            let mut res = 1;
+            for i in 0..a.len() {
+                if i != index {
+                    res *= a[i]
+                }
+            }
+            res
+        }
+
+        for i in 0..res.len() {
+            if let Some(value) = m.get(&a[i]) {
+                res[i] = *value
+            } else {
+                let value = get_construct(&a, i);
+                res[i] = value;
+                m.insert(a[i], value);
+            }
+        }
+        res
+    }
 
     //剑指 Offer 46. 把数字翻译成字符串
     pub fn translate_num(num: i32) -> i32 {

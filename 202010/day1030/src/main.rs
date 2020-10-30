@@ -8,6 +8,24 @@ struct Solution{
 
 impl Solution {
 
+    //剑指 Offer 14- I. 剪绳子
+    pub fn cutting_rope(n: i32) -> i32 {
+        let mut dp = vec![0, 0, 1, 2, 4];
+        for i in 5..n + 1 {
+            let mut max = 0;
+            for j in 1..i / 2 + 1 {
+                if j * dp[(i - j) as usize] > max {
+                    max = j * dp[(i - j) as usize];
+                }
+                if j * (i - j) > max {
+                    max = j * (i - j);
+                }
+            }
+            dp.push(max);
+        }
+        dp[n as usize]
+    }
+
     //每日一题；463 岛屿的周长
     pub fn island_perimeter(grid: Vec<Vec<i32>>) -> i32 {
         if grid.len() == 0 || grid[0].len() == 0{

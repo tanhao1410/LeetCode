@@ -7,6 +7,32 @@ struct Solution {}
 
 
 impl Solution {
+
+    //剑指 Offer 63. 股票的最大利润 //注意空的时候 1,2
+    pub fn max_profit(prices: Vec<i32>) -> i32 {
+        //用一个数组记录，在此之后的最大值为多少。
+        let counts = prices.len();
+        if counts < 2{
+            return 0;
+        }
+        let mut dp = prices.clone();
+        for i in (0..counts - 1).rev() {
+            if dp[i + 1] > prices[i] {
+                dp[i] = dp[i + 1]
+            } else {
+                dp[i] = prices[i]
+            }
+        }
+        let mut res = 0;
+        for i in 0..counts {
+            if dp[i] - prices[i] > res {
+                res = dp[i] - prices[i];
+            }
+        }
+        res
+    }
+
+
     //剑指 Offer 66. 构建乘积数组
     pub fn construct_arr(a: Vec<i32>) -> Vec<i32> {
         let mut res = a.clone();

@@ -7,6 +7,24 @@ struct Solution {}
 
 
 impl Solution {
+
+    //剑指 Offer 46. 把数字翻译成字符串
+    pub fn translate_num(num: i32) -> i32 {
+        //直接递归就行了，把数字转换成字符串进行判别即可，或者不进行转换，直接递归也行
+        let s = num.to_string();
+        fn translate(s: String) -> i32 {
+            if s.len() < 2 {
+                return 1;
+            }
+            if s.chars().nth(0).unwrap() == '1' || (s.chars().nth(0).unwrap() == '2' && s.chars().nth(1).unwrap() < '6') {
+                return translate(s[1..].to_string()) + translate(s[2..].to_string());
+            } else {
+                return translate(s[1..].to_string());
+            }
+        }
+        translate(s)
+    }
+
     //剑指 Offer 47. 礼物的最大价值
     pub fn max_value(grid: Vec<Vec<i32>>) -> i32 {
         //思路：普通动态规划题目

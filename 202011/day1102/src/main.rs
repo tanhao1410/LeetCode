@@ -2,6 +2,7 @@
 
 fn main() {
     println!("Hello, world!");
+    Solution::find_nth_digit(11);
 }
 
 struct Solution{}
@@ -62,6 +63,46 @@ impl Solution {
             }
         }
         true
+    }
+
+    //剑指 Offer 44. 数字序列中某一位的数字
+    pub fn find_nth_digit(n: i32) -> i32 {
+
+        //10->1 //1000000000 ->1
+        if n < 10 {
+            return n;
+        }
+        if n == 10{
+            return 1
+        }
+
+        fn get_bit(mut n: i32, mut base: i32, mut index: i32) -> i32 {
+            let mut res = n;
+            while index >= 0 {
+                res = n / base;
+                n = n % base;
+                base /= 10;
+                index -= 1;
+            }
+            res
+        }
+
+        let mut dp:Vec<i64> = vec![0, 10];
+        let mut max:i64 = 10;
+        let mut i = 1;
+        let mut ten_i = 1;
+        while max < n as i64 {
+            i += 1;
+            ten_i *= 10;
+            max = *dp.last().unwrap() + 9 * i * ten_i;
+            dp.push(max);
+        }
+        //前面切割掉
+        let new_index = n - dp[dp.len() - 2] as i32;
+        //此时的数字的位数都是 i
+        let skip_count = new_index / i as i32;
+        let skip_index = skip_count + ten_i as i32;
+        get_bit(skip_index, ten_i as i32, new_index % i as i32)
     }
 
 }

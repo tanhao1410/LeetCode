@@ -25,4 +25,43 @@ impl Solution {
         }
         res
     }
+
+    //面试题 01.02. 判定是否互为字符重排
+    pub fn check_permutation(s1: String, s2: String) -> bool {
+        if s1.len() != s2.len() {
+            return false;
+        }
+        //采用map的形式
+        let mut m1 = std::collections::HashMap::new();
+        let mut m2 = std::collections::HashMap::new();
+        for i in 0..s1.len() {
+            if m1.contains_key(&s1.chars().nth(i).unwrap()){
+                m1.insert(s1.chars().nth(i).unwrap(),m1.get(&s1.chars().nth(i).unwrap()).unwrap() + 1);
+            }else{
+                m1.insert(s1.chars().nth(i).unwrap(),1);
+            }
+
+            if m2.contains_key(&s2.chars().nth(i).unwrap()){
+                m2.insert(s2.chars().nth(i).unwrap(),m2.get(&s1.chars().nth(i).unwrap()).unwrap() + 1);
+            }else{
+                m2.insert(s2.chars().nth(i).unwrap(),1);
+            }
+
+        }
+        if m1.len() != m2.len() {
+            return false;
+        }
+        for i in m2.into_iter() {
+            match  m1.get(&i.0){
+                None => return false,
+                Some(&j) =>{
+                    if i.1 != j{
+                        return false
+                    }
+                }
+            }
+        }
+        true
+    }
+
 }

@@ -1,7 +1,8 @@
 fn main() {
     println!("Hello, world!");
     //println!("{}", Solution::find_nth_digit(1000000000));
-    Solution::moving_count(2, 2, 2);
+    //Solution::moving_count(2, 2, 2);
+    println!("{}",Solution::length_of_longest_substring("abdib".to_string()))
 }
 
 struct Solution {}
@@ -138,5 +139,39 @@ impl Solution {
             }
         }
         res
+    }
+
+    //剑指 Offer 48. 最长不含重复字符的子字符串
+    pub fn length_of_longest_substring(s: String) -> i32 {
+        if s.len() < 2{
+            return s.len() as i32;
+        }
+        fn has_repit_char(s:&str)->i32{
+            let mut end = s.len() as i32;
+            let last_char = s.chars().nth(end as usize - 1).unwrap();
+            end -= 2;
+            while end >= 0{
+                if s.chars().nth(end as usize).unwrap() == last_char{
+                    return end;
+                }
+                end -=1;
+            }
+            -1
+        }
+        let mut res = 0;
+        let (mut i,mut j) = (1,0);
+        while i < s.len(){
+            //判断s[i..j+1]在前面是否有，如果有，确定它位置
+            if has_repit_char(&s[j..i+1]) == -1{
+                i += 1;
+            }else{
+                j = j + has_repit_char(&s[j..i + 1]) as usize + 1;
+                i += 1;
+            }
+            if i -j > res{
+                res = i - j
+            }
+        }
+        res as i32
     }
 }

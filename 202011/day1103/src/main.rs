@@ -50,6 +50,33 @@ impl Solution {
         }
         res
     }
+
+    //剑指 Offer 40. 最小的k个数
+    pub fn get_least_numbers(arr: Vec<i32>, k: i32) -> Vec<i32> {
+        if k == arr.len() as i32 {
+            return arr.clone();
+        }
+        let mut res = vec![0; k as usize];
+        for i in 0..k as usize {
+            res[i] = arr[i];
+        }
+        res.sort();
+        for i in k..arr.len() as i32 {
+            let mut j = k - 1;
+            if arr[i as usize] >= res[j as usize] {
+                continue;
+            }
+            while j >= 0 && res[j as usize] > arr[i as usize]{
+                if j !=0 && res[j as usize - 1] > arr[i as usize]{
+                    res[j as usize] = res[j as usize -1];
+                }else{
+                    res[j as usize] = arr[i as usize]
+                }
+                j -= 1;
+            }
+        }
+        res
+    }
 }
 
 #[derive(Debug, PartialEq, Eq)]

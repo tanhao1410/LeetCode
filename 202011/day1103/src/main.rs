@@ -77,6 +77,37 @@ impl Solution {
         }
         res
     }
+
+    //剑指 Offer 38. 字符串的排列
+    pub fn permutation(s: String) -> Vec<String> {
+        let mut res = Vec::new();
+        //思路：去重，然后排列组合即可
+        fn create_str(mut pre:String,mut remain :Vec<char>,mut res :& mut Vec<String>) {
+            if remain.len() == 0{
+                res.push(pre);
+            }else{
+                let mut pre_char = '&';
+                for i in 0..remain.len() {
+                    if pre_char == remain[i]{
+                        continue;
+                    }
+                    let mut next = pre.clone();
+                    let mut new_remain = remain.clone();
+                    let v = new_remain.remove(i);
+                    next.push(v);
+                    create_str(next,new_remain,&mut res);
+                    pre_char = v;
+                }
+            }
+        }
+        let mut remain= vec![];
+        for i in s.chars(){
+            remain.push(i);
+        }
+        remain.sort();
+        create_str("".to_string(),remain,&mut res);
+        res
+    }
 }
 
 #[derive(Debug, PartialEq, Eq)]

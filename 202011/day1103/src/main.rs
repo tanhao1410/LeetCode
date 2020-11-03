@@ -66,10 +66,10 @@ impl Solution {
             if arr[i as usize] >= res[j as usize] {
                 continue;
             }
-            while j >= 0 && res[j as usize] > arr[i as usize]{
-                if j !=0 && res[j as usize - 1] > arr[i as usize]{
-                    res[j as usize] = res[j as usize -1];
-                }else{
+            while j >= 0 && res[j as usize] > arr[i as usize] {
+                if j != 0 && res[j as usize - 1] > arr[i as usize] {
+                    res[j as usize] = res[j as usize - 1];
+                } else {
                     res[j as usize] = arr[i as usize]
                 }
                 j -= 1;
@@ -82,30 +82,30 @@ impl Solution {
     pub fn permutation(s: String) -> Vec<String> {
         let mut res = Vec::new();
         //思路：去重，然后排列组合即可
-        fn create_str(mut pre:String,mut remain :Vec<char>,mut res :& mut Vec<String>) {
-            if remain.len() == 0{
+        fn create_str(mut pre: String, mut remain: Vec<char>, mut res: &mut Vec<String>) {
+            if remain.len() == 0 {
                 res.push(pre);
-            }else{
+            } else {
                 let mut pre_char = '&';
                 for i in 0..remain.len() {
-                    if pre_char == remain[i]{
+                    if pre_char == remain[i] {
                         continue;
                     }
                     let mut next = pre.clone();
                     let mut new_remain = remain.clone();
                     let v = new_remain.remove(i);
                     next.push(v);
-                    create_str(next,new_remain,&mut res);
+                    create_str(next, new_remain, &mut res);
                     pre_char = v;
                 }
             }
         }
-        let mut remain= vec![];
-        for i in s.chars(){
+        let mut remain = vec![];
+        for i in s.chars() {
             remain.push(i);
         }
         remain.sort();
-        create_str("".to_string(),remain,&mut res);
+        create_str("".to_string(), remain, &mut res);
         res
     }
 
@@ -139,6 +139,37 @@ impl Solution {
             queue_len = queue.len();
         }
         res
+    }
+
+    //剑指 Offer 33. 二叉搜索树的后序遍历序列
+    pub fn verify_postorder(postorder: Vec<i32>) -> bool {
+        //判断是否是某二叉搜索树的后序遍历，即左右中
+        if postorder.len() < 3 {
+            return true;
+        }
+        //根节点
+        let last_node = *postorder.last().unwrap();
+        //以根节点为界，分隔原来的序列
+        let mut index = 0;
+        while postorder[index] < last_node {
+            index += 1;
+        }
+
+        //判断右边是否有小于该数的
+        let mut index2 = index;
+        while index2 < postorder.len() - 1 {
+            index2 += 1;
+            if postorder[index2] < last_node {
+                return false;
+            }
+        }
+
+        if index < postorder.len() - 1 {
+            Solution::verify_postorder(postorder[..index].to_vec())
+                && Solution::verify_postorder(postorder[index..postorder.len() - 1].to_vec())
+        } else {
+            Solution::verify_postorder(postorder[..index].to_vec())
+        }
     }
 }
 

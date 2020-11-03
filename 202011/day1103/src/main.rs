@@ -108,6 +108,38 @@ impl Solution {
         create_str("".to_string(),remain,&mut res);
         res
     }
+
+    //剑指 Offer 32 - III. 从上到下打印二叉树 III
+    pub fn level_order2(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
+        let mut res = Vec::new();
+        if let None = root {
+            return res;
+        }
+        let mut queue = vec![root.unwrap()];
+        let mut queue_len = queue.len();
+        let mut is_odd = true;
+        while queue_len > 0 {
+            let mut item = Vec::new();
+            for i in 0..queue_len {
+                let node = queue.remove(0);
+                if is_odd {
+                    item.push(node.borrow().val);
+                } else {
+                    item.insert(0, node.borrow().val);
+                }
+                if node.borrow().left.is_some() {
+                    queue.push(node.borrow().left.clone().unwrap());
+                }
+                if node.borrow().right.is_some() {
+                    queue.push(node.borrow().right.clone().unwrap());
+                }
+            }
+            is_odd = !is_odd;
+            res.push(item);
+            queue_len = queue.len();
+        }
+        res
+    }
 }
 
 #[derive(Debug, PartialEq, Eq)]

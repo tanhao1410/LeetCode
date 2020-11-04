@@ -127,6 +127,67 @@ impl Solution {
             _ => false
         }
     }
+    //剑指 Offer 34. 二叉树中和为某一值的路径
+    pub fn path_sum(root: Option<Rc<RefCell<TreeNode>>>, sum: i32) -> Vec<Vec<i32>> {
+        let mut res = Vec::new();
+        //直到叶节点
+        if let Some(node) = root {
+            //该节点为叶子节点
+            if node.borrow().left.is_none() && node.borrow().right.is_none() {
+                if sum == node.borrow().val {
+                    res.push(vec![sum]);
+                    return res;
+                }
+                return res;
+            }
+            match node.borrow().right.clone() {
+                Some(right) => {
+                    let mut right_vec = Solution::path_sum(node.borrow().right.clone(), sum - node.borrow().val);
+                    for i in 0..right_vec.len() {
+                        let mut item = vec![node.borrow().val];
+                        if right_vec[i].is_empty() {
+                            continue;
+                        }
+                        item.append(&mut right_vec[i]);
+                        res.push(item);
+                    }
+                }
+                _ => {}
+            }
+            if node.borrow().left.is_some() {
+                let mut left_vec = Solution::path_sum(node.borrow().left.clone(), sum - node.borrow().val);
+                for i in 0..left_vec.len() {
+                    if left_vec[i].is_empty() {
+                        continue;
+                    }
+                    let mut item = vec![node.borrow().val];
+                    item.append(&mut left_vec[i]);
+                    res.push(item);
+                }
+            }
+        }
+        res
+    }
 }
 
 struct Solution {}
+use std::rc::Rc;
+use std::cell::RefCell;
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct TreeNode {
+    pub val: i32,
+    pub left: Option<Rc<RefCell<TreeNode>>>,
+    pub right: Option<Rc<RefCell<TreeNode>>>,
+}
+
+impl TreeNode {
+    #[inline]
+    pub fn new(val: i32) -> Self {
+        TreeNode {
+            val,
+            left: None,
+            right: None,
+        }
+    }
+}

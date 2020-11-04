@@ -1,6 +1,7 @@
 fn main() {
     println!("Hello, world!");
     println!("{:?}", Solution::insert(vec![vec![1,5]], vec![0, 1]));
+    println!("{}",Solution::is_match("".to_string(),"b*a*".to_string()))
 }
 
 impl Solution {
@@ -85,6 +86,46 @@ impl Solution {
             i += 1;
         }
         res
+    }
+
+    //剑指 Offer 19. 正则表达式匹配
+    pub fn is_match(s: String, mut p: String) -> bool {
+        if s.is_empty() {
+            //c*c*这种
+            while !p.is_empty(){
+                if let Some('*') = p.pop(){
+                    p.pop();
+                }else{
+                    return false;
+                }
+            }
+            return true;
+        }
+        //先判断第一个字符
+        let first_char = s.chars().nth(0).unwrap();
+        match p.chars().nth(0) {
+            Some(p_first) if (p_first == '.' || p_first == first_char) && Some('*') == p.chars().nth(1) => {
+                //*取任意数时候
+                let mut i = 1;
+                while Some(first_char) == s.chars().nth(i) || (p_first == '.' && s.chars().nth(i).is_some()) {
+                    if Solution::is_match(s[i..].to_string(), p[2..].to_string()) {
+                        return true;
+                    }
+                    i += 1;
+                }
+                //下一个判别
+                if i > s.len() {
+                    i = s.len();
+                }
+                Solution::is_match(s[i..].to_string(), p[2..].to_string())
+                    || Solution::is_match(s.clone(), p[2..].to_string()) //当*取0个时进行判别
+            }
+            Some(p_first) if p_first == '.' || p_first == first_char =>
+                Solution::is_match(s[1..].to_string(), p[1..].to_string()),
+            Some(_) if Some('*') == p.chars().nth(1) =>
+                Solution::is_match(s.clone(), p[2..].to_string()),
+            _ => false
+        }
     }
 }
 

@@ -1,3 +1,5 @@
+use std::usize::MAX;
+
 fn main() {
     println!("Hello, world!");
     let mut word_list = vec!["hot".to_string(),"dot".to_string(),"dog".to_string(),"lot".to_string(),"log".to_string(),"cog".to_string()];
@@ -7,6 +9,12 @@ fn main() {
 struct Solution {}
 
 impl Solution {
+
+    //剑指 Offer 05. 替换空格
+    pub fn replace_space(s: String) -> String {
+        s.replacen(" ","%20",std::usize::MAX)
+    }
+
     //每日一题：127. 单词接龙
     pub fn ladder_length(begin_word: String, end_word: String, mut word_list: Vec<String>) -> i32 {
         //先确定 结束的单词是否在其中，不在，直接返回0

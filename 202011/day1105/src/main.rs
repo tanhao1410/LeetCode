@@ -2,13 +2,45 @@ use std::usize::MAX;
 
 fn main() {
     println!("Hello, world!");
-    let mut word_list = vec!["hot".to_string(),"dot".to_string(),"dog".to_string(),"lot".to_string(),"log".to_string(),"cog".to_string()];
-    println!("{}",Solution::ladder_length("dot".to_string(),"cog".to_string(),word_list));
+    //let mut word_list = vec!["hot".to_string(),"dot".to_string(),"dog".to_string(),"lot".to_string(),"log".to_string(),"cog".to_string()];
+    //println!("{}",Solution::ladder_length("dot".to_string(),"cog".to_string(),word_list));
+    let nums = vec![16,16,18,24,30,32];
+    println!("{:?}",Solution::two_sum(nums,48));
 }
 
 struct Solution {}
 
 impl Solution {
+
+    //剑指 Offer 57. 和为s的两个数字
+    pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
+        //1.map法，2.顺序然后从剩下的进行二分查找3.将所有数放入到一个数组中，然后，直接从数组中看对应的数是否存在。和1很类似
+        let mut res = vec![];
+        fn exist(num : i32,nums:&[i32])->bool{
+            let (mut start,mut end) = (0,nums.len() -1);
+            let mut middle = (start + end) /2;
+            while start <= end{
+                if nums[middle] == num{
+                    return true;
+                }else if nums[middle] > num{
+                    end = middle -1;
+                }else{
+                    start = middle + 1;
+                }
+                middle = (start + end) / 2;
+            }
+            false
+        }
+
+        for i in 0..nums.len()-1{
+            if exist(target - nums[i],&nums[i+1..]){
+                res.push(nums[i]);
+                res.push(target - nums[i]);
+                return res;
+            }
+        }
+        res
+    }
 
     //剑指 Offer 05. 替换空格
     pub fn replace_space(s: String) -> String {

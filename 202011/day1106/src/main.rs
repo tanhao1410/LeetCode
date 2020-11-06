@@ -7,6 +7,30 @@ struct Solution {}
 
 impl Solution {
 
+    //剑指 Offer 21. 调整数组顺序使奇数位于偶数前面
+    pub fn exchange(mut nums: Vec<i32>) -> Vec<i32> {
+        //思路：双指针
+        if nums.len() == 0{
+            return nums;
+        }
+        let (mut head,mut tail) = (0,nums.len()-1);
+        while head  < tail as i32{
+            if nums[head] % 2 == 1{
+                //奇数
+                head += 1;
+            }
+            if nums[tail] % 2 == 0{
+                tail -= 1;
+            }
+            if head < tail && nums[head] % 2 == 0 && nums[tail] % 2 == 1{
+                let temp = nums[head];
+                nums[head] = nums[tail];
+                nums[tail] = temp;
+            }
+        }
+        nums
+    }
+
     //剑指 Offer 15. 二进制中1的个数 191. 位1的个数 9 1001 2
     //n&(n−1) 解析： 二进制数字 nn 最右边的 11 变成 00 ，其余不变。
     pub fn hammingWeight(mut n: u32) -> i32 {

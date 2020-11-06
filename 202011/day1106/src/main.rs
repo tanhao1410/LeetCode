@@ -7,6 +7,32 @@ struct Solution {}
 
 impl Solution {
 
+    //剑指 Offer 61. 扑克牌中的顺子
+    pub fn is_straight(mut nums: Vec<i32>) -> bool {
+        //思路2：用一个数组来记录所有的数
+        let mut arrays = [0;14];
+        for i in nums{
+            arrays[i as usize] += 1
+        }
+        let mut zero_count = arrays[0];
+        //从第一个不是0的地方开始访问
+        let mut i = 1;
+        while arrays[i] == 0{
+            i += 1;
+        }
+        for j in 0..5{
+            if i + j == 14{
+                return zero_count == 5-j
+            }
+            if arrays[i+j] > 1{
+                return false;
+            }else if arrays[i +j] == 0{
+                zero_count -= 1;
+            }
+        }
+        zero_count == 0
+    }
+
     //剑指 Offer 21. 调整数组顺序使奇数位于偶数前面
     pub fn exchange(mut nums: Vec<i32>) -> Vec<i32> {
         //思路：双指针
@@ -14,7 +40,7 @@ impl Solution {
             return nums;
         }
         let (mut head,mut tail) = (0,nums.len()-1);
-        while head  < tail as i32{
+        while head  < tail {
             if nums[head] % 2 == 1{
                 //奇数
                 head += 1;

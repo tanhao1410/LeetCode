@@ -8,6 +8,63 @@ fn main() {
 struct Solution {}
 
 impl Solution {
+
+    //130. 被围绕的区域
+    pub fn solve(board: &mut Vec<Vec<char>>) {
+        //思路：从最外圈的O开始走，将该字母换成1，走完后，再遍历矩阵，将O换成X，1换成o即可。
+        //先找最外层的o
+        if board.is_empty() || board[0].is_empty() {
+            return;
+        }
+        let mut queue = vec![];
+        //上下左右四块
+        for i in 0..board[0].len() {
+            if board[0][i] == 'O' {
+                queue.push((0, i))
+            }
+            if board[board.len() - 1][i] == 'O' {
+                queue.push((board.len() - 1, i))
+            }
+        }
+        for i in 0..board.len() {
+            if board[i][0] == 'O' {
+                queue.push((i, 0))
+            }
+            if board[i][board[0].len() - 1] == 'O' {
+                queue.push((i, board[0].len() - 1))
+            }
+        }
+
+        while queue.len() > 0 {
+            let x = queue.pop().unwrap();
+            board[x.0][x.1] = 'o';
+            //看它的上下左右是否为O，为的话，加入队列
+            //上
+            if x.0 > 0 && board[x.0 - 1][x.1] == 'O' {
+                queue.push((x.0 - 1, x.1));
+            }
+            if x.0 < board.len() - 1 && board[x.0 + 1][x.1] == 'O' {
+                queue.push((x.0 + 1, x.1));
+            }
+            if x.1 > 0 && board[x.0][x.1 - 1] == 'O' {
+                queue.push((x.0, x.1 - 1));
+            }
+            if x.1 < board[0].len() - 1 && board[x.0][x.1 + 1] == 'O' {
+                queue.push((x.0, x.1 + 1));
+            }
+        }
+
+        for i in board {
+            for j in i {
+                if *j == 'O' {
+                    *j = 'X';
+                } else if *j == 'o' {
+                    *j = 'O';
+                }
+            }
+        }
+    }
+
     //973. 最接近原点的 K 个点
     pub fn k_closest(points: Vec<Vec<i32>>, k: i32) -> Vec<Vec<i32>> {
         //思路：用一个vec记录最接近的点，发现更小的后，清空原来的，加入新的

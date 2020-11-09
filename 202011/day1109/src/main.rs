@@ -9,6 +9,12 @@ struct Solution {}
 
 impl Solution {
 
+    //剑指 Offer 64. 求1+2+…+n
+    pub fn sum_nums(mut n: i32) -> i32 {
+        n > 0 && (n += Solution::sum_nums(n - 1)) == ();
+        n
+    }
+
     //剑指 Offer 17. 打印从1到最大的n位数
     pub fn print_numbers(n: i32) -> Vec<i32> {
         let (mut res,mut max) = (vec![],0);

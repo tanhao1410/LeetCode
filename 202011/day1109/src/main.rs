@@ -9,6 +9,36 @@ struct Solution {}
 
 impl Solution {
 
+    //139. 单词拆分
+    pub fn word_break(s: String, word_dict: Vec<String>) -> bool {
+        //思路：递归法，先 截取一个可以截的，剩下的继续调用。
+        //可能会存在多个可以截的，循环即可。
+        fn word_break2(s: String, word_set: &std::collections::HashSet<String>) -> bool {
+            if s.len() == 0 || word_set.contains(&s){
+                return true;
+            }
+            for i in 0..s.len() {
+                if word_set.contains(&s[..i].to_string()) && word_break2(s[i..].to_string(), word_set) {
+                    return true;
+                }
+            }
+            false
+        }
+        let mut word_set = std::collections::HashSet::new();
+        for i in word_dict.clone() {
+            word_set.insert(i);
+        }
+        //对于可以由其他单词组成的单词，不应该再放进去
+        for i in word_dict{
+            word_set.remove(&i);
+            if !word_break2(i.clone(),&word_set){
+                word_set.insert(i);
+            }
+        }
+
+        word_break2(s,&word_set)
+    }
+
     //130. 被围绕的区域
     pub fn solve(board: &mut Vec<Vec<char>>) {
         //思路：从最外圈的O开始走，将该字母换成1，走完后，再遍历矩阵，将O换成X，1换成o即可。

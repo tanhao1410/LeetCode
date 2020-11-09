@@ -9,6 +9,20 @@ struct Solution {}
 
 impl Solution {
 
+    //剑指 Offer 17. 打印从1到最大的n位数
+    pub fn print_numbers(n: i32) -> Vec<i32> {
+        let (mut res,mut max) = (vec![],0);
+        //求最大的n+1位数
+        let mut max = 1;
+        for i in 0..n{
+            max *= 10
+        }
+        for i in 1 .. max{
+            res.push(i);
+        }
+        res
+    }
+
     //139. 单词拆分
     pub fn word_break(s: String, word_dict: Vec<String>) -> bool {
         //思路：递归法，先 截取一个可以截的，剩下的继续调用。

@@ -44,6 +44,32 @@ use std::cell::RefCell;
 
 impl Solution {
 
+    //199. 二叉树的右视图
+    pub fn right_side_view(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        //思路：层次遍历可以解决，
+        let mut res = vec![];
+        let mut queue = vec![];
+        if let Some(node) = root {
+            queue.push(node);
+        }
+        while !queue.is_empty() {
+            let queue_size = queue.len();
+            res.push(queue[queue_size - 1].borrow_mut().val);
+            for i in 0..queue_size {
+                let left = queue[i].borrow_mut().left.clone();
+                let right = queue[i].borrow_mut().right.clone();
+                if left.is_some() {
+                    queue.push(left.unwrap());
+                }
+                if right.is_some() {
+                    queue.push(right.unwrap());
+                }
+            }
+            queue = queue[queue_size..].to_vec();
+        }
+        res
+    }
+
     //面试题 04.03. 特定深度节点链表
     pub fn list_of_depth(tree: Option<Rc<RefCell<TreeNode>>>) -> Vec<Option<Box<ListNode>>> {
 

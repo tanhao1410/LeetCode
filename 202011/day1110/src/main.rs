@@ -44,6 +44,46 @@ use std::cell::RefCell;
 
 impl Solution {
 
+    //剑指 Offer 54. 二叉搜索树的第k大节点
+    pub fn kth_largest(root: Option<Rc<RefCell<TreeNode>>>, k: i32) -> i32 {
+
+        //思路1：根据左右个数来求
+        // fn count(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        //     if let Some(node) = root {
+        //         count(node.borrow_mut().left.clone()) + count(node.borrow_mut().right.clone()) + 1
+        //     } else {
+        //         0
+        //     }
+        // }
+        // let (mut left_count, mut right_count) = (0, 0);
+        // if let Some(node) = root{
+        //     left_count = count(node.borrow_mut().left.clone());
+        //     right_count = count(node.borrow_mut().right.clone());
+        //     if left_count < k{
+        //         Solution::kth_largest(node.borrow_mut().right.clone(),k - left_count)
+        //     }else if left_count == k{
+        //         return node.borrow_mut().val;
+        //     }else{
+        //         Solution::kth_largest(node.borrow_mut().left.clone(),k)
+        //     }
+        // }else{
+        //     0
+        // }
+        //思路2：转换成vec![]
+        fn dfs(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+            let mut res = vec![];
+            if let Some(node) = root {
+                res.append(&mut dfs(node.borrow_mut().right.clone()));
+                res.push(node.borrow_mut().val);
+                res.append(&mut dfs(node.borrow_mut().left.clone()));
+            }
+            res
+        }
+        dfs(root)[k as usize - 1]
+
+        //思路3：反中序遍历，第K个结点即可，不用专门用个数组来存
+    }
+
     //每日一题：31. 下一个排列
     pub fn next_permutation(nums: &mut Vec<i32>) {
         //思路：就是找对应的数值位，然后后面的按顺序摆放即可。

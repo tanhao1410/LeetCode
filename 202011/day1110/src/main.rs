@@ -44,6 +44,40 @@ use std::cell::RefCell;
 
 impl Solution {
 
+    //面试题 04.03. 特定深度节点链表
+    pub fn list_of_depth(tree: Option<Rc<RefCell<TreeNode>>>) -> Vec<Option<Box<ListNode>>> {
+
+        //层次遍历
+        let mut res = vec![];
+        let mut queue = vec![];
+        if tree.is_some() {
+            queue.push(tree.unwrap());
+        }
+        while !queue.is_empty() {
+            let queue_size = queue.len();
+            let mut head = None;
+            for i in 0..queue_size {
+                let mut tree_node = queue[i].clone();
+                let mut list_node = ListNode::new(queue[queue_size - 1 - i].borrow_mut().val);
+                if head.is_none() {
+                    head = Some(Box::new(list_node));
+                } else {
+                    list_node.next = head;
+                    head = Some(Box::new(list_node));
+                }
+                if tree_node.borrow_mut().left.is_some() {
+                    queue.push(tree_node.borrow_mut().left.clone().unwrap());
+                }
+                if tree_node.borrow_mut().right.is_some() {
+                    queue.push(tree_node.borrow_mut().right.clone().unwrap());
+                }
+            }
+            queue = queue[queue_size..].to_vec();
+            res.push(head);
+        }
+        res
+    }
+
     //200. 岛屿数量
     pub fn num_islands(grid: Vec<Vec<char>>) -> i32 {
         //思路：先找到一个1，然后，将与它相连的都变为0，继续走，直到结束。

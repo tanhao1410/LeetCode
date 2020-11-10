@@ -44,6 +44,24 @@ use std::cell::RefCell;
 
 impl Solution {
 
+    //剑指 Offer 42. 连续子数组的最大和
+    pub fn max_sub_array(nums: Vec<i32>) -> i32 {
+        //动态规划算法，以该数字结尾的最大值
+        let mut dp = nums.clone();
+        let mut res = std::i32::MIN;
+        for i in 1..nums.len() {
+            if dp[i - 1] > 0 {
+                dp[i] = dp[i - 1] + nums[i];
+            }
+        }
+        for i in dp{
+            if res < i{
+                res = i
+            }
+        }
+        res
+    }
+
     //剑指 Offer 28. 对称的二叉树
     pub fn is_symmetric(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
         //思路：按层次进行判别呢？中心距

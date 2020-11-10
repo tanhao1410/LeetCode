@@ -46,6 +46,24 @@ use std::collections::hash_map::VacantEntry;
 
 impl Solution {
 
+    //剑指 Offer 55 - II. 平衡二叉树
+    pub fn is_balanced(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        fn balanced(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+            if root.is_some() {
+                let left = balanced(root.clone().unwrap().borrow_mut().left.clone());
+                let right = balanced(root.clone().unwrap().borrow_mut().right.clone());
+                if left == -1 || right == -1 || left - right >= 2 || right - left >= 2 {
+                    return -1;
+                }
+                if left > right {
+                    return left + 1;
+                }
+                return right + 1;
+            }
+            0
+        }
+        balanced(root) >= 0
+    }
 
     //222. 完全二叉树的节点个数
     pub fn count_nodes(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {

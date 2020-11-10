@@ -44,6 +44,37 @@ use std::cell::RefCell;
 
 impl Solution {
 
+    //200. 岛屿数量
+    pub fn num_islands(grid: Vec<Vec<char>>) -> i32 {
+        //思路：先找到一个1，然后，将与它相连的都变为0，继续走，直到结束。
+        let mut res = 0;
+        let mut grid2 = grid.clone();
+        fn set_zero(i: usize, j: usize, grid2: &mut Vec<Vec<char>>) {
+            grid2[i][j] = '0';
+            if i + 1 < grid2.len() && grid2[i + 1][j] == '1' {
+                set_zero(i + 1, j, grid2);
+            }
+            if i as i32 - 1 >= 0 && grid2[i - 1][j] == '1' {
+                set_zero(i - 1, j, grid2);
+            }
+            if j as i32 - 1  >= 0 && grid2[i][j - 1] == '1' {
+                set_zero(i, j - 1, grid2);
+            }
+            if j + 1 < grid2[0].len() && grid2[i][j + 1] == '1' {
+                set_zero(i, j + 1, grid2);
+            }
+        }
+        for i in 0..grid.len() {
+            for j in 0..grid[0].len() {
+                if grid[i][j] == '1' && grid2[i][j] == '1' {
+                    res += 1;
+                    set_zero(i, j, &mut grid2);
+                }
+            }
+        }
+        res
+    }
+
     //剑指 Offer 42. 连续子数组的最大和
     pub fn max_sub_array(nums: Vec<i32>) -> i32 {
         //动态规划算法，以该数字结尾的最大值

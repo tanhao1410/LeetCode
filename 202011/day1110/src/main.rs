@@ -1,6 +1,7 @@
 fn main() {
     println!("Hello, world!");
-    println!("{:?}",Solution::next_permutation(&mut vec![3, 2, 1]));
+    //println!("{:?}",Solution::next_permutation(&mut vec![3, 2, 1]));
+    println!("{}", Solution::compare_version("1.00002".to_string(), "001.12.0.01.0.0.1".to_string()))
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -41,8 +42,31 @@ struct Solution {}
 
 use std::rc::Rc;
 use std::cell::RefCell;
+use std::collections::hash_map::VacantEntry;
 
 impl Solution {
+
+
+    //222. 完全二叉树的节点个数
+    pub fn count_nodes(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        //思路：最简单的思路，遍历即可。
+        let mut res = 0;
+        let mut queue = vec![];
+        if let Some(node) = root{
+            queue.push(node);
+        }
+        while !queue.is_empty(){
+            let node = queue.pop().unwrap();
+            res += 1;
+            if node.borrow_mut().left.is_some(){
+                queue.push(node.borrow_mut().left.clone().unwrap());
+            }
+            if node.borrow_mut().right.is_some(){
+                queue.push(node.borrow_mut().right.clone().unwrap());
+            }
+        }
+        res
+    }
 
     //199. 二叉树的右视图
     pub fn right_side_view(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
@@ -117,7 +141,7 @@ impl Solution {
             if i as i32 - 1 >= 0 && grid2[i - 1][j] == '1' {
                 set_zero(i - 1, j, grid2);
             }
-            if j as i32 - 1  >= 0 && grid2[i][j - 1] == '1' {
+            if j as i32 - 1 >= 0 && grid2[i][j - 1] == '1' {
                 set_zero(i, j - 1, grid2);
             }
             if j + 1 < grid2[0].len() && grid2[i][j + 1] == '1' {
@@ -145,8 +169,8 @@ impl Solution {
                 dp[i] = dp[i - 1] + nums[i];
             }
         }
-        for i in dp{
-            if res < i{
+        for i in dp {
+            if res < i {
                 res = i
             }
         }
@@ -196,7 +220,6 @@ impl Solution {
 
     //剑指 Offer 54. 二叉搜索树的第k大节点
     pub fn kth_largest(root: Option<Rc<RefCell<TreeNode>>>, k: i32) -> i32 {
-
         //思路1：根据左右个数来求
         // fn count(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
         //     if let Some(node) = root {
@@ -238,39 +261,39 @@ impl Solution {
     pub fn next_permutation(nums: &mut Vec<i32>) {
         //思路：就是找对应的数值位，然后后面的按顺序摆放即可。
         let nums_size = nums.len();
-        if nums_size < 2{
+        if nums_size < 2 {
             return;
         }
-        let mut i = nums_size as i32- 2;
-        while i >= 0{
+        let mut i = nums_size as i32 - 2;
+        while i >= 0 {
             //从后面找到一个比它大的最小的一个数
-            let mut more_min = i  as usize;
-            for j in i  as usize.. nums_size{
-                if nums[j] > nums[i as usize]{
-                    if more_min == i  as usize{
+            let mut more_min = i as usize;
+            for j in i as usize..nums_size {
+                if nums[j] > nums[i as usize] {
+                    if more_min == i as usize {
                         more_min = j;
-                    }else if nums[j ] < nums[more_min ]{
+                    } else if nums[j] < nums[more_min] {
                         more_min = j;
                     }
                 }
             }
-            if more_min != i  as usize{
+            if more_min != i as usize {
                 //把该数放置在i位置上，后面按顺序摆放即可
                 let temp = nums[i as usize];
-                nums[i as usize] = nums[more_min ];
-                nums[more_min ] = temp;
+                nums[i as usize] = nums[more_min];
+                nums[more_min] = temp;
                 //后面的进行排序
-                for j in i  as usize + 1 .. nums_size-1{
-                    for k in j +1 ..nums_size{
-                        if nums[k ] < nums[j ]{
-                            let temp = nums[j ];
-                            nums[j ] = nums[k];
-                            nums[k ] = temp;
+                for j in i as usize + 1..nums_size - 1 {
+                    for k in j + 1..nums_size {
+                        if nums[k] < nums[j] {
+                            let temp = nums[j];
+                            nums[j] = nums[k];
+                            nums[k] = temp;
                         }
                     }
                 }
                 return;
-            }else{
+            } else {
                 //若不存在这样的数，则 i -= 1;如果直到结束都不存在,说明数组是递减的，反转即可。
                 i -= 1;
             }

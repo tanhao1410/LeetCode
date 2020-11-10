@@ -44,6 +44,47 @@ use std::cell::RefCell;
 
 impl Solution {
 
+    //剑指 Offer 28. 对称的二叉树
+    pub fn is_symmetric(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        //思路：按层次进行判别呢？中心距
+        let mut queue = vec![];
+        let mut queue_dis = vec![];
+        if let Some(node) = root {
+            queue.push(node);
+            queue_dis.push(0);
+        }
+        let mut is_root = true;
+        while !queue.is_empty() {
+            let queue_size = queue.len();
+            if queue_size % 2 != 0 && !is_root {//需 指定不是root的情况
+                return false;
+            }
+            is_root = false;
+            for i in 0..queue_size {
+                let node = queue[i].clone();
+                let node_val = node.borrow_mut().val;
+                let other_val = queue[queue_size - 1 - i].borrow_mut().val;
+                let node_dis = queue_dis[i];
+                if node.borrow_mut().left.is_some() {
+                    queue.push(node.borrow_mut().left.clone().unwrap());
+                    queue_dis.push(node_dis - 1);
+                }
+                if node.borrow_mut().right.is_some() {
+                    queue.push(node.borrow_mut().right.clone().unwrap());
+                    queue_dis.push(node_dis + 1);
+                }
+                if node_val != other_val
+                    || -node_dis != queue_dis[queue_size - 1 - i] {
+                    return false;
+                }
+            }
+            queue = queue[queue_size..].to_vec();
+            queue_dis = queue_dis[queue_size..].to_vec();
+        }
+        true
+    }
+
+
     //剑指 Offer 54. 二叉搜索树的第k大节点
     pub fn kth_largest(root: Option<Rc<RefCell<TreeNode>>>, k: i32) -> i32 {
 

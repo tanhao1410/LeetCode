@@ -6,6 +6,66 @@ struct Solution{}
 
 impl Solution{
 
+    //221. 最大正方形  [["1"]]
+    pub fn maximal_square(matrix: Vec<Vec<char>>) -> i32 {
+
+        if matrix.len() == 0 || matrix[0].len()==0{
+            return 0;
+        }
+
+        fn sqr(num :i32)->usize{
+            for i in 1..num{
+                if i * i == num{
+                    return i as usize;
+                }
+            }
+            1
+        }
+
+        let mut res = 0;
+
+        let mut dp = Vec::new();
+        for i in matrix {
+            let mut row = vec![];
+            for j in i {
+                if j == '0' {
+                    row.push(0);
+                } else {
+                    row.push(1);
+                }
+            }
+            dp.push(row);
+        }
+
+        //思路：先从第一行开始和第一列开始，0 即0,1即1
+        for i in 0..dp.len() {
+            for j in 0..dp[0].len() {
+                if i > 0 && j > 0 && dp[i][j] != 0 && dp[i - 1][j - 1] != 0 {
+
+                    //看它的左上角
+                    let pre_width = sqr(dp[i - 1][j - 1]);
+                    //往左走，和往上走，
+                    let mut temp = 0;
+                    while temp < pre_width && dp[i][j - temp - 1] != 0 {
+                        temp += 1;
+                    }
+                    let mut temp2 = 0;
+                    while temp2 < pre_width && dp[i - temp2 - 1][j] != 0 {
+                        temp2 += 1;
+                    }
+                    if temp < temp2{
+                        dp[i][j] = ((1 + temp) * (1 + temp)) as i32;
+                    }else{
+                        dp[i][j] = ((1 + temp2) * (1 + temp2)) as i32;
+                    }
+                }
+                if dp[i][j] > res{
+                    res = dp[i][j];
+                }
+            }
+        }
+        res as i32
+    }
 
     //165. 比较版本号
     pub fn compare_version(version1: String, version2: String) -> i32 {

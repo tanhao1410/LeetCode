@@ -1,21 +1,52 @@
 fn main() {
     println!("Hello, world!");
+    print!("{}", Solution::trap(vec![4, 2, 0, 3, 2, 5]));
 }
 
-struct Solution{}
+struct Solution {}
 
-impl Solution{
+impl Solution {
+    //42. 接雨水
+    pub fn trap(height: Vec<i32>) -> i32 {
+        let mut res = 0;
+        let mut i = 0;
+        while i < height.len() {
+            let cur = height[i];
+            //从后面找到一个比它大的或相等的
+            let mut j = i + 1;
+            let mut max = j;
+            while j < height.len() && height[j] < cur {
+                if height[j] > height[max] {
+                    max = j;
+                }
+                j += 1;
+            }
+            if j != height.len() {
+                max = j;
+            }
+            if max == height.len() {
+                break;
+            }
+            //如果一直走到最后都没找到的话，就从后面找一个最大的数，然后求区间即可。
+            let h = if height[max] > cur { cur } else { height[max] };
+            res += (max - i) as i32 * h;
+            for k in i + 1..max + 1 {
+                res -= height[k];
+            }
+            i = max;
+        }
+        res
+    }
 
     //221. 最大正方形  [["1"]]
     pub fn maximal_square(matrix: Vec<Vec<char>>) -> i32 {
-
-        if matrix.len() == 0 || matrix[0].len()==0{
+        if matrix.len() == 0 || matrix[0].len() == 0 {
             return 0;
         }
 
-        fn sqr(num :i32)->usize{
-            for i in 1..num{
-                if i * i == num{
+        fn sqr(num: i32) -> usize {
+            for i in 1..num {
+                if i * i == num {
                     return i as usize;
                 }
             }
@@ -53,13 +84,13 @@ impl Solution{
                     while temp2 < pre_width && dp[i - temp2 - 1][j] != 0 {
                         temp2 += 1;
                     }
-                    if temp < temp2{
+                    if temp < temp2 {
                         dp[i][j] = ((1 + temp) * (1 + temp)) as i32;
-                    }else{
+                    } else {
                         dp[i][j] = ((1 + temp2) * (1 + temp2)) as i32;
                     }
                 }
-                if dp[i][j] > res{
+                if dp[i][j] > res {
                     res = dp[i][j];
                 }
             }

@@ -4,6 +4,29 @@ fn main() {
 
 impl Solution {
 
+    //134. 加油站
+    pub fn can_complete_circuit(gas: Vec<i32>, cost: Vec<i32>) -> i32 {
+
+        //先找一个可以开始的起点，即cost[i]<=gas[i]
+        for i in 0..gas.len(){
+            //可以开始
+            if cost[i]  <= gas[i]{
+                let mut all = gas[i] - cost[i];
+                let mut next = (i + 1) % gas.len();
+                //如果油不够了，或完成了一圈退出循环
+                while all >= 0 && next != i{
+                    all += gas[next];
+                    all -= cost[next];
+                    next = (next+1) % gas.len()
+                }
+                if all >= 0 {
+                    return i as i32;
+                }
+            }
+        }
+        -1
+    }
+
     //223. 矩形面积
     pub fn compute_area(a: i32, b: i32, c: i32, d: i32, e: i32, f: i32, g: i32, h: i32) -> i32 {
         let all = (c - a).abs() * (d - b).abs() + (g - e).abs() * (h - f).abs();

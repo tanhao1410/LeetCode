@@ -4,6 +4,41 @@ fn main() {
 
 impl Solution {
 
+    //150. 逆波兰表达式求值
+    pub fn eval_rpn(tokens: Vec<String>) -> i32 {
+        use std::str::FromStr;
+        //遇到数字则入栈；遇到算符则取出栈顶两个数字进行计算，并将结果压入栈中
+        let mut stack = vec![];
+        for i in tokens {
+            match i.as_str() {
+                "+" => {
+                    let num2 = stack.pop().unwrap();
+                    let num1 = stack.pop().unwrap();
+                    stack.push(num1 + num2);
+                }
+                "-" => {
+                    let num2 = stack.pop().unwrap();
+                    let num1 = stack.pop().unwrap();
+                    stack.push(num1 - num2);
+                }
+                "*" => {
+                    let num2 = stack.pop().unwrap();
+                    let num1 = stack.pop().unwrap();
+                    stack.push(num1 * num2);
+                }
+                "/" => {
+                    let num2 = stack.pop().unwrap();
+                    let num1 = stack.pop().unwrap();
+                    stack.push(num1 / num2);
+                }
+                num @ _ => {
+                    stack.push(i32::from_str(num).unwrap());
+                }
+            }
+        }
+        stack.pop().unwrap()
+    }
+
     //187. 重复的DNA序列
     pub fn find_repeated_dna_sequences(s: String) -> Vec<String> {
         //用hashmap暴力解决

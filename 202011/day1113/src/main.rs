@@ -4,6 +4,57 @@ fn main() {
 
 impl Solution {
 
+    //68. 文本左右对齐
+    pub fn full_justify(words: Vec<String>, max_width: i32) -> Vec<String> {
+        let mut res = vec![];
+        let mut i = 0;
+        while i < words.len() {
+            //纯字符串长度
+            let mut new_len = words[i].len();
+            //能加入到哪一个字符串，不包括j
+            let mut j = i + 1;
+            while j < words.len() && new_len + words[j].len() + j - i <= max_width as usize {
+                new_len += words[j].len();
+                j += 1;
+            }
+            let mut new_str = words[i].clone();
+            //最后一行特殊处理//只放一个单词
+            if j >= words.len() || j == i + 1 {
+                if j >= words.len() {
+                    for k in i + 1..words.len() {
+                        new_str.push(' ');
+                        new_str += &words[k];
+                    }
+                }
+                //后面补空格
+                let need_space_count = max_width  - new_str.len() as i32;
+                for i in 0..need_space_count {
+                    new_str.push(' ');
+                }
+            } else {
+                //平均分配空格，前面的多分点
+                let count = (max_width as usize - new_len) / (j - i - 1);
+                let mut last_count = (max_width as usize - new_len) % (j - i - 1);
+                //前面last_count多一个，后面的没多
+                for k in i + 1..j {
+                    //倒数第二个字母加空格
+                    if last_count != 0 {
+                        new_str.push(' ');
+                        last_count -= 1;
+                    }
+                    //加空格
+                    for _ in 0..count {
+                        new_str.push(' ');
+                    }
+                    new_str += &words[k];
+                }
+            }
+            res.push(new_str);
+            i = j;
+        }
+        res
+    }
+
     //153. 寻找旋转排序数组中的最小值
     pub fn find_min(nums: Vec<i32>) -> i32 {
         //数组大小为1，直接返回即可

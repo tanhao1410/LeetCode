@@ -4,6 +4,30 @@ fn main() {
 
 impl Solution {
 
+    //153. 寻找旋转排序数组中的最小值
+    pub fn find_min(nums: Vec<i32>) -> i32 {
+        //数组大小为1，直接返回即可
+        if nums.len() == 1 {
+            return nums[0];
+        }
+        //最后一个比第一个大，说明是有序的，返回第一个数即可
+        if nums[nums.len() - 1] > nums[0] {
+            return nums[0];
+        }
+
+        let middle = nums[(nums.len() - 1) / 2];
+        //中间的数比前面都要大，说明前面都是比较大的了。忽略掉即可
+        if middle > nums[0] {
+            Solution::find_min(nums[(nums.len() - 1) / 2 + 1..].to_vec())
+        } else if middle == nums[0] {
+            //中间的数与第一个数相同，说明此时的长度为2，直接返回第二个数即可。
+            nums[1]
+        } else {
+            //中间的数比第一个数小，说明，最小的数在前面的范围里，该范围包括中间的数
+            Solution::find_min(nums[1..(nums.len() - 1) / 2 + 1].to_vec())
+        }
+    }
+
     //150. 逆波兰表达式求值
     pub fn eval_rpn(tokens: Vec<String>) -> i32 {
         use std::str::FromStr;

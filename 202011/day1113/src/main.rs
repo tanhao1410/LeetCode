@@ -3,6 +3,34 @@ fn main() {
 }
 
 impl Solution {
+
+    //187. 重复的DNA序列
+    pub fn find_repeated_dna_sequences(s: String) -> Vec<String> {
+        //用hashmap暴力解决
+        let mut res = vec![];
+        if s.len() <= 10 {
+            return res;
+        }
+        let mut m = std::collections::HashMap::new();
+        let mut i = 10;
+        let s = s.as_bytes();
+        while i <= s.len() {
+            //截取一个字符串
+            let sub_s = String::from_utf8(s[i - 10..i].to_vec()).unwrap();
+            if let Some(count) = m.get(&sub_s) {
+                if *count == 1 {
+                    res.push(sub_s.clone());
+                }
+                m.insert(sub_s, 2);
+            } else {
+                m.insert(sub_s, 1);
+            }
+            i += 1;
+        }
+        res
+    }
+
+
     //152. 乘积最大子数组
     pub fn max_product(nums: Vec<i32>) -> i32 {
 

@@ -26,4 +26,39 @@ impl Solution {
         }
         arr1
     }
+
+    //面试题 01.08. 零矩阵
+    pub fn set_zeroes(matrix: &mut Vec<Vec<i32>>) {
+        if matrix.len() == 0 || matrix[0].len() == 0 {
+            return;
+        }
+        let m = matrix.len();
+        let n = matrix[0].len();
+        let mut row = vec![1; m];
+        let mut col = vec![1; n];
+        for i in 0..m {
+            for j in 0..n {
+                if matrix[i][j] == 0 {
+                    row[i] = 0;
+                    col[j] = 0;
+                }
+            }
+        }
+
+        for i in 0..m {
+            if row[i] == 0 {
+                for j in 0..n {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+
+        for i in 0..n {
+            if col[i] == 0 {
+                for j in 0..m {
+                    matrix[j][i] = 0;
+                }
+            }
+        }
+    }
 }

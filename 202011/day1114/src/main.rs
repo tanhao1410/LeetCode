@@ -1,5 +1,6 @@
 fn main() {
     println!("Hello, world!");
+    Solution::smallest_k(vec![1, 3, 5, 7, 2, 4, 6, 8], 4);
 }
 
 struct Solution {}
@@ -60,5 +61,61 @@ impl Solution {
                 }
             }
         }
+    }
+
+    //剑指 Offer 50. 第一个只出现一次的字符
+    pub fn first_uniq_char(s: String) -> char {
+        //思路：用一个数组记录所有的字母出现的次数。
+        let mut res = ' ';
+        let mut chars = vec![0;27];
+        for i in  s.chars(){
+            //看i之前是否出现过
+            let x = i as usize- 'a' as usize;
+            chars[x] += 1;
+        }
+        for i in s.chars(){
+            let x = i as usize- 'a' as usize;
+            if chars[x] == 1{
+                return i;
+            }
+        }
+        res
+    }
+
+    //面试题 17.14. 最小K个数
+    pub fn smallest_k(mut arr: Vec<i32>, k: i32) -> Vec<i32> {
+        fn f(arr: &mut Vec<i32>, mut start: usize, mut end: usize, k: usize) {
+
+            let first = arr[start];
+            let start1 = start;
+            start += 1;
+            while end > start {
+                while start < arr.len() && arr[start] <= first {
+                    start += 1;
+                }
+                while arr[end] > first {
+                    end -= 1;
+                }
+                if end > start {
+                    let temp = arr[end];
+                    arr[end] = arr[start];
+                    arr[start] = temp;
+                }
+            }
+            arr[start1] = arr[end];
+            arr[end] = first;
+
+            if end - start1 == k {
+                return;
+            } else if end - start1 > k {
+                f(arr, 0, end - 1, k);
+            } else {
+                f(arr, end + 1, arr.len() - 1, k - end - 1);
+            }
+        }
+
+        let max = arr.len() - 1;
+        f(&mut arr, 0, max, k as usize);
+        return arr[..k as usize].to_vec();
     }
 }

@@ -4,6 +4,42 @@
  */
 public class Solution {
 
+    public static class Result{
+        public int code;
+        public TreeNode res;
+    }
+
+    //剑指 Offer 68 - I. 二叉搜索树的最近公共祖先
+    public Result visit(TreeNode root,int v0,int v1){
+        Result res = new Result();
+        res.code = -1;
+        if(root != null){
+            Result l = this.visit(root.left,v0,v1);
+            Result r = this.visit(root.right,v0,v1);
+            if (l.code == 2){
+                res.code = 2;
+                res.res = l.res;
+            }else if (r.code == 2){
+                res.code = 2;
+                res.res = r.res;
+            }else if ((root.val == v0 && (l.code == 1 || r.code ==1 ))||(l.code == 1 && r.code == 0) ||(l.code == 0 && r.code == 1) ||(root.val == v1 && (l.code == 0 || r.code ==0)) ){
+                res.code = 2;
+                res.res = root;
+            }else if (root.val == v0 || l.code == 0 || r.code == 0){
+                res.code = 0;
+            }else if(root.val == v1 || l.code == 1|| r.code == 1){
+                res.code = 1;
+            }else{
+                res.code = -1;
+            }
+        }
+        return res;
+    }
+
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        return this.visit(root,p.val,q.val).res;
+    }
+
     //剑指 Offer 31. 栈的压入、弹出序列
     public boolean validateStackSequences(int[] pushed, int[] popped) {
         Stack<Integer> stack = new Stack();

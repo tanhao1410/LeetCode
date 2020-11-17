@@ -4,6 +4,79 @@
  */
 public class Solution {
 
+    //剑指 Offer 37. 序列化二叉树
+    public String serialize(TreeNode root) {
+        StringBuilder res = new StringBuilder("[");
+        //层次遍历
+        List<TreeNode> queue = new ArrayList<TreeNode>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            //出队
+            TreeNode first = queue.remove(0);
+            if (first != null) {
+                res.append(first.val).append(",");
+                queue.add(first.left);
+                queue.add(first.right);
+            } else {
+                res.append("null").append(",");
+            }
+        }
+
+        //最后多余的null需要处理下
+        int endIndex = res.length() - 1;
+        while ("null,".contains(res.charAt(endIndex) + "")) {
+            endIndex -= 1;
+        }
+        if (endIndex == 0) {
+            endIndex = res.length() - 2;
+        }
+
+        return res.substring(0, endIndex + 1) + "]";
+    }
+
+    public TreeNode createNode(String value) {
+        if ("null".equals(value)) {
+            return null;
+        }
+        return new TreeNode(Integer.parseInt(value));
+    }
+
+    // Decodes your encoded data to tree.[1,2,3,null,null,4,5]
+    public TreeNode deserialize(String data) {
+        data = data.substring(1, data.length() - 1);
+        String[] values = data.split(",");
+        TreeNode root = createNode(values[0]);
+        List<TreeNode> queue = new ArrayList<TreeNode>();
+
+        if (root != null) {
+            queue.add(root);
+        }
+        int i = 1;
+        while (!queue.isEmpty()) {
+            //从队列中取出这一排的所有的
+            int queueSize = queue.size();
+            //依次取出下一层的二倍数量的字符串
+            for (int j = 0; j < queueSize; j++) {
+                TreeNode head = queue.remove(0);
+                if (i < values.length) {
+                    TreeNode left = createNode(values[i++]);
+                    head.left = left;
+                    if (left != null) {
+                        queue.add(left);
+                    }
+                }
+                if (i < values.length) {
+                    TreeNode right = createNode(values[i++]);
+                    head.right = right;
+                    if (right != null) {
+                        queue.add(right);
+                    }
+                }
+            }
+        }
+        return root;
+    }
+
     public static class Result{
         public int code;
         public TreeNode res;

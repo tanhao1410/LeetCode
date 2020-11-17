@@ -4,6 +4,30 @@ fn main() {
 }
 
 impl Solution {
+
+    //剑指 Offer 31. 栈的压入、弹出序列
+    pub fn validate_stack_sequences(pushed: Vec<i32>, popped: Vec<i32>) -> bool {
+        let mut stack = vec![];
+        let (mut i ,mut j) = (0,0);
+        while i < popped.len() && (j < pushed.len() || !stack.is_empty()){
+            if stack.is_empty(){
+                stack.push(pushed[j]);
+                j += 1;
+            }
+            while *stack.last().unwrap() != popped[i] && j < pushed.len(){
+                stack.push(pushed[j]);
+                j += 1;
+            }
+            if *stack.last().unwrap() == popped[i]{
+                stack.pop();
+                i += 1;
+            }else{
+                return false;
+            }
+        }
+        i == popped.len()
+    }
+
     //每日一题：1030. 距离顺序排列矩阵单元格
     pub fn all_cells_dist_order(r: i32, c: i32, r0: i32, c0: i32) -> Vec<Vec<i32>> {
         let mut res = vec![vec![r0, c0]];

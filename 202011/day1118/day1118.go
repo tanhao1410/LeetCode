@@ -15,6 +15,19 @@ type TreeNode struct {
 	Right *TreeNode
 }
 
+//剑指 Offer 55 - I. 二叉树的深度
+func maxDepth(root *TreeNode) int {
+	if root == nil {
+		return 0
+	}
+	left := maxDepth(root.Left)
+	right := maxDepth(root.Right)
+	if left > right {
+		return left + 1
+	}
+	return right + 1
+}
+
 //剑指 Offer 27. 二叉树的镜像
 func mirrorTree(root *TreeNode) *TreeNode {
 	if root != nil {

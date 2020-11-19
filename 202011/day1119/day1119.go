@@ -1,12 +1,36 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
 
 func main() {
 	//fmt.Println(calculate("3 *1 /2"))
+	fmt.Println(lengthOfLIS([]int{10, 9, 2, 5, 3, 7, 101, 180}))
+}
+
+//300. 最长上升子序列
+func lengthOfLIS(nums []int) int {
+	//以自己为结尾的最大子序列
+	res := 0
+	dp := make([]int, len(nums))
+	for i := 0; i < len(nums); i++ {
+		dp[i] = 1
+		if res < dp[i] {
+			res = dp[i]
+		}
+		for j := 0; j < i; j++ {
+			if nums[j] < nums[i] && dp[j]+1 > dp[i] {
+				dp[i] = dp[j] + 1
+				if dp[i] > res {
+					res = dp[i]
+				}
+			}
+		}
+	}
+	return res
 }
 
 //227. 基本计算器 II

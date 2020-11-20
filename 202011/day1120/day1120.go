@@ -4,6 +4,51 @@ func main() {
 
 }
 
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+//剑指 Offer 25. 合并两个排序的链表
+func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
+	var head *ListNode
+	var p *ListNode
+	p1, p2 := l1, l2
+	for p1 != nil && p2 != nil {
+		if p1.Val > p2.Val {
+			if head == nil {
+				head, p = p2, p2
+			} else {
+				p.Next = p2
+				p = p2
+			}
+			p2 = p2.Next
+		} else {
+			if head == nil {
+				head, p = p1, p1
+			} else {
+				p.Next = p1
+				p = p1
+			}
+			p1 = p1.Next
+		}
+	}
+	if p1 != nil {
+		if p == nil {
+			return p1
+		}
+		p.Next = p1
+	}
+	if p2 != nil {
+		if p == nil {
+			return p2
+		}
+		p.Next = p2
+	}
+
+	return head
+}
+
 //面试题 03.05. 栈排序
 type SortedStack struct {
 	Stack []int

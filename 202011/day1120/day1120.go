@@ -4,6 +4,49 @@ func main() {
 
 }
 
+//面试题 03.05. 栈排序
+type SortedStack struct {
+	Stack []int
+}
+
+func Constructor2() SortedStack {
+	return SortedStack{
+		Stack: []int{},
+	}
+}
+
+func (this *SortedStack) Push(val int) {
+	if len(this.Stack) == 0 || this.Peek() >= val {
+		this.Stack = append(this.Stack, val)
+	} else {
+		//需要将该数插入到合适的位置
+		this.Stack = append(this.Stack, 0)
+		index := len(this.Stack) - 2 //原来的倒数第一个数
+		for ; index >= 0 && this.Stack[index] < val; index-- {
+			this.Stack[index+1] = this.Stack[index]
+		}
+		this.Stack[index+1] = val
+	}
+}
+
+func (this *SortedStack) Pop() {
+	if len(this.Stack) > 0 {
+		this.Stack = this.Stack[:len(this.Stack)-1]
+	}
+}
+
+func (this *SortedStack) Peek() int {
+	res := -1
+	if len(this.Stack) > 0 {
+		res = this.Stack[len(this.Stack)-1]
+	}
+	return res
+}
+
+func (this *SortedStack) IsEmpty() bool {
+	return len(this.Stack) == 0
+}
+
 //面试题 03.03. 堆盘子
 type StackOfPlates struct {
 	Cap    int

@@ -36,3 +36,30 @@ pub fn max_profit(mut prices: Vec<i32>) -> i32 {
     }
     res
 }
+
+//115. 不同的子序列
+pub fn num_distinct(s: String, t: String) -> i32 {
+    //思路2：先找到第一个字母可以的方式，然后其余的进行递归求即可。
+
+    let mut res = 0;
+    let mut locations = vec![];
+    let s_bytes = s.as_bytes();
+    let t_bytes = t.as_bytes();
+    for i in 0..s.len(){
+        if s_bytes[i] == t_bytes[0]{
+            locations.push(i);
+        }
+    }
+    if t.len() == 1{
+        return locations.len() as i32;
+    }
+
+    while !locations.is_empty(){
+        let mut start = 1;
+        let (_, new_t) = t.split_at(start);
+        let (_, new_s) = s.split_at(locations.pop().unwrap()+1);
+        println!("{}-{}", new_s, new_t);
+        res += Solution::num_distinct(new_s.to_string(), new_t.to_string());
+    }
+    res
+}

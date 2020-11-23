@@ -37,6 +37,30 @@ pub fn max_profit(mut prices: Vec<i32>) -> i32 {
     res
 }
 
+//122. 买卖股票的最佳时机 II
+pub fn max_profit2(prices: Vec<i32>) -> i32 {
+    let mut res = 0;
+    if prices.len() < 2 {
+        return 0;
+    }
+    //不用递归
+    let mut i = 0;
+    while i < prices.len() - 1 {
+        let mut j = i + 1;
+        if prices[j] <= prices[i] {
+            i += 1;
+        } else {
+            //只要是增长的，就一直往前走
+            while j < prices.len() && prices[j] >= prices[j - 1] {
+                j += 1;
+            }
+            res += prices[j - 1] - prices[i];
+            i = j;
+        }
+    }
+    res
+}
+
 //115. 不同的子序列
 pub fn num_distinct(s: String, t: String) -> i32 {
     //思路2：先找到第一个字母可以的方式，然后其余的进行递归求即可。

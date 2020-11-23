@@ -18,3 +18,21 @@ pub fn get_row(row_index: i32) -> Vec<i32> {
     }
     res
 }
+
+//121. 买卖股票的最佳时机
+pub fn max_profit(mut prices: Vec<i32>) -> i32 {
+    //思路,修改数组，从后往前修改，遍历后，把它的值改为从本位置算起的最大的值
+    if prices.len() < 2 {
+        return 0;
+    }
+    let mut res = 0;
+    for i in (0..prices.len() - 1).rev() {
+        if res < prices[i + 1] - prices[i] {
+            res = prices[i + 1] - prices[i];
+        }
+        if prices[i] < prices[i + 1] {
+            prices[i] = prices[i + 1]
+        }
+    }
+    res
+}

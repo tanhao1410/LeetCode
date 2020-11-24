@@ -1,7 +1,11 @@
 package main
 
-func main() {
+import "fmt"
 
+func main() {
+	nums := []int{1, 0, 1, 2, 0, 0}
+	sortColors(nums)
+	fmt.Println(nums)
 }
 
 type TreeNode struct {
@@ -19,4 +23,27 @@ func countNodes(root *TreeNode) int {
 		res = countNodes(root.Left) + countNodes(root.Right) + 1
 	}
 	return res
+}
+
+//75. 颜色分类
+func sortColors(nums []int) {
+	//思路：计数法
+	zero, one := 0, 0
+	for _, v := range nums {
+		if v == 0 {
+			zero++
+		} else if v == 1 {
+			one++
+		}
+	}
+
+	for i := 0; i < len(nums); i++ {
+		if i < zero {
+			nums[i] = 0
+		} else if i < zero+one {
+			nums[i] = 1
+		} else {
+			nums[i] = 2
+		}
+	}
 }

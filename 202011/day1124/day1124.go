@@ -9,6 +9,45 @@ func main() {
 	fmt.Println(maxPoints([][]int{{-6, -65}, {-18, 26}, {-6, -65}, {10, -2}, {10, -2}}))
 }
 
+//剑指 Offer 29. 顺时针打印矩阵
+func spiralOrder(matrix [][]int) []int {
+	res := []int{}
+	if len(matrix) == 0 || len(matrix[0]) == 0 {
+		return res
+	}
+	r, c := len(matrix), len(matrix[0])
+	for x, y := 0, -1; len(res) < len(matrix)*len(matrix[0]); {
+
+		//向右走 c 步
+		for i := 0; i < c; i++ {
+			y++
+			res = append(res, matrix[x][y])
+		}
+
+		//向下走 r - 1步
+		for i := 0; i < r-1; i++ {
+			x++
+			res = append(res, matrix[x][y])
+		}
+
+		//向左走 c - 1步
+		for i := 0; i < c-1; i++ {
+			y--
+			res = append(res, matrix[x][y])
+		}
+
+		//向上走r - 2步
+		for i := 0; i < r-2; i++ {
+			x--
+			res = append(res, matrix[x][y])
+		}
+
+		r -= 2
+		c -= 2
+	}
+	return res[:len(matrix)*len(matrix[0])]
+}
+
 type TreeNode struct {
 	Val   int
 	Left  *TreeNode

@@ -1,10 +1,29 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
 
 func main() {
 	board := [][]int{{1, 1, 0}, {1, 0, 1}, {1, 1, 1}, {0, 0, 0}}
 	gameOfLife(board)
+}
+
+//274. H 指数
+func hIndex(citations []int) int {
+	res := 0
+	sort.Ints(citations)
+	for i := len(citations) - 1; i >= 0; i-- {
+		if citations[i] <= len(citations)-i {
+			if citations[i] > res {
+				return citations[i]
+			}
+			return res
+		}
+		res = len(citations) - i
+	}
+	return res
 }
 
 //289. 生命游戏

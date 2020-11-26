@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 )
 
 func main() {
-	fmt.Println(calculate("(1+(4+5+2)-3)+(6+8)"))
+	//fmt.Println(calculate("(1+(4+5+2)-3)+(6+8)"))
+	fmt.Println(maximumGap([]int{3, 4, 5, 8, 12, 12, 3, 4, 45, 3, 6, 9, 1}))
 }
 
 //224. 基本计算器
@@ -82,6 +84,64 @@ func majorityElement(nums []int) int {
 
 //每日一题：164. 最大间距
 func maximumGap(nums []int) int {
+	//采用桶排序的方式，每个桶中记录两个数，最大的和最小的，然后比较前后两个桶之间的差距，
+	//需要多少个桶？每个桶中存放的范围？
+	//需要 nums + 1 )/2个，即每个桶平均可以放两个
+	//范围的话，先求最大值
 
-	return 0
+	//桶的第一个数为最大值，第二个数为最小值。
+
+	max, min := 0, math.MaxInt32
+	for _, v := range nums {
+		if v > max {
+			max = v
+		}
+		if v < min {
+			min = v
+		}
+	}
+
+	dis := max - min
+	if dis <= 0 {
+		return 0
+	}
+	//桶的数量,当桶的数量够多的情况下，桶内部的数据之间的距离不可能是最大的了。
+	tCount := len(nums)
+	ts := make([][]int, tCount)
+
+	//区间大小
+	qLen := dis/tCount + 1
+
+	for _, v := range nums {
+		//应该放在第几个桶里面
+		tNum := (v - min) / qLen
+		//还没有桶，生成桶，放进数
+		if ts[tNum] == nil {
+			t := []int{v, v}
+			ts[tNum] = t
+		} else {
+			t := ts[tNum]
+			if v > t[1] {
+				if t[1] < t[0] {
+					t[0] = t[1]
+				}
+				t[1] = v
+			} else if v < t[0] {
+				t[0] = v
+			}
+		}
+	}
+
+	res := 0
+	preMax := math.MaxInt32
+	for _, v := range ts {
+		if v != nil {
+			if v[0]-preMax > res {
+				res = v[0] - preMax
+			}
+			preMax = v[1]
+		}
+	}
+
+	return res
 }

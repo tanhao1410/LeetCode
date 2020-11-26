@@ -87,3 +87,18 @@ pub fn num_distinct(s: String, t: String) -> i32 {
     }
     res
 }
+
+//164. 最大间距
+pub fn maximum_gap(nums: Vec<i32>) -> i32 {
+    let mut nums = nums;
+    nums.sort();
+    let mut res = 0;
+    let mut i = 1;
+    while i < nums.len(){
+        if nums[i] - nums[i - 1] > res{
+            res = nums[i] - nums[i - 1]
+        }
+        i+=1;
+    }
+    res
+}

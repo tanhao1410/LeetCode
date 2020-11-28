@@ -4,6 +4,49 @@ fn main() {
 
 struct Solution {}
 
+//155. 最小栈
+struct MinStack {
+    stack :Vec<i32>,
+    min:i32
+}
+impl MinStack {
+
+    /** initialize your data structure here. */
+    fn new() -> Self {
+        MinStack{
+            stack:vec![],
+            min:std::i32::MAX
+        }
+    }
+
+    fn push(&mut self, x: i32) {
+        self.stack.push(x);
+        if x < self.min{
+            self.min = x;
+        }
+    }
+
+    fn pop(&mut self) {
+        let popValue = self.stack.pop().unwrap();
+        if popValue == self.min{
+            self.min = std::i32::MAX;
+            for i in &self.stack{
+                if *i < self.min{
+                    self.min = *i;
+                }
+            }
+        }
+    }
+
+    fn top(&self) -> i32 {
+        *self.stack.last().unwrap()
+    }
+
+    fn get_min(&self) -> i32 {
+        self.min
+    }
+}
+
 impl Solution {
     //每日一题：976. 三角形的最大周长
     pub fn largest_perimeter(a: Vec<i32>) -> i32 {

@@ -2,11 +2,52 @@ package main
 
 import (
 	"fmt"
+	"sort"
 )
 
 func main() {
 	fmt.Println(reorganizeString("ababa"))
 	fmt.Println(rangeBitwiseAnd(0, 1))
+}
+
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+//148. 排序链表
+func sortList(head *ListNode) *ListNode {
+	nums := []int{}
+	//思路2：转换成数组，然后再排序
+	for p := head; p != nil; p = p.Next {
+		nums = append(nums, p.Val)
+	}
+	sort.Ints(nums)
+	for p, i := head, 0; p != nil; p, i = p.Next, i+1 {
+		p.Val = nums[i]
+	}
+	return head
+}
+
+//时间超时
+func sortList2(head *ListNode) *ListNode {
+	if head == nil {
+		return nil
+	}
+	for cur := head; cur != nil; {
+		flag := true
+		for p, pNext := cur, cur.Next; pNext != nil; p, pNext = pNext, pNext.Next {
+			if pNext.Val < p.Val {
+				//交换两个结点的值
+				p.Next.Val, p.Val = p.Val, p.Next.Val
+				flag = false
+			}
+		}
+		if flag {
+			break
+		}
+	}
+	return head
 }
 
 //201. 数字范围按位与

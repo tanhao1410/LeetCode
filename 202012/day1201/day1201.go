@@ -7,6 +7,34 @@ func main() {
 	fmt.Println(minSubArrayLen(7, []int{2, 3, 1, 2, 4, 3}))
 }
 
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+//230. 二叉搜索树中第K小的元素
+func kthSmallest(root *TreeNode, k int) int {
+	//思路：判断左边和右边有多少元素
+	//看左边有多少比它小的
+	smallerCount := nodeCount(root.Left)
+	if smallerCount < k-1 {
+		return kthSmallest(root.Right, k-smallerCount-1)
+	} else if smallerCount == k-1 {
+		return root.Val
+	} else {
+		return kthSmallest(root.Left, k)
+	}
+}
+
+//求树的节点个数
+func nodeCount(root *TreeNode) int {
+	if root != nil {
+		return 1 + nodeCount(root.Right) + nodeCount(root.Left)
+	}
+	return 0
+}
+
 //209. 长度最小的子数组
 func minSubArrayLen(s int, nums []int) int {
 	if len(nums) < 1 {

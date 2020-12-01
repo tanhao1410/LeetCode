@@ -1,10 +1,70 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 func main() {
 	fmt.Println(searchRange([]int{8, 8, 8}, 8))
 	fmt.Println(minSubArrayLen(7, []int{2, 3, 1, 2, 4, 3}))
+	fmt.Println(numberToWords(102000))
+}
+
+//273. 整数转换英文表示
+func numberToWords(num int) string {
+	res := ""
+	//对应关系
+	m := map[int]string{
+		0: "Zero", 1: "One", 2: "Two", 3: "Three", 4: "Four", 5: "Five", 6: "Six", 7: "Seven", 8: "Eight", 9: "Nine",
+		10: "Ten", 11: "Eleven", 12: "Twelve", 13: "Thirteen", 14: "Fourteen", 15: "Fifteen", 16: "Sixteen", 17: "Seventeen", 18: "Eighteen", 19: "Nineteen",
+		20: "Twenty", 30: "Thirty", 40: "Forty", 50: "Fifty", 60: "Sixty", 70: "Seventy", 80: "Eighty", 90: "Ninety",
+	}
+	//先确定最高位是多少
+	if num >= 1000000000 {
+		billionNum := num / 1000000000
+		res += m[billionNum]
+		res += " Billion "
+		num = num % 1000000000
+	}
+
+	//确定million
+	if num >= 1000000 {
+		millionNum := num / 1000000
+		res += numberToWords(millionNum)
+		res += " Million "
+		num = num % 1000000
+	}
+
+	//确定千位
+	if num >= 1000 {
+		thousandNum := num / 1000
+		res += numberToWords(thousandNum)
+		res += " Thousand "
+		num = num % 1000
+	}
+
+	//确定百位
+	if num >= 100 {
+		hundredNum := num / 100
+		res += m[hundredNum]
+		res += " Hundred "
+		num = num % 100
+	}
+
+	//确定十位
+	if num <= 20 {
+		res += m[num]
+	} else {
+		//
+		tenNum := num / 10
+		res += m[tenNum*10]
+		if num%10 != 0 {
+			res += " "
+			res += m[num%10]
+		}
+	}
+	return strings.ReplaceAll(res, " Zero", "")
 }
 
 type TreeNode struct {

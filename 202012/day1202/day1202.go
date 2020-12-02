@@ -9,6 +9,60 @@ func main() {
 	fmt.Println(maxNumber([]int{6, 7}, []int{6, 0, 4}, 5))
 }
 
+//284. 顶端迭代器
+type Iterator struct {
+}
+
+func (this *Iterator) hasNext() bool {
+	// Returns true if the iteration has more elements.
+	return false
+}
+
+func (this *Iterator) next() int {
+	// Returns the next element in the iteration.
+	return 0
+}
+
+type PeekingIterator struct {
+	Iterator *Iterator
+	Peek     *int
+}
+
+func Constructor(iter *Iterator) *PeekingIterator {
+	res := PeekingIterator{
+		Iterator: iter,
+		Peek:     nil,
+	}
+	return &res
+}
+
+func (this *PeekingIterator) hasNext() bool {
+	if this.Peek != nil {
+		return true
+	}
+	return this.Iterator.hasNext()
+}
+
+func (this *PeekingIterator) next() int {
+	if this.Peek == nil {
+		return this.Iterator.next()
+	} else {
+		res := *this.Peek
+		this.Peek = nil
+		return res
+	}
+}
+
+func (this *PeekingIterator) peek() int {
+	if this.Peek == nil {
+		peekNum := this.Iterator.next()
+		this.Peek = &peekNum
+		return peekNum
+	} else {
+		return *this.Peek
+	}
+}
+
 //每日一题：321. 拼接最大数
 func maxNumber(nums1 []int, nums2 []int, k int) []int {
 	res := []int{}
@@ -16,43 +70,43 @@ func maxNumber(nums1 []int, nums2 []int, k int) []int {
 		return res
 	}
 
-	//所有数都要用到的时候
-	if k == len(nums1)+len(nums2) {
-		//选择大的，当两个大小相同时，又要选择谁呢？递归
-		if len(nums1) == 0 {
-			return nums2
-		} else if len(nums2) == 0 {
-			return nums1
-		}
-
-		if nums1[0] > nums2[0] {
-			res = append(res, nums1[0])
-			res = append(res, maxNumber(nums1[1:], nums2, k-1)...)
-		} else if nums1[0] < nums2[0] {
-			res = append(res, nums2[0])
-			res = append(res, maxNumber(nums1, nums2[1:], k-1)...)
-		} else {
-			select1 := maxNumber(nums1[1:], nums2, k-1)
-			select2 := maxNumber(nums1, nums2[1:], k-1)
-			flag := true
-			for i := 0; i < len(select1); i++ {
-				if select2[i] > select1[i] {
-					flag = false
-					break
-				} else if select1[i] > select2[i] {
-					flag = true
-					break
-				}
-			}
-			res = append(res, nums1[0])
-			if flag {
-				res = append(res, select1...)
-			} else {
-				res = append(res, select2...)
-			}
-		}
-		return res
-	}
+	////所有数都要用到的时候
+	//if k == len(nums1)+len(nums2) {
+	//	//选择大的，当两个大小相同时，又要选择谁呢？递归
+	//	if len(nums1) == 0 {
+	//		return nums2
+	//	} else if len(nums2) == 0 {
+	//		return nums1
+	//	}
+	//
+	//	if nums1[0] > nums2[0] {
+	//		res = append(res, nums1[0])
+	//		res = append(res, maxNumber(nums1[1:], nums2, k-1)...)
+	//	} else if nums1[0] < nums2[0] {
+	//		res = append(res, nums2[0])
+	//		res = append(res, maxNumber(nums1, nums2[1:], k-1)...)
+	//	} else {
+	//		select1 := maxNumber(nums1[1:], nums2, k-1)
+	//		select2 := maxNumber(nums1, nums2[1:], k-1)
+	//		flag := true
+	//		for i := 0; i < len(select1); i++ {
+	//			if select2[i] > select1[i] {
+	//				flag = false
+	//				break
+	//			} else if select1[i] > select2[i] {
+	//				flag = true
+	//				break
+	//			}
+	//		}
+	//		res = append(res, nums1[0])
+	//		if flag {
+	//			res = append(res, select1...)
+	//		} else {
+	//			res = append(res, select2...)
+	//		}
+	//	}
+	//	return res
+	//}
 
 	//k 小于 两数组大小之和
 	index := len(nums1) + len(nums2) - k

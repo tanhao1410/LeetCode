@@ -9,6 +9,38 @@ func main() {
 	fmt.Println(maxNumber([]int{6, 7}, []int{6, 0, 4}, 5))
 }
 
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+//236. 二叉树的最近公共祖先
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+	//如果root的左子树和右子树有一个的话，说明，root就是最近公共祖先。有两个，接着往下走
+	var count func(root *TreeNode, p, q int) int
+	count = func(root *TreeNode, p, q int) int {
+		if root != nil {
+			if root.Val == p || root.Val == q {
+				return 1 + count(root.Right, p, q) + count(root.Left, p, q)
+			} else {
+				return count(root.Right, p, q) + count(root.Left, p, q)
+			}
+		}
+		return 0
+	}
+	left, right := count(root.Left, p.Val, q.Val), count(root.Right, p.Val, q.Val)
+	for left != 1 && right != 1 {
+		if left == 2 {
+			root = root.Left
+		} else {
+			root = root.Right
+		}
+		left, right = count(root.Left, p.Val, q.Val), count(root.Right, p.Val, q.Val)
+	}
+	return root
+}
+
 //284. 顶端迭代器
 type Iterator struct {
 }

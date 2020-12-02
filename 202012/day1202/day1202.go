@@ -6,7 +6,89 @@ import (
 )
 
 func main() {
-	fmt.Println(maxNumber([]int{6, 7}, []int{6, 0, 4}, 5))
+	fmt.Println(maxNumber2([]int{1}, []int{}, 1))
+	//fmt.Println(getMaxSequence([]int{1, 3, 8, 7, 5, 4, 3, 7, 8, 2}, 5))
+}
+
+//每日一题：321. 拼接最大数
+func maxNumber2(nums1 []int, nums2 []int, k int) []int {
+	res := []int{}
+	//先求指定大小的最大子序列，再合并
+	if len(nums1) == 0 {
+		return getMaxSequence(nums2, k)
+	}
+	for i := 0; i < len(nums1) && i+1 <= k; i++ {
+		//nums1抽取出i个，那么nums2就要抽取出k - i 个
+		if k-i-1 > len(nums2) {
+			//nums2中的数据不够
+			continue
+		}
+		num1Child := getMaxSequence(nums1, i+1)
+		num2Child := getMaxSequence(nums2, k-i-1)
+		resItem := merge(num1Child, num2Child)
+		if compare(resItem, res) {
+			res = resItem
+		}
+	}
+	return res
+}
+
+//合并两个子序列
+func merge(nums1, nums2 []int) []int {
+	res := []int{}
+	for {
+		if len(nums1) == 0 {
+			res = append(res, nums2...)
+			return res
+		}
+		if len(nums2) == 0 {
+			res = append(res, nums1...)
+			return res
+		}
+		if compare(nums1, nums2) {
+			res = append(res, nums1[0])
+			nums1 = nums1[1:]
+		} else {
+			res = append(res, nums2[0])
+			nums2 = nums2[1:]
+		}
+	}
+}
+
+//比较两个子序列
+func compare(nums1 []int, nums2 []int) bool {
+
+	for i := 0; i < len(nums1) && i < len(nums2); i++ {
+		if nums1[i] > nums2[i] {
+			return true
+		} else if nums1[i] < nums2[i] {
+			return false
+		}
+	}
+	//前面全都相等，num1长的话，就是大
+	return len(nums1) > len(nums2)
+}
+
+//得到最大的子序列
+func getMaxSequence(nums []int, k int) []int {
+	res := []int{}
+	if k == 0 {
+		return res
+	}
+	//第一个数怎么找？前面len(nums) - k 个中最大的那个
+	max, maxIndex := math.MinInt32, 0
+	for k > 0 {
+		for i := maxIndex; i < len(nums)-k+1; i++ {
+			if nums[i] > max {
+				max = nums[i]
+				maxIndex = i
+			}
+		}
+		res = append(res, max)
+		max, maxIndex = math.MinInt32, maxIndex+1
+		k--
+	}
+	return res
 }
 
 type TreeNode struct {

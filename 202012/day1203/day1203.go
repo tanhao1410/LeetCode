@@ -1,9 +1,67 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+	"strings"
+)
 
 func main() {
 	fmt.Println(findKthLargest([]int{3, 2, 1, 5, 6, 4}, 2))
+}
+
+//468. 验证IP地址
+func validIPAddress(IP string) string {
+	v4code := func(code string) bool {
+		if len(code) > 3 || len(code) < 1 || (code[0] == '0' && len(code) > 1) {
+			return false
+		}
+		for i := 0; i < len(code); i++ {
+			if code[i] > '9' || code[i] < '0' {
+				return false
+			}
+		}
+		num, _ := strconv.Atoi(code)
+		return num < 256
+	}
+	v6code := func(code string) bool {
+		if len(code) > 4 || len(code) < 1 {
+			return false
+		}
+		for i := 0; i < len(code); i++ {
+			if !((code[i] <= '9' && code[i] >= '0') ||
+				(code[i] <= 'f' && code[i] >= 'a') ||
+				(code[i] <= 'F' && code[i] >= 'A')) {
+				return false
+			}
+
+		}
+		return true
+	}
+
+	if strings.Contains(IP, ".") {
+		codes := strings.Split(IP, ".")
+		if len(codes) != 4 {
+			return "Neither"
+		}
+		for i := 0; i < 4; i++ {
+			if !v4code(codes[i]) {
+				return "Neither"
+			}
+		}
+		return "IPv4"
+	} else {
+		codes := strings.Split(IP, ":")
+		if len(codes) != 8 {
+			return "Neither"
+		}
+		for i := 0; i < 8; i++ {
+			if !v6code(codes[i]) {
+				return "Neither"
+			}
+		}
+		return "IPv6"
+	}
 }
 
 //215. 数组中的第K个最大元素

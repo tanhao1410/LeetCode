@@ -1,9 +1,12 @@
 package main
 
-import "math"
+import (
+	"fmt"
+	"math"
+)
 
 func main() {
-
+	fmt.Println(isPossible([]int{1, 2, 3, 3, 4, 5}))
 }
 
 //329. 矩阵中的最长递增路径
@@ -130,6 +133,45 @@ func isPossible(nums []int) bool {
 	if len(nums) < 3 {
 		return false
 	}
-
-	return false
+	//对于数组中的元素，如果存在一个子序列以x-1结尾，则可以将x加入到该子序列中
+	m := make(map[int]int)
+	for _, v := range nums {
+		if _, ok := m[v]; ok {
+			m[v] += 1
+		} else {
+			m[v] = 1
+		}
+	}
+	//mm := make(map[int]int)//key 为尾部元素，value为数量 // 不行，如果已经有了已key结尾的呢？
+	//用一个二维来记录
+	mm := [][]int{}
+	//可以放在哪一个的尾部
+	whichTail := func(num int) int {
+		res := -1
+		for i := 0; i < len(mm); i++ {
+			//优先放在短的那边
+			if mm[i][len(mm[i])-1] == num-1 {
+				if res == -1 {
+					res = i
+				} else if len(mm[i]) < len(mm[res]) {
+					res = i
+				}
+			}
+		}
+		return res
+	}
+	for _, v := range nums {
+		index := whichTail(v)
+		if index != -1 {
+			mm[index] = append(mm[index], v)
+		} else {
+			mm = append(mm, []int{v})
+		}
+	}
+	for _, v := range mm {
+		if len(v) < 3 {
+			return false
+		}
+	}
+	return true
 }

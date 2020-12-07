@@ -6,6 +6,29 @@ func main() {
 	fmt.Println(matrixScore([][]int{{0, 0, 0, 1, 1, 0}, {1, 1, 0, 1, 0, 1}, {1, 0, 1, 0, 0, 1}}))
 }
 
+//202. 快乐数
+func isHappy(n int) bool {
+	m := make(map[int]bool)
+	for {
+		//这个数第二次出现了。
+		if m[n] {
+			return false
+		} else {
+			m[n] = true
+		}
+		sum := 0
+		for n != 0 {
+			num := n % 10
+			sum = sum + (num * num)
+			n = n / 10
+		}
+		if sum == 1 {
+			return true
+		}
+		n = sum
+	}
+}
+
 //1438. 绝对差不超过限制的最长连续子数组
 func longestSubarray(nums []int, limit int) int {
 	max, min := 0, 0

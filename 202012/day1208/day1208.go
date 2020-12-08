@@ -8,6 +8,44 @@ import (
 func main() {
 	fmt.Println(splitIntoFibonacci("539834657215398346785398346991079669377161950407626991734534318677529701785098211336528511"))
 	fmt.Println(restoreIpAddresses("101023"))
+	fmt.Println(isInterleave(
+		"aacaac",
+		"aacaaeaac",
+		"aacaacaaeaacaac"))
+}
+
+//97. 交错字符串
+func isInterleave(s1 string, s2 string, s3 string) bool {
+	//时间复杂度不行。
+	//思路：
+	//字母可以来自哪
+	i, j, k := 0, 0, 0
+	for (i < len(s1) || j < len(s2)) && k < len(s3) {
+		//两边都可以取的情况。//用递归呢
+		if i < len(s1) && j < len(s2) && s3[k] == s1[i] && s3[k] == s2[j] {
+			//如果从A取可以的话，可以取几个，一次性放进去所有的
+
+			//这样不行。
+			l := 1
+			for ; i+l < len(s1) && j+l < len(s2) && k+l < len(
+				s3) && s3[k+l] == s1[i+l] && s3[k+l] == s2[j+l] && s1[i] == s1[i+l]; l++ {
+			}
+
+			if isInterleave(s1[i+l:], s2[j:], s3[k+l:]) {
+				return true
+			}
+			return isInterleave(s1[i:], s2[j+l:], s3[k+l:])
+		} else if i < len(s1) && s3[k] == s1[i] {
+			k++
+			i++
+		} else if j < len(s2) && s3[k] == s2[j] {
+			k++
+			j++
+		} else {
+			return false
+		}
+	}
+	return i == len(s1) && j == len(s2) && k == len(s3)
 }
 
 //93. 复原IP地址

@@ -14,6 +14,34 @@ func main() {
 		"aacaacaaeaacaac"))
 }
 
+//474. 一和零。递归思路，时间超时。。。
+func findMaxForm(strs []string, m int, n int) int {
+	//动态规划做法：
+	//递归思路：可以选择包括或不包括
+	//结果包含i
+	if len(strs) == 0 {
+		return 0
+	}
+	zeroNum, oneNum := 0, 0
+	for i := 0; i < len(strs[0]); i++ {
+		if strs[0][i] == '0' {
+			zeroNum++
+		} else {
+			oneNum++
+		}
+	}
+	//这个肯定不能选
+	if zeroNum > m || oneNum > n {
+		return findMaxForm(strs[1:], m, n)
+	}
+	include := findMaxForm(strs[1:], m-zeroNum, n-oneNum) + 1
+	noInclude := findMaxForm(strs[1:], m, n)
+	if include > noInclude {
+		return include
+	}
+	return noInclude
+}
+
 //97. 交错字符串
 func isInterleave(s1 string, s2 string, s3 string) bool {
 	//时间复杂度不行。

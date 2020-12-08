@@ -7,6 +7,32 @@ import (
 
 func main() {
 	fmt.Println(splitIntoFibonacci("539834657215398346785398346991079669377161950407626991734534318677529701785098211336528511"))
+	fmt.Println(restoreIpAddresses("101023"))
+}
+
+//93. 复原IP地址
+func restoreIpAddresses(s string) []string {
+	//思路：第一个可以是三个数字，也可以两个，或一个。如果是0开头的话，只能是一个数字
+	can := func(s string) bool {
+		if len(s) == 0 || len(s) > 3 || len(s) > 1 && s[0] == '0' {
+			return false
+		}
+		num, _ := strconv.Atoi(s)
+		return num <= 255
+	}
+	res := []string{}
+	//第一个数字可以用几个
+	for i := 1; i < 4; i++ {
+		for j := 1; i < len(s) && can(s[:i]) && j < 4; j++ {
+			for k := 1; i+j < len(s) && can(s[i:i+j]) && k < 4; k++ {
+				//第三个确定的话，第四个也就确定了。
+				if i+j+k < len(s) && can(s[i+j:i+j+k]) && can(s[i+j+k:]) {
+					res = append(res, s[:i]+"."+s[i:i+j]+"."+s[i+j:i+j+k]+"."+s[i+j+k:])
+				}
+			}
+		}
+	}
+	return res
 }
 
 //每日一题：842. 将数组拆分成斐波那契序列

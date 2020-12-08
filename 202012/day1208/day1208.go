@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 func main() {
@@ -12,6 +13,32 @@ func main() {
 		"aacaac",
 		"aacaaeaac",
 		"aacaacaaeaacaac"))
+	fmt.Println(isMatch("a", "**"))
+}
+
+//44. 通配符匹配
+func isMatch(s string, p string) bool {
+	//?*
+	//递归法
+	if s == "" || p == "" {
+		return strings.ReplaceAll(p, "*", "") == s
+	}
+	//先看第一个字符
+	if p[0] == '?' || p[0] == s[0] {
+		return isMatch(s[1:], p[1:])
+	} else if p[0] == '*' {
+		//*可以代表几个字母呢。
+		//如果*后面没东西了，说明肯定是可以的
+		if len(p) == 1 {
+			return true
+		}
+		for i := 0; i < len(s); i++ {
+			if isMatch(s[i:], p[1:]) {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 //474. 一和零。递归思路，时间超时。。。

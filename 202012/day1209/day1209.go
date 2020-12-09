@@ -6,6 +6,26 @@ func main() {
 	fmt.Println(uniquePaths(1, 1))
 }
 
+//343. 整数拆分
+func integerBreak(n int) int {
+	// n 不小于 2 且不大于 58。
+	//特殊处理n = 2,n = 3 情况
+	if n < 4 {
+		return n - 1
+	}
+	dp := []int{1, 1, 2, 3}
+	for i := 4; i < n+1; i++ {
+		max := 0
+		for j := 2; j < i; j++ {
+			if dp[j]*dp[i-j] > max {
+				max = dp[j] * dp[i-j]
+			}
+		}
+		dp = append(dp, max)
+	}
+	return dp[n]
+}
+
 //每日一题：62. 不同路径
 func uniquePaths(m int, n int) int {
 	//思路：动态规划做法

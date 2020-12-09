@@ -1,9 +1,56 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
 	fmt.Println(uniquePaths(1, 1))
+}
+
+//207. 课程表
+func canFinish(numCourses int, prerequisites [][]int) bool {
+	//思路：先解决没有前驱的课程。如果最后没有课程了，说明都完成了，否则，完成不了
+	course := make([][]int, numCourses)
+	//图的表示，谁指向自己，就加入自己的集合中
+	for _, v := range prerequisites {
+		course[v[1]] = append(course[v[1]], v[0])
+	}
+	haveDel := make(map[int]bool)
+	for {
+		//去除没有前提的课程
+		i := 0
+		for ; i < numCourses; i++ {
+			if len(course[i]) == 0 && !haveDel[i] {
+				break
+				//说明该课程应被删除
+				//所有需要先学习该课程的前提课程中，都删除该课程
+			}
+		}
+
+		if i == numCourses {
+			//如果一轮结束下来，没有一门课程被删除，说明循环结束
+			break
+		}
+		//开始删除
+		for j := 0; j < len(course); j++ {
+			for k := 0; k < len(course[j]); k++ {
+				if course[j][k] == i {
+					course[j] = append(course[j][:k], course[j][k+1:]...)
+					break
+				}
+			}
+		}
+		//需要记录哪些是已经删除了的
+		haveDel[i] = true
+	}
+	for i := 0; i < numCourses; i++ {
+		if len(course[i]) > 0 {
+			return false
+		}
+	}
+
+	return true
 }
 
 //343. 整数拆分

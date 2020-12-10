@@ -4,6 +4,56 @@ import "fmt"
 
 func main() {
 	fmt.Println(lemonadeChange([]int{5, 5, 5, 10, 5, 5, 10, 20, 20, 20}))
+
+}
+
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+//99. 恢复二叉搜索树
+func recoverTree(root *TreeNode) {
+	//中序遍历应该是有序的
+	//思路：先找到不合适的地方。
+	//关键是要和谁交换。如果能找到两个不合适的节点，他们俩交换。如果只找到一个的话，
+	//方法1：中序遍历后，找到两个位置交换变有序。即为结果。
+	nums := []int{}
+
+	var readTree func(node *TreeNode)
+	readTree = func(root *TreeNode) {
+		if root != nil {
+			readTree(root.Left)
+			nums = append(nums, root.Val)
+			readTree(root.Right)
+		}
+	}
+	readTree(root)
+
+	//冒泡法排序
+	for flag := true; flag; {
+		flag = false
+		for i := 0; i < len(nums)-1; i++ {
+			//后一个比前一个要小
+			if nums[i+1] < nums[i] {
+				//交换
+				flag = true
+				nums[i], nums[i+1] = nums[i+1], nums[i]
+			}
+		}
+	}
+	//写树
+	var writeTree func(node *TreeNode)
+	writeTree = func(root *TreeNode) {
+		if root != nil {
+			writeTree(root.Left)
+			root.Val = nums[0]
+			nums = nums[1:]
+			writeTree(root.Right)
+		}
+	}
+	writeTree(root)
 }
 
 type ListNode struct {

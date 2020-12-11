@@ -2,11 +2,62 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"strings"
 )
 
 func main() {
 	fmt.Println(predictPartyVictory("DDRRRR"))
+}
+
+//391. 完美矩形
+func isRectangleCover(rectangles [][]int) bool {
+	//思路：找 合在一起的左下和右上，计算面积
+	a, b, c, d := math.MaxInt32, math.MaxInt32, 0, 0
+	for _, v := range rectangles {
+		if v[0] < a {
+			a = v[0]
+		}
+		if v[1] < b {
+			b = v[1]
+		}
+		if v[2] > c {
+			c = v[2]
+		}
+		if v[3] > d {
+			d = v[3]
+		}
+	}
+	all := (d - b) * (c - a)
+	//计算分别的面积。若不相同，肯定不是的
+	for _, v := range rectangles {
+		all -= (v[3] - v[1]) * (v[2] - v[0])
+	}
+	if all != 0 {
+		return false
+	}
+	//若相同，判断是否存在重叠的，有重叠的，返回false
+	//某个矩形的左下角，或左上角落在了别的矩形范围内（不包括右下边界）
+	for k, v := range rectangles {
+		for kk, vv := range rectangles {
+			if kk == k {
+				continue
+			}
+			//v的左上角为 v[0],v[3] 落在了vv的矩形范围内
+			if v[0] >= vv[0] && v[0] < vv[2] && v[3] <= vv[3] && v[3] > vv[1] {
+				return false
+			}
+			//v的左下角为 v[0],v[1]
+			if v[0] >= vv[0] && v[0] < vv[2] && v[1] >= vv[1] && v[1] < vv[3] {
+				return false
+			}
+			//完全包含
+			if v[0] >= vv[0] && v[1] >= vv[1] && v[2] <= vv[2] && v[3] <= vv[3] {
+				return false
+			}
+		}
+	}
+	return true
 }
 
 //每日一题：649. Dota2 参议院

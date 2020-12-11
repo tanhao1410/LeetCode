@@ -8,6 +8,49 @@ import (
 
 func main() {
 	fmt.Println(predictPartyVictory("DDRRRR"))
+	fmt.Println(isScramble("dbdac", "abcdd"))
+}
+
+//87. 扰乱字符串
+func isScramble(s1 string, s2 string) bool {
+	//思路：各分成连续的两段，其中需要s1中的 一段对应s2中的一段，保证相同（不要求顺序相同），递归，如果都是可以的，那么总的就是可以的
+	//分成两段
+	//如果长度小于4，并且字母相同，那么肯定属于扰乱字符串
+	if !isSame(s1, s2) {
+		return false
+	}
+	if isSame(s1, s2) && len(s1) < 4 {
+		return true
+	}
+	i := 1
+	for ; i < len(s1); i++ {
+		if isSame(s1[:i], s2[:i]) && isScramble(s1[:i], s2[:i]) && isScramble(s1[i:], s2[i:]) { //可以交叉相等的
+			return true
+		}
+		if isSame(s1[:i], s2[len(s2)-i:]) && isScramble(s1[:i], s2[len(s2)-i:]) && isScramble(s1[i:],
+			s2[:len(s2)-i]) {
+			return true
+		}
+	}
+	return false
+}
+
+//判断是否是相同字符串，不要求顺序
+func isSame(s1 string, s2 string) bool {
+	m := make([]int, 26)
+	if len(s1) != len(s2) {
+		return false
+	}
+	for i := 0; i < len(s1); i++ {
+		m[s1[i]-'a'] += 1
+		m[s2[i]-'a'] -= 1
+	}
+	for i := 0; i < 26; i++ {
+		if m[i] > 0 {
+			return false
+		}
+	}
+	return true
 }
 
 //391. 完美矩形

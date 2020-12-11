@@ -11,6 +11,30 @@ func main() {
 	fmt.Println(isScramble("dbdac", "abcdd"))
 }
 
+//101. 对称二叉树
+func isSymmetric(root *TreeNode) bool {
+	if root == nil {
+		return true
+	}
+	return isSameTree(root.Left, root.Right)
+}
+
+func isSameTree(root1 *TreeNode, root2 *TreeNode) bool {
+	if root1 == nil || root2 == nil {
+		return root1 == root2
+	}
+	if root1.Val == root2.Val {
+		return isSameTree(root1.Right, root2.Left) && isSameTree(root1.Left, root2.Right)
+	}
+	return false
+}
+
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
 //87. 扰乱字符串
 func isScramble(s1 string, s2 string) bool {
 	//思路：各分成连续的两段，其中需要s1中的 一段对应s2中的一段，保证相同（不要求顺序相同），递归，如果都是可以的，那么总的就是可以的

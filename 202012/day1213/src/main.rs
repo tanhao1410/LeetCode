@@ -7,6 +7,24 @@ fn main() {
 struct Solution{}
 
 impl Solution {
+
+    //169. 多数元素
+    pub fn majority_element(nums: Vec<i32>) -> i32 {
+        //思路：摩尔投票法
+        let (mut res,mut v ) = (nums[0],1);
+        for i in 1..nums.len(){
+            if v == 0{
+                res = nums[i];
+            }
+            if nums[i] == res{
+                v += 1;
+            }else{
+                v -= 1;
+            }
+        }
+        res
+    }
+
     //每日一题：217. 存在重复元素
     pub fn contains_duplicate(nums: Vec<i32>) -> bool {
 

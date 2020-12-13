@@ -8,6 +8,20 @@ struct Solution{}
 
 impl Solution {
 
+    //167. 两数之和 II - 输入有序数组
+    pub fn two_sum(numbers: Vec<i32>, target: i32) -> Vec<i32> {
+        //思路：双指针法，分别从前和尾开始向中间走
+        let (mut i,mut j ) = (0,numbers.len() - 1);
+        while numbers[i] + numbers[j] != target{
+            if numbers[i] + numbers[j] > target{
+                j -= 1;
+            }else{
+                i += 1;
+            }
+        }
+        vec![i as i32 + 1,j as i32 + 1]
+    }
+
     //169. 多数元素
     pub fn majority_element(nums: Vec<i32>) -> i32 {
         //思路：摩尔投票法

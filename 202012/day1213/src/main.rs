@@ -4,35 +4,54 @@ fn main() {
     println!("Hello, world!");
 }
 
-struct Solution{}
+struct Solution {}
 
 impl Solution {
+    //168. Excel表列名称
+    pub fn convert_to_title(n: i32) -> String {
+        //1->a
+        let mut res = String::new();
+        //相当于26进制
+        let mut n = n;
+        while n > 26 {
+            let t = (n % 26) as u8;
+            if t == 0 {
+                res.insert(0, 'Z');
+                n = n / 26 - 1;
+            } else {
+                res.insert(0, ('A' as u8 + t - 1) as char);
+                n = n / 26;
+            }
+        }
+        res.insert(0, ('A' as u8 + n as u8 - 1) as char);
+        res
+    }
 
     //167. 两数之和 II - 输入有序数组
     pub fn two_sum(numbers: Vec<i32>, target: i32) -> Vec<i32> {
         //思路：双指针法，分别从前和尾开始向中间走
-        let (mut i,mut j ) = (0,numbers.len() - 1);
-        while numbers[i] + numbers[j] != target{
-            if numbers[i] + numbers[j] > target{
+        let (mut i, mut j) = (0, numbers.len() - 1);
+        while numbers[i] + numbers[j] != target {
+            if numbers[i] + numbers[j] > target {
                 j -= 1;
-            }else{
+            } else {
                 i += 1;
             }
         }
-        vec![i as i32 + 1,j as i32 + 1]
+        vec![i as i32 + 1, j as i32 + 1]
     }
 
     //169. 多数元素
     pub fn majority_element(nums: Vec<i32>) -> i32 {
         //思路：摩尔投票法
-        let (mut res,mut v ) = (nums[0],1);
-        for i in 1..nums.len(){
-            if v == 0{
+        let (mut res, mut v) = (nums[0], 1);
+        for i in 1..nums.len() {
+            if v == 0 {
                 res = nums[i];
             }
-            if nums[i] == res{
+            if nums[i] == res {
                 v += 1;
-            }else{
+            } else {
                 v -= 1;
             }
         }
@@ -52,14 +71,14 @@ impl Solution {
         // }
         // false
 
-        if nums.is_empty(){
-            return false
+        if nums.is_empty() {
+            return false;
         }
         let mut nums = nums;
         nums.sort_unstable();
-        for i in 0..nums.len()-1{
-            if nums[i] == nums[i + 1]{
-                return true
+        for i in 0..nums.len() - 1 {
+            if nums[i] == nums[i + 1] {
+                return true;
             }
         }
         false

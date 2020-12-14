@@ -2,16 +2,39 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"strconv"
 )
 
 func main() {
 	fmt.Println(compress([]byte{'a', 'a', 'b', 'b', 'b', 'c', 'a', 'b', 'b', 'c'}))
+	nums := make([]int, 10)
+	for i := 0; i < 100000; i++ {
+		nums[rand10()-1]++
+	}
+	fmt.Println(nums)
 }
 
 type Node struct {
 	Val      int
 	Children []*Node
+}
+
+//470. 用 Rand7() 实现 Rand10()
+func rand10() int {
+	//思路：两次rand7,
+	for {
+		first, second := rand7(), rand7()
+		if second <= 4 {
+			return first
+		} else if first <= 4 {
+			return second + 3
+		}
+	}
+}
+
+func rand7() int {
+	return rand.Intn(7) + 1
 }
 
 //443. 压缩字符串

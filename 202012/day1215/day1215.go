@@ -6,6 +6,34 @@ func main() {
 	fmt.Println(monotoneIncreasingDigits(100))
 }
 
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+//1669. 合并两个链表
+func mergeInBetween(list1 *ListNode, a int, b int, list2 *ListNode) *ListNode {
+
+	start, startPre := list1, list1
+	//走a步
+	for i := 0; i < a; i++ {
+		start, startPre = start.Next, start
+	}
+	//开始拼接即可。
+	startPre.Next = list2
+
+	//找到要删除的结束位置
+	for i := 0; i < b-a; i++ {
+		start = start.Next
+	}
+
+	//list2走至结尾，开始拼接
+	for ; list2.Next != nil; list2 = list2.Next {
+	}
+	list2.Next = start.Next
+	return list1
+}
+
 //每日一题：738. 单调递增的数字
 func monotoneIncreasingDigits(N int) int {
 

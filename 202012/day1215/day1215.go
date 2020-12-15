@@ -4,6 +4,47 @@ import "fmt"
 
 func main() {
 	fmt.Println(monotoneIncreasingDigits(100))
+	fmt.Println(validUtf8([]int{255}))
+}
+
+//393. UTF-8 编码验证
+func validUtf8(data []int) bool {
+	//只看最低八位。若第一位为0，则但字节，11->双字节，而且后面的是10开头。111->三字节，1111->四字节
+	countOne := func(num int) int {
+		if num&0b1111_1000 == 0b1111_1000 {
+			return 5
+		}
+		if num&0b1111_1000 == 0b1111_0000 {
+			return 4
+		}
+		if num&0b1111_0000 == 0b1110_0000 {
+			return 3
+		}
+		if num&0b1110_0000 == 0b1100_0000 {
+			return 2
+		}
+		if num&0b1100_0000 == 0b1000_0000 {
+			return 1
+		}
+		return 0
+	}
+
+	for i := 0; i < len(data); i++ {
+		count := countOne(data[i])
+		if count == 1 || count == 5 {
+			return false
+		}
+		for j := 1; j <= count-1; j++ {
+			if i+j >= len(data) || countOne(data[i+j]) != 1 {
+				return false
+			}
+		}
+		if count > 1 {
+			i += count - 1
+		}
+	}
+
+	return true
 }
 
 type ListNode struct {

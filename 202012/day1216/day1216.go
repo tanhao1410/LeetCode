@@ -8,6 +8,60 @@ func main() {
 
 }
 
+type NestedInteger struct{}
+
+func (this NestedInteger) IsInteger() bool { return false }
+
+func (this NestedInteger) GetInteger() int { return 0 }
+
+func (n *NestedInteger) SetInteger(value int)      {}
+func (this *NestedInteger) Add(elem NestedInteger) {}
+
+func (this NestedInteger) GetList() []*NestedInteger { return nil }
+
+//341. 扁平化嵌套列表迭代器
+type NestedIterator struct {
+	Data  []int
+	point int
+}
+
+func Constructor(nestedList []*NestedInteger) *NestedIterator {
+	res := NestedIterator{
+		Data:  []int{},
+		point: 0,
+	}
+	if len(nestedList) != 0 {
+		stack := []*NestedInteger{}
+		for i := len(nestedList) - 1; i >= 0; i-- {
+			stack = append(stack, nestedList[i])
+		}
+		stackLen := len(stack)
+		for stackLen > 0 {
+			//处理栈顶的元素
+			top := stack[stackLen-1]
+			stack = stack[:len(stack)-1]
+			if top.IsInteger() {
+				res.Data = append(res.Data, top.GetInteger())
+			} else {
+				for i := len(top.GetList()) - 1; i >= 0; i-- {
+					stack = append(stack, top.GetList()[i])
+				}
+			}
+			stackLen = len(stack)
+		}
+	}
+	return &res
+}
+
+func (this *NestedIterator) Next() int {
+	this.point++
+	return this.Data[this.point-1]
+}
+
+func (this *NestedIterator) HasNext() bool {
+	return len(this.Data) > this.point
+}
+
 //每日一题：290. 单词规律
 func wordPattern(pattern string, s string) bool {
 	m := make(map[byte]string)

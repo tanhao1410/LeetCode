@@ -8,6 +8,28 @@ func main() {
 
 }
 
+//397. 整数替换
+func integerReplacement(n int) int {
+	res := 0
+	//如果是偶数，可以直接减半，如果是奇数，可以选择+1，也可以选择-1，至于选择哪个？
+	for n%2 == 0 {
+		n = n / 2
+		res++
+	}
+	//结束了
+	if n == 1 {
+		return res
+	}
+	////选择+1或-1
+	res++
+	plus := integerReplacement(n + 1)
+	dec := integerReplacement(n - 1)
+	if plus < dec {
+		return plus + res
+	}
+	return res + dec
+}
+
 type NestedInteger struct{}
 
 func (this NestedInteger) IsInteger() bool { return false }

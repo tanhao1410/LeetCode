@@ -3,10 +3,51 @@ package main
 import (
 	"fmt"
 	"sort"
+	"strconv"
 )
 
 func main() {
 	fmt.Println(maxProfit([]int{1, 3, 2, 8, 4, 9, 3, 2, 8, 4, 9}, 4))
+}
+
+//394. 字符串解码
+func decodeString(s string) string {
+	res := []byte{}
+
+	for i := 0; i < len(s); i++ {
+		if s[i] >= '1' && s[i] <= '9' {
+			//需要处理数字了
+			j := i + 1
+			for ; j < len(s) && s[j] >= '1' && s[j] <= '9'; j++ {
+			}
+			//得到倍数
+			count, _ := strconv.Atoi(s[i:j])
+			//得到括号里面的内容
+			left := 1
+			k := j + 1
+			for ; k < len(s); k++ {
+				if s[k] == '[' {
+					left++
+				} else if s[k] == ']' {
+					left--
+				}
+				if left == 0 {
+					break
+				}
+			}
+			//通过递归得到解码后的内部内容
+			innerContent := decodeString(s[j+1 : k])
+			for i := 0; i < count; i++ {
+				res = append(res, innerContent...)
+			}
+			//跳过已解码的内容
+			i = k
+		} else {
+			res = append(res, s[i])
+		}
+	}
+
+	return string(res)
 }
 
 //355. 设计推特

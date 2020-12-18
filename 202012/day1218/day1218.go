@@ -1,7 +1,34 @@
 package main
 
+import "math/rand"
+
 func main() {
 
+}
+
+//398. 随机数索引
+type Solution struct {
+	m map[int][]int
+}
+
+func Constructor(nums []int) Solution {
+	m := make(map[int][]int)
+	for k, v := range nums {
+		if _, ok := m[v]; ok {
+			m[v] = append(m[v], k)
+		} else {
+			m[v] = []int{k}
+		}
+	}
+	return Solution{
+		m: m,
+	}
+}
+
+func (this *Solution) Pick(target int) int {
+	ints := this.m[target]
+	index := rand.Intn(len(ints))
+	return this.m[target][index]
 }
 
 //每日一题：389. 找不同

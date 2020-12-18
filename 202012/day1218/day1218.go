@@ -1,9 +1,59 @@
 package main
 
-import "math/rand"
+import (
+	"fmt"
+	"math/rand"
+)
 
 func main() {
 
+	head := ListNode{
+		Val: 1,
+	}
+	head.Next = &ListNode{Val: 2}
+	head.Next.Next = &ListNode{Val: 3}
+	solution := Constructor3(&head)
+	m := []int{0, 0, 0}
+	for i := 0; i < 10000; i++ {
+		m[solution.GetRandom()-1]++
+	}
+	fmt.Println(m)
+}
+
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+//382. 链表随机节点
+type Solution3 struct {
+	//Vals []int
+	List *ListNode
+}
+
+func Constructor3(head *ListNode) Solution3 {
+	//vals := []int{}
+	//for ; head != nil; head = head.Next {
+	//	vals = append(vals, head.Val)
+	//}
+	//return Solution3{
+	//	Vals: vals,
+	//}
+	return Solution3{
+		List: head,
+	}
+}
+
+func (this *Solution3) GetRandom() int {
+	//return this.Vals[rand.Intn(len(this.Vals))]
+	res, n := 0, 0
+	for head := this.List; head != nil; head = head.Next {
+		n++
+		if rand.Int()%n == 0 {
+			res = head.Val
+		}
+	}
+	return res
 }
 
 //398. 随机数索引

@@ -6,6 +6,35 @@ func main() {
 	fmt.Print(removeDuplicateLetters("bcabc"))
 }
 
+//205. 同构字符串
+func isIsomorphic(s string, t string) bool {
+	m1 := make(map[uint8]byte)
+	m2 := make(map[byte]byte)
+	for i := 0; i < len(s); i++ {
+		if v, ok := m1[s[i]]; ok {
+			if v != t[i] {
+				return false
+			}
+			if v2, ok := m2[t[i]]; ok {
+				if v2 != s[i] {
+					return false
+				}
+			} else {
+				return false
+			}
+		} else {
+			m1[s[i]] = t[i]
+			if _, ok := m2[t[i]]; ok {
+				return false
+			} else {
+				m2[t[i]] = s[i]
+			}
+		}
+	}
+
+	return true
+}
+
 //每日一题：316. 去除重复字母
 func removeDuplicateLetters(s string) string {
 	res := ""

@@ -6,6 +6,27 @@ func main() {
 	fmt.Print(removeDuplicateLetters("bcabc"))
 }
 
+//263. 丑数
+func isUgly(num int) bool {
+	if num == 1 {
+		return true
+	}
+	history := num
+	if num%2 == 0 {
+		num /= 2
+	}
+	if num%3 == 0 {
+		num /= 3
+	}
+	if num%5 == 0 {
+		num /= 5
+	}
+	if history == num {
+		return false
+	}
+	return isUgly(num)
+}
+
 //205. 同构字符串
 func isIsomorphic(s string, t string) bool {
 	m1 := make(map[uint8]byte)

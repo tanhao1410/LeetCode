@@ -1,7 +1,30 @@
 package main
 
+import "sort"
+
 func main() {
 
+}
+
+//495. 提莫攻击
+func findPoisonedDuration(timeSeries []int, duration int) int {
+	if len(timeSeries) == 0 {
+		return 0
+	}
+	//先排序时间
+	sort.Ints(timeSeries)
+	for res, i := 0, 0; ; i++ {
+		//最后一次攻击
+		if i == len(timeSeries)-1 {
+			return res + duration
+		}
+		//如果它的下一个比当前时间大2及以上
+		if timeSeries[i+1] >= timeSeries[i]+duration {
+			res += duration
+		} else {
+			res += timeSeries[i+1] - timeSeries[i]
+		}
+	}
 }
 
 //746. 使用最小花费爬楼梯

@@ -26,6 +26,50 @@ func main() {
 	fmt.Println(m)
 }
 
+//497. 非重叠矩形中的随机点
+type Solution struct {
+	Rects   [][]int
+	Areas   []int
+	AreaSum int
+}
+
+func Constructor2(rects [][]int) Solution {
+	areaSum := 0
+	areas := []int{}
+
+	for _, v := range rects {
+		//思路：第一，非重叠，总面积易求。每个矩形的面积也易求。可以求出每个矩形的概率。根据矩形的概率就可以求出对应坐标的概率
+		//修改，用面积不好，改为用里面的点的数量
+		area := (v[2] - v[0] + 1) * (v[3] - v[1] + 1)
+		areaSum += area
+		areas = append(areas, areaSum)
+	}
+
+	return Solution{
+		Rects:   rects,
+		Areas:   areas,
+		AreaSum: areaSum,
+	}
+}
+
+func (this *Solution) Pick() []int {
+	res := make([]int, 2)
+	//先查找落在了哪一个矩形中
+	randNum := rand.Intn(this.AreaSum)
+	for i := 0; i < len(this.Areas); i++ {
+		if randNum < this.Areas[i] {
+			//找到了对应的矩形了
+			rect := this.Rects[i]
+			//随机话 x,y,可以包括边
+			res[0] = rand.Intn(rect[2]-rect[0]+1) + rect[0]
+			res[1] = rand.Intn(rect[3]-rect[1]+1) + rect[1]
+			return res
+		}
+	}
+
+	return res
+}
+
 //381. O(1) 时间插入、删除和获取随机元素 - 允许重复
 type RandomizedCollection struct {
 	//key -->count

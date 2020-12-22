@@ -26,6 +26,50 @@ func main() {
 	fmt.Println(m)
 }
 
+//547. 朋友圈
+func findCircleNum(M [][]int) int {
+	//思路，第一次遍历，形成学生-->朋友s
+	//第二次遍历学生，形成学生-->完整朋友圈集合
+	//剩下的朋友中继续，直到没有剩余的学生了
+	m := make(map[int]map[int]bool) //学生id -->{朋友id:true}
+	for i := 0; i < len(M); i++ {
+		m[i] = make(map[int]bool)
+		for j := 0; j < len(M); j++ {
+			if M[i][j] == 1 {
+				m[i][j] = true
+			}
+		}
+	}
+
+	//用一个map记录哪些学生已经处理了
+	already := make(map[int]bool)
+	res := 0
+	for i := 0; i < len(M); i++ {
+		//没有加入任何朋友圈的才会进入
+		if !already[i] {
+			res++
+			already[i] = true
+			for flag := true; flag; {
+				//先处理学生0，直到新加入的朋友数为0退出
+				flag = false
+				for friend, _ := range m[i] {
+					already[friend] = true
+					//遍历朋友的朋友
+					for friendFriend, _ := range m[friend] {
+						//如果朋友的朋友不是自己的朋友，那么加入进来，并记录
+						if !m[i][friendFriend] {
+							m[i][friendFriend] = true
+							flag = true
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return res
+}
+
 //497. 非重叠矩形中的随机点
 type Solution struct {
 	Rects   [][]int

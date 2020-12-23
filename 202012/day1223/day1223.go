@@ -9,6 +9,35 @@ func main() {
 	fmt.Println(increasingTriplet([]int{1, 5, 3, 4}))
 }
 
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+//337. 打家劫舍 III
+func rob(root *TreeNode) int {
+	//思路：递归，头节点很重要，关系到
+	if root == nil {
+		return 0
+	}
+	sum1 := root.Val + rob2(root.Left) + rob2(root.Right)
+	sum2 := rob(root.Left) + rob(root.Right)
+	//问题：sum2虽然没取根节点，但是如果左右子树也没有取根节点的话，答案就不对了。但是这样的情况下，sum1肯定要大于sum2，即不会取这种情况。
+	if sum1 > sum2 {
+		return sum1
+	}
+	return sum2
+}
+
+//不能取根节点
+func rob2(root *TreeNode) int {
+	if root == nil || (root.Right == nil && root.Left == nil) {
+		return 0
+	}
+	return rob(root.Left) + rob(root.Right)
+}
+
 //334. 递增的三元子序列
 func increasingTriplet(nums []int) bool {
 	//思路：记录最小值，次小值

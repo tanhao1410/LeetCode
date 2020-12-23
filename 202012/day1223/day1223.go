@@ -3,10 +3,43 @@ package main
 import (
 	"fmt"
 	"math"
+	"sort"
 )
 
 func main() {
 	fmt.Println(increasingTriplet([]int{1, 5, 3, 4}))
+
+}
+
+//354. 俄罗斯套娃信封问题
+func maxEnvelopes(envelopes [][]int) int {
+	if len(envelopes) == 0 {
+		return 0
+	}
+	res := 0
+	//先按宽度排序
+	sort.Slice(envelopes, func(i, j int) bool {
+		if envelopes[i][0] == envelopes[j][0] {
+			return envelopes[i][1] < envelopes[j][1]
+		}
+		return envelopes[i][0] < envelopes[j][0]
+	})
+	dp := make([]int, len(envelopes))
+	for i := 1; i < len(envelopes); i++ {
+		j := i - 1
+		//找到一个可以放进去，可能存在多个可以放进去的，都要进行尝试下
+		for ; j >= 0; j-- {
+			if envelopes[i][0] > envelopes[j][0] && envelopes[i][1] > envelopes[j][1] {
+				if dp[j]+1 > dp[i] {
+					dp[i] = dp[j] + 1
+				}
+			}
+		}
+		if dp[i] > res {
+			res = dp[i]
+		}
+	}
+	return res + 1
 }
 
 type TreeNode struct {

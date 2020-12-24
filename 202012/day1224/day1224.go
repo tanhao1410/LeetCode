@@ -8,6 +8,61 @@ import (
 func main() {
 	nums := []int{1, 2, 4, 4, 3}
 	fmt.Println(candy(nums))
+	fmt.Println(findDiagonalOrder([][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}))
+
+}
+
+//498. 对角线遍历
+func findDiagonalOrder(matrix [][]int) []int {
+	res := []int{}
+	if len(matrix) == 0 || len(matrix[0]) == 0 {
+		return res
+	}
+	m, n := len(matrix), len(matrix[0])
+	upFlag := true
+	for i, j := 1, -1; ; {
+		if upFlag {
+			//可以往上走
+			if i-1 >= 0 && j+1 < n {
+				i--
+				j++
+				res = append(res, matrix[i][j])
+			} else if j+1 < n {
+				//到了最上面了，只能往右边走了
+				upFlag = false
+				res = append(res, matrix[i][j+1])
+				j++
+			} else {
+				//可以网上走，但右边已经没了
+				upFlag = false
+				if i+1 == m {
+					return res
+				}
+				res = append(res, matrix[i+1][j])
+				i++
+			}
+		} else {
+			if i+1 < m && j-1 >= 0 {
+				i, j = i+1, j-1
+				res = append(res, matrix[i][j])
+			} else if i+1 < m {
+				//可以往下走，但左边没有了
+				upFlag = true
+				res = append(res, matrix[i+1][j])
+				i++
+			} else {
+				//可以往左边走，但下面已经没有了，这时候转换方向
+				upFlag = true
+
+				//往右边走
+				if j+1 == n {
+					return res
+				}
+				res = append(res, matrix[i][j+1])
+				j++
+			}
+		}
+	}
 }
 
 //423. 从英文中重建数字

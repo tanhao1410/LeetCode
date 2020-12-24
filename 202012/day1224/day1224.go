@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"math"
+	"sort"
 )
 
 func main() {
@@ -66,16 +66,46 @@ func candy(ratings []int) int {
 		count++
 	}
 
-	for count < len(ratings) {
-		//先给分数最小的分配一个，存在多个最小的key
-		min := math.MaxInt32
-		for k, v := range ratings {
-			if dp[k] == 0 && v < min {
-				min = v
-			}
+	l := make([]map[int][]int, 0)
+
+	m := make(map[int][]int)
+	for k, v := range ratings {
+		if _, ok := m[v]; ok {
+			m[v] = append(m[v], k)
+		} else {
+			m[v] = []int{k}
 		}
-		for k, v := range ratings {
-			if v == min && dp[k] == 0 {
+	}
+	for keys, value := range m {
+		item := make(map[int][]int)
+		item[keys] = value
+		l = append(l, item)
+	}
+
+	sort.Slice(l, func(i, j int) bool {
+		iVal := 0
+		for k, _ := range l[i] {
+			iVal = k
+			break
+		}
+		jVal := 0
+		for k, _ := range l[j] {
+			jVal = k
+			break
+		}
+		return iVal < jVal
+	})
+
+	for i := 1; i < len(l); i++ {
+
+		_, minIndexs := 0, make([]int, 0)
+		for _, v := range l[i] {
+			minIndexs = v
+			break
+		}
+
+		for _, k := range minIndexs {
+			if dp[k] == 0 {
 				//dp[k] = 1
 				if (k+1 < len(ratings) && dp[k+1] != 0) || (k-1 > -1 && dp[k-1] != 0) {
 					//它的两边已经有分配了

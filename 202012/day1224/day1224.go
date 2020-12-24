@@ -10,6 +10,37 @@ func main() {
 	fmt.Println(candy(nums))
 }
 
+//423. 从英文中重建数字
+func originalDigits(s string) string {
+	//思路：先统计各个字母的次数，拼出对应数字的大小
+	//one two three four five six seven eight nine  zero
+	//w的数量代表2的数量。u代表4的数量。4 已知的话，根据f可以求出5的量，x代表6，z可以代表0
+	//每一个字母对应的数量
+	m := make([]int, 26)
+	for _, v := range s {
+		m[v-'a']++
+	}
+	//0，2,3,4,5,6,8已知数量。
+	numCount := make([]int, 10)
+	numCount[0] = m['z'-'a']
+	numCount[2] = m['w'-'a']
+	numCount[4] = m['u'-'a']
+	numCount[6] = m['x'-'a']
+	numCount[5] = m['f'-'a'] - numCount[4]
+	numCount[7] = m['v'-'a'] - numCount[5]
+	numCount[3] = m['r'-'a'] - numCount[4] - numCount[0]
+	numCount[8] = m['t'-'a'] - numCount[2] - numCount[3]
+	numCount[1] = m['o'-'a'] - numCount[2] - numCount[0] - numCount[4]
+	numCount[9] = m['i'-'a'] - numCount[5] - numCount[6] - numCount[8]
+	res := []byte{}
+	for i := 0; i < 10; i++ {
+		for j := 0; j < numCount[i]; j++ {
+			res = append(res, byte(i+'a'))
+		}
+	}
+	return string(res)
+}
+
 //每日一题：135. 分发糖果
 func candy(ratings []int) int {
 	if len(ratings) < 2 {

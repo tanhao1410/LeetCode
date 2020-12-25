@@ -6,6 +6,45 @@ func main() {
 
 }
 
+//433. 最小基因变化
+func minMutation(start string, end string, bank []string) int {
+	//思路：start经一次变异可以形成什么的集合。然后再从里面新形成的去组成，直到没有新形成的，或形成了end结束
+	change := func(s1, s2 string) int {
+		if len(s1) != len(s2) {
+			return -1
+		}
+		count := 0
+		for i := 0; i < 8; i++ {
+			if s1[i] != s2[i] {
+				count++
+			}
+		}
+		return count
+	}
+	//能够变异形成的dna集合
+	dnas := []string{start}
+	//哪些是已经出现过了的
+	exist := map[string]bool{}
+	exist[start] = true
+
+	for res, dnasLen := 0, 0; dnasLen != len(dnas); res++ {
+		dnasLen = len(dnas)
+		for i := 0; i < dnasLen; i++ {
+			for _, v := range bank {
+				if end == dnas[i] {
+					return res
+				}
+				//说明产生了新的变异
+				if change(v, dnas[i]) == 1 && !exist[v] {
+					dnas = append(dnas, v)
+					exist[v] = true
+				}
+			}
+		}
+	}
+	return -1
+}
+
 //436. 寻找右区间
 func findRightInterval(intervals [][]int) []int {
 	res := make([]int, len(intervals))

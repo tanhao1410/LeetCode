@@ -4,6 +4,33 @@ func main() {
 
 }
 
+//520. 检测大写字母
+func detectCapitalUse(word string) bool {
+
+	//思路：先看第一个字母是否是大写，如果是，除非后面全大写，或全小写，或为空
+	//如果第一个字母是小写，则后面必须是全小写
+	firstIsSmall := word[0] >= 'a' && word[0] <= 'z'
+	haveSmall, haveBig := false, false
+	for i := 1; i < len(word); i++ {
+		if word[i] >= 'a' && word[i] <= 'z' {
+			haveSmall = true
+		}
+		if word[i] >= 'A' && word[i] <= 'Z' {
+			haveBig = true
+		}
+		//第一个字母是小写，后面出现了大写
+		if firstIsSmall && haveBig {
+			return false
+		}
+		//第一个字母是大写，后面又出现小写，又出现大写
+		if !firstIsSmall && haveBig && haveSmall {
+			return false
+		}
+
+	}
+	return true
+}
+
 //每日一题：205. 同构字符串
 func isIsomorphic(s string, t string) bool {
 	m1 := make(map[byte]byte)

@@ -4,6 +4,30 @@ func main() {
 
 }
 
+//541. 反转字符串 II
+func reverseStr(s string, k int) string {
+	res := make([]byte, len(s))
+	for i, index := 0, 0; i < len(s); {
+		//前k个反转，如果不够，全反转
+		for j := k - 1; j >= 0; j-- {
+			if i+j < len(s) {
+				res[index] = s[i+j]
+				index++
+			}
+		}
+		i = i + k
+		//
+		for j := 0; j < k; j++ {
+			if i+j < len(s) {
+				res[index] = s[i+j]
+				index++
+			}
+		}
+		i = i + k
+	}
+	return string(res)
+}
+
 //509. 斐波那契数
 func fib(n int) int {
 	if n < 2 {

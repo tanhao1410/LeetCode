@@ -1,7 +1,53 @@
 package main
 
 func main() {
+	one := TreeNode{
+		Val:   1,
+		Left:  nil,
+		Right: nil,
+	}
+	three := TreeNode{
+		Val:   3,
+		Left:  nil,
+		Right: nil,
+	}
+	root := TreeNode{
+		Val:   2,
+		Left:  &one,
+		Right: &three,
+	}
 
+	inorderSuccessor(&root, &one)
+}
+
+//面试题 04.06. 后继者
+func inorderSuccessor(root *TreeNode, p *TreeNode) *TreeNode {
+	flag := false
+	//中序遍历
+	var dfs func(root *TreeNode) *TreeNode
+	//中序遍历，左，中，右
+	dfs = func(root *TreeNode) *TreeNode {
+		if root != nil {
+			leftRes := dfs(root.Left)
+			if leftRes != nil {
+				return leftRes
+			}
+			if flag {
+				return root
+			}
+			if root.Val == p.Val {
+				//下一个就是了。
+				flag = true
+			}
+			rightRes := dfs(root.Right)
+			if rightRes != nil {
+				return rightRes
+			}
+		}
+		return nil
+	}
+
+	return dfs(root)
 }
 
 //每日一题：188. 买卖股票的最佳时机 IV

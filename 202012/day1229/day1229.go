@@ -47,64 +47,21 @@ func smallestK(arr []int, k int) []int {
 
 //每日一题：330. 按要求补齐数组
 func minPatches(nums []int, n int) int {
-	//思路：肯定需要1，没有的话要加上。除非有多个1，否则2也是必需的。
-	//先看前面能组成多少一下的任意数 ，注意1,2,4,8这些，如果形成有形成不了的数了，就应该添上
 	res := 0
-	//先根据n生成一般的数组合，后面数之和
-
-	used := make([]int, len(nums))
-	//没有被使用的数字的和
-	//getNoUsedSum := func() int {
-	//	res := 0
-	//	for k, v := range used {
-	//		if v == 0 {
-	//			res += nums[k]
-	//		}
-	//	}
-	//	return res
-	//}
-
-	//能组成的任意数
-	r := 0
-	//先看前面能形成多少的任意数
-	if len(nums) == 0 || nums[0] != 1 {
-		res++
-		r = 1
-	} else {
-		r = 1
-		//该1已被使用了
-		used[0] = 1
-	}
-
-	//得到比N大的最近的2的幂，1，2,4,8
-	get2N := func(n int) int {
-		for res := 2; ; res <<= 1 {
-			if res > n {
-				return res
-			}
-		}
-	}
-
-	for all := r; all < n; all = r {
-
-		flag := false
-		for i := 0; i < len(nums); i++ {
-			if used[i] == 0 && r+1 == nums[i] {
-				r = r + 1
-				used[i] = 1
-				flag = true
-				break
-			}
-		}
-
-		if !flag {
-			//不一定每一次都要从里面补，如果后面还有这样的数呢
-			a := get2N(r)
+	//设开始时的覆盖范围是x = 1,index = 0
+	//这里的x代表的是小于x的都可以，所以for循环中是x<=n
+	x, index := 1, 0
+	for x <= n {
+		//可以直接扩大覆盖范围
+		if index < len(nums) && nums[index] <= x {
+			x += nums[index]
+			index++
+		} else {
+			//不够了，需要补充数字了，补充x
 			res++
-			r = a<<1 - 1
+			x += x
 		}
 	}
-
 	return res
 }
 

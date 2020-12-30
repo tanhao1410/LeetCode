@@ -6,6 +6,35 @@ func main() {
 	fmt.Println(lastStoneWeight([]int{2, 2}))
 }
 
+//面试题 08.07. 无重复字符串的排列组合
+func permutation(S string) []string {
+
+	res := []string{}
+	if len(S) == 1 {
+		res = append(res, S)
+		return res
+	}
+
+	trimS := func(s string, b byte) string {
+		res := make([]byte, len(s)-1)
+		for i, j := 0, 0; i < len(s); i++ {
+			if s[i] != b {
+				res[j] = s[i]
+				j++
+			}
+		}
+		return string(res)
+	}
+
+	//采用递归的方式
+	for i := 0; i < len(S); i++ {
+		for _, v := range permutation(trimS(S, S[i])) {
+			res = append(res, string(S[i])+v)
+		}
+	}
+	return res
+}
+
 //每日一题：1046. 最后一块石头的重量
 func lastStoneWeight(stones []int) int {
 

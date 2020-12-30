@@ -1,9 +1,51 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 func main() {
+	fmt.Println(printBin(0.1))
 	fmt.Println(lastStoneWeight([]int{2, 2}))
+}
+
+//面试题 05.02. 二进制数转字符串
+func printBin(num float64) string {
+
+	//得到2^n 分之一
+	get2N := func(n int) float64 {
+		res := 1.0
+		for i := 0; i < n; i++ {
+			res /= 2.0
+		}
+		return res
+	}
+
+	oneIndex := make(map[int]bool)
+	for i := 1; i < 18; i++ {
+		base := get2N(i)
+		if num >= base {
+			oneIndex[i] = true
+			num -= base
+		}
+	}
+
+	if num != 0 {
+		return "ERROR"
+	}
+
+	res := "0."
+
+	for j := 1; j <= 17; j++ {
+		if oneIndex[j] {
+			res += "1"
+		} else {
+			res += "0"
+		}
+	}
+	//再根据该数反过来计算，如果相等的话，说明是的，如果不相等，说明数不行。
+	return strings.TrimRight(res, "0")
 }
 
 //面试题 08.07. 无重复字符串的排列组合

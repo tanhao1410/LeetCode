@@ -16,6 +16,44 @@ func main() {
 	}
 }
 
+//面试题 04.08. 首个共同祖先
+func lowestCommonAncestor(root *TreeNode, p *TreeNode, q *TreeNode) *TreeNode {
+	//思路：判断当前节点是否p,q,如果是其中之一，返回结果。如果不是，遍历当前节点的左右节点，如果返回都是1，则返回当前节点。
+	//若有一边返回的是2，则，继续进入这一边遍历。
+
+	var haveCountOfVal func(root *TreeNode) int
+	haveCountOfVal = func(root *TreeNode) int {
+		res := 0
+		if root != nil {
+			if root.Val == q.Val || root.Val == p.Val {
+				res++
+			}
+			res += haveCountOfVal(root.Left)
+			res += haveCountOfVal(root.Right)
+		}
+		return res
+	}
+	res := root
+	for {
+		leftCount := haveCountOfVal(res.Left)
+		rightCount := haveCountOfVal(res.Right)
+		if leftCount == 2 {
+			res = root.Left
+		} else if rightCount == 2 {
+			res = root.Right
+		} else {
+			return res
+		}
+	}
+
+}
+
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
 type NestedInteger struct {
 }
 

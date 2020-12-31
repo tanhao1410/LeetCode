@@ -15,6 +15,51 @@ func main() {
 	}
 }
 
+//面试题 17.08. 马戏团人塔
+func bestSeqAtIndex(height []int, weight []int) int {
+	if len(height) == 0 {
+		return 0
+	}
+	//思路：先排序，然后类似于俄罗斯套娃问题，动态规划的算法，dp[i]自己在顶部的最大人数。dp[i+1]等于前面的可以放的+1，前面 到某几位呢？
+	//不能简单的排序，因为身高和体重是一一对应的。
+	hw := make([][]int, len(height))
+	for i := 0; i < len(height); i++ {
+		hw[i] = []int{height[i], weight[i]}
+	}
+	sort.Slice(hw, func(i, j int) bool {
+		//首先按身高排序，应该矮的在后
+		return hw[i][0] > hw[j][0]
+
+	})
+
+	//它的前面可以叠多少人
+	dp := make([]int, len(hw))
+	//记录能形成的最长人数
+	dpMax := make([]int, len(hw))
+	dp[0] = 1
+	dpMax[0] = 1
+
+	for i := 1; i < len(dp); i++ {
+		//从后往前找，找到第一个它可以放上去的。同身高下，轻的放在了前面，轻的dp肯定要比重的大或相等。前面的身高肯定要比后面的要矮或相等。
+		max := 0
+		for j := i - 1; j >= 0; j-- {
+			if hw[j][0] > hw[i][0] && hw[j][1] > hw[i][1] && dp[j] > max {
+				max = dp[j]
+			}
+			if max >= dpMax[j] {
+				break
+			}
+		}
+		dp[i] = max + 1
+		if dpMax[i-1] < dp[i] {
+			dpMax[i] = dp[i]
+		} else {
+			dpMax[i] = dpMax[i-1]
+		}
+	}
+	return dpMax[len(dpMax)-1]
+}
+
 //面试题 10.09. 排序矩阵查找
 func searchMatrix(matrix [][]int, target int) bool {
 	//矩阵为空的时候直接返回

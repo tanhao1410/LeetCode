@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"sort"
+	"strconv"
 )
 
 func main() {
@@ -13,6 +14,73 @@ func main() {
 		fmt.Println(searchMatrix([][]int{{1, 4, 7, 11, 15}, {2, 5, 8, 12, 19}, {3, 6, 9, 16, 22}, {10, 13, 14, 17, 24}, {18, 21, 23, 26,
 			30}}, arr[i]))
 	}
+}
+
+type NestedInteger struct {
+}
+
+func (n NestedInteger) IsInteger() bool { return true }
+
+func (n NestedInteger) GetInteger() int { return 0 }
+
+func (n *NestedInteger) SetInteger(value int) {}
+
+func (n *NestedInteger) Add(elem NestedInteger) {}
+
+func (n NestedInteger) GetList() []*NestedInteger { return nil }
+
+//385. 迷你语法分析器
+func deserialize(s string) *NestedInteger {
+	if len(s) == 0 {
+		return new(NestedInteger)
+	}
+	res := new(NestedInteger)
+	//如果s是一个纯数字
+	if (s[0] >= '0' && s[0] <= '9') || s[0] == '-' {
+		num, _ := strconv.Atoi(s)
+		res.SetInteger(num)
+	} else {
+		//说明是以[开头的数组类
+		for _, v := range processS(s) {
+			res.Add(*deserialize(v))
+		}
+	}
+	return res
+}
+
+//把一个[xx,xxx,[xx],xx]分成数组
+func processS(s string) []string {
+	res := []string{}
+	for i := 1; i < len(s)-1; {
+		if s[i] == ',' {
+			i++
+			continue
+		}
+		if s[i] == '[' {
+			stack := 1
+			j := i + 1
+			for ; stack > 0; j++ {
+				if s[j] == '[' {
+					stack++
+				} else if s[j] == ']' {
+					stack--
+				}
+			}
+			res = append(res, s[i:j])
+			i = j
+		} else {
+			//碰到数字了
+			j := i + 1
+			for ; j < len(s)-1; j++ {
+				if (s[j] > '9' || s[j] < '0') && s[j] != '-' {
+					break
+				}
+			}
+			res = append(res, s[i:j])
+			i = j
+		}
+	}
+	return res
 }
 
 //面试题 17.08. 马戏团人塔

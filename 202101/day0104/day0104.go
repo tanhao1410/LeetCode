@@ -1,9 +1,59 @@
 package main
 
-import "strings"
+import (
+	"fmt"
+	"sort"
+	"strings"
+)
 
 func main() {
+	fmt.Println(longestWord([]string{"pg", "ptgt", "tgpppttg", "tptttgg", "pgttggtpt", "t", "ptg", "ppgp", "g", "ptgpptpgg"}))
+}
 
+//面试题 17.15. 最长单词
+func longestWord(words []string) string {
+	m := make(map[string]bool)
+	for _, v := range words {
+		m[v] = true
+	}
+	sort.Slice(words, func(i, j int) bool {
+		if len(words[i]) == len(words[j]) {
+			for i := 0; i < len(words[i]); i++ {
+				if words[i] != words[j] {
+					//字母序小的在前
+					return words[i] < words[j]
+				}
+			}
+		}
+		//大的在前
+		return len(words[i]) > len(words[j])
+	})
+
+	var canCompose func(s string, canSingle bool) bool
+	canCompose = func(s string, canSingle bool) bool {
+		if canSingle && m[s] {
+			return true
+		}
+		for i := 1; i < len(s); i++ {
+			pre, tail := s[:i], s[i:]
+			//前缀是单词
+			if m[pre] && canCompose(tail, true) {
+				return true
+			}
+		}
+
+		return false
+	}
+
+	for i := 0; i < len(words); i++ {
+		word := words[i]
+		//截取单词，看是否存在于字典中
+		//可以由多个单词组合！
+		if canCompose(word, false) {
+			return word
+		}
+	}
+	return ""
 }
 
 //面试题 01.04. 回文排列

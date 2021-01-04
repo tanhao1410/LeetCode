@@ -6,6 +6,26 @@ func main() {
 
 }
 
+//面试题 01.04. 回文排列
+func canPermutePalindrome(s string) bool {
+	//用一个hash来判断，如果，所有的字母都是偶数个或只有一个一个字母是奇数个，那么返回true
+	m := make(map[byte]int)
+	for i := 0; i < len(s); i++ {
+		if _, ok := m[s[i]]; ok {
+			m[s[i]]++
+		} else {
+			m[s[i]] = 1
+		}
+	}
+	n := 0
+	for _, count := range m {
+		if count%2 != 0 {
+			n++
+		}
+	}
+	return n <= 1
+}
+
 //面试题 01.03. URL化
 func replaceSpaces(S string, length int) string {
 	//两种方式，第一种，重新生成一个字符串，比较简单。第二种，如何在原来的字符串上生成呢。

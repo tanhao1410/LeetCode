@@ -12,6 +12,104 @@ func main() {
 	}
 }
 
+//面试题 03.01. 三合一
+type TripleInOne struct {
+	Nums  []int
+	One   int
+	Two   int
+	Three int
+}
+
+func Constructor(stackSize int) TripleInOne {
+	return TripleInOne{
+		Nums:  make([]int, stackSize*3),
+		One:   -1,
+		Two:   -1 + stackSize,
+		Three: -1 + 2*stackSize,
+	}
+}
+
+func (this *TripleInOne) Push(stackNum int, value int) {
+	size := len(this.Nums) / 3
+	switch stackNum {
+	case 0:
+		if this.One < size-1 {
+			this.Nums[this.One+1] = value
+			this.One++
+		}
+	case 1:
+		if this.Two < size-1+size {
+			this.Nums[this.Two+1] = value
+			this.Two++
+		}
+	case 2:
+		if this.Three < size-1+2*size {
+			this.Nums[this.Three+1] = value
+			this.Three++
+		}
+	}
+}
+
+func (this *TripleInOne) Pop(stackNum int) int {
+	size := len(this.Nums) / 3
+	switch stackNum {
+	case 0:
+		if this.One > -1 {
+			this.One--
+			return this.Nums[this.One+1]
+		}
+	case 1:
+		if this.Two > -1+size {
+			this.Two--
+			return this.Nums[this.Two+1]
+		}
+	case 2:
+		if this.Three > -1+2*size {
+			this.Three--
+			return this.Nums[this.Three+1]
+		}
+	}
+	return -1
+}
+
+func (this *TripleInOne) Peek(stackNum int) int {
+	size := len(this.Nums) / 3
+	switch stackNum {
+	case 0:
+		if this.One > -1 {
+			return this.Nums[this.One]
+		}
+	case 1:
+		if this.Two > -1+size {
+			return this.Nums[this.Two]
+		}
+	case 2:
+		if this.Three > -1+2*size {
+			return this.Nums[this.Three]
+		}
+	}
+	return -1
+}
+
+func (this *TripleInOne) IsEmpty(stackNum int) bool {
+	size := len(this.Nums) / 3
+	switch stackNum {
+	case 0:
+		if this.One > -1 {
+			return false
+		}
+	case 1:
+		if this.Two > -1+size {
+			return false
+		}
+	case 2:
+		if this.Three > -1+2*size {
+			return false
+		}
+	}
+	return true
+}
+
 //面试题 05.04. 下一个数
 func findClosedNumbers(num int) []int {
 	//求n的位数

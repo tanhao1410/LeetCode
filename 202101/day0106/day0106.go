@@ -6,6 +6,54 @@ func main() {
 	fmt.Println(findNthDigit(3012))
 }
 
+//面试题 03.02. 栈的最小值
+type MinStack struct {
+	//用另外一个栈来记录最小值,栈顶为最小值
+	Nums []int
+	Min  []int
+}
+
+func Constructor() MinStack {
+	return MinStack{
+		Nums: []int{},
+		Min:  []int{},
+	}
+}
+
+func (this *MinStack) Push(x int) {
+	this.Nums = append(this.Nums, x)
+	if len(this.Min) == 0 || x <= this.Min[len(this.Min)-1] {
+		this.Min = append(this.Min, x)
+	}
+}
+
+func (this *MinStack) Pop() {
+	if len(this.Nums) != 0 {
+		popValue := this.Nums[len(this.Nums)-1]
+		this.Nums = this.Nums[:len(this.Nums)-1]
+
+		//与栈顶元素相等，去掉栈顶元素
+		if this.Min[len(this.Min)-1] == popValue {
+			this.Min = this.Min[:len(this.Min)-1]
+		}
+	}
+
+}
+
+func (this *MinStack) Top() int {
+	if len(this.Nums) > 0 {
+		return this.Nums[len(this.Nums)-1]
+	}
+	return -1
+}
+
+func (this *MinStack) GetMin() int {
+	if len(this.Min) > 0 {
+		return this.Min[len(this.Min)-1]
+	}
+	return -1
+}
+
 type ListNode struct {
 	Val  int
 	Next *ListNode

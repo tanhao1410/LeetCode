@@ -6,6 +6,47 @@ func main() {
 	fmt.Println(findNthDigit(3012))
 }
 
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+//面试题 02.06. 回文链表
+func isPalindrome(head *ListNode) bool {
+	//简单思路：用一个栈通过进栈出栈即可做到时间复杂度o(n)
+	//用 O(n) 时间复杂度和 O(1) 空间复杂度，逆置后半截链表
+	size := 0
+	for p := head; p != nil; p = p.Next {
+		size++
+	}
+
+	if size <= 1 {
+		return true
+	}
+	//从中间开始截取
+	size = (size + 1) / 2
+	p := head
+	for ; size >= 0; p = p.Next {
+		size--
+	}
+
+	//逆置链表
+	pp, q := p, p.Next
+	for q != nil {
+		q.Next, pp, q = pp, q, q.Next
+	}
+	p.Next = nil
+
+	for p != nil && head != nil {
+		if p.Val != head.Val {
+			return false
+		}
+		p, head = p.Next, head.Next
+	}
+
+	return true
+}
+
 //400. 第N个数字
 func findNthDigit(n int) int {
 

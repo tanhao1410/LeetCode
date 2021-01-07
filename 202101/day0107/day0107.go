@@ -4,6 +4,51 @@ func main() {
 
 }
 
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+//508. 出现次数最多的子树元素和
+func findFrequentTreeSum(root *TreeNode) []int {
+	//用缓存来临时存住，优化递归过程中的重复计算
+	cache := make(map[*TreeNode]int) //节点--->元素和
+	var sum func(root *TreeNode) int
+	sum = func(root *TreeNode) int {
+		if root == nil {
+			return 0
+		}
+		if sum, ok := cache[root]; ok {
+			return sum
+		}
+		res := root.Val + sum(root.Left) + sum(root.Right)
+		cache[root] = res
+		return res
+	}
+	sum(root)
+	//计算哪一个值出现的次数最多
+	m := make(map[int]int)
+	max := 0
+	for _, v := range cache {
+		if _, ok := m[v]; ok {
+			m[v]++
+		} else {
+			m[v] = 1
+		}
+		if m[v] > max {
+			max = m[v]
+		}
+	}
+	res := []int{}
+	for k, v := range m {
+		if v == max {
+			res = append(res, k)
+		}
+	}
+	return res
+}
+
 //529. 扫雷游戏
 func updateBoard(board [][]byte, click []int) [][]byte {
 	//如果一个地雷（'M'）被挖出，游戏就结束了- 把它改为 'X'。

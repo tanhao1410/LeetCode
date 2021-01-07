@@ -1,5 +1,7 @@
 package main
 
+import "math"
+
 func main() {
 
 }
@@ -8,6 +10,34 @@ type TreeNode struct {
 	Val   int
 	Left  *TreeNode
 	Right *TreeNode
+}
+
+//515. 在每个树行中找最大值
+func largestValues(root *TreeNode) []int {
+	res := []int{}
+	//思路：树的层级遍历+寻找最大值
+	if root == nil {
+		return res
+	}
+	queue := []*TreeNode{root}
+	for queueLen := len(queue); queueLen > 0; queueLen = len(queue) {
+		//一行
+		max := math.MinInt32
+		for i := 0; i < queueLen; i++ {
+			if queue[i].Val > max {
+				max = queue[i].Val
+			}
+			if queue[i].Left != nil {
+				queue = append(queue, queue[i].Left)
+			}
+			if queue[i].Right != nil {
+				queue = append(queue, queue[i].Right)
+			}
+		}
+		res = append(res, max)
+		queue = queue[queueLen:]
+	}
+	return res
 }
 
 //508. 出现次数最多的子树元素和

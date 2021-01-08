@@ -8,6 +8,23 @@ func main() {
 
 }
 
+//190. 颠倒二进制位
+func reverseBits(num uint32) uint32 {
+	//思路：求每一位，然后倒序
+	bytes := make([]byte, 32)
+	for i := 0; i < 32 && num != 0; i++ {
+		bytes[i] = byte(num & 1)
+		num >>= 1
+	}
+	//把byte形成一个新的数
+	var res uint32 = uint32(bytes[0])
+	for i := 1; i < 32; i++ {
+		res <<= 1
+		res += uint32(bytes[i])
+	}
+	return res
+}
+
 //198. 打家劫舍
 func rob(nums []int) int {
 	if len(nums) == 0 {

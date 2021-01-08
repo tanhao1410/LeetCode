@@ -8,6 +8,32 @@ func main() {
 
 }
 
+//198. 打家劫舍
+func rob(nums []int) int {
+	if len(nums) == 0 {
+		return 0
+	}
+
+	//偷第i家得到的最大的值，不偷得到的最大值，不包括后面
+	y := make([]int, len(nums))
+	y[0] = nums[0]
+	n := make([]int, len(nums))
+	for i := 1; i < len(nums); i++ {
+		y[i] = n[i-1] + nums[i] //上一个不偷
+		//这个不偷的最大值为上一个的最大值
+		if y[i-1] > n[i-1] {
+			n[i] = y[i-1]
+		} else {
+			n[i] = n[i-1]
+		}
+	}
+	if y[len(y)-1] > n[len(n)-1] {
+		return y[len(y)-1]
+	}
+
+	return n[len(n)-1]
+}
+
 type ListNode struct {
 	Val  int
 	Next *ListNode

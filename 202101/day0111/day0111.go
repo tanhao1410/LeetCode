@@ -9,6 +9,54 @@ func main() {
 	fmt.Println(smallestStringWithSwaps("dcab", [][]int{{0, 3}, {1, 2}, {0, 2}}))
 }
 
+//232. 用栈实现队列
+type MyQueue struct {
+	Stack1 []int
+	Stack2 []int
+}
+
+func Constructor() MyQueue {
+	return MyQueue{
+		Stack1: []int{},
+		Stack2: []int{},
+	}
+}
+
+func (this *MyQueue) Push(x int) {
+	this.Stack1 = append(this.Stack1, x)
+}
+
+func (this *MyQueue) Pop() int {
+
+	if len(this.Stack2) == 0 { //需要将栈1依次弹出，放入栈2中
+		for len(this.Stack1) > 0 {
+			top := this.Stack1[len(this.Stack1)-1]
+			this.Stack2 = append(this.Stack2, top)
+			this.Stack1 = this.Stack1[:len(this.Stack1)-1]
+		}
+	}
+
+	res := this.Stack2[len(this.Stack2)-1]
+	this.Stack2 = this.Stack2[:len(this.Stack2)-1]
+	return res
+}
+
+func (this *MyQueue) Peek() int {
+	if len(this.Stack2) == 0 { //需要将栈1依次弹出，放入栈2中
+		for len(this.Stack1) > 0 {
+			top := this.Stack1[len(this.Stack1)-1]
+			this.Stack2 = append(this.Stack2, top)
+			this.Stack1 = this.Stack1[:len(this.Stack1)-1]
+		}
+	}
+	res := this.Stack2[len(this.Stack2)-1]
+	return res
+}
+
+func (this *MyQueue) Empty() bool {
+	return len(this.Stack2) == 0 && len(this.Stack1) == 0
+}
+
 //每日一题：1202. 交换字符串中的元素
 func smallestStringWithSwaps(s string, pairs [][]int) string {
 	res := []byte(s)

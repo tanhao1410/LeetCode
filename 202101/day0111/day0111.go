@@ -9,13 +9,78 @@ func main() {
 	fmt.Println(smallestStringWithSwaps("dcab", [][]int{{0, 3}, {1, 2}, {0, 2}}))
 }
 
+//225. 用队列实现栈
+type MyStack struct {
+	queues [][]int
+	cur    int
+}
+
+func Constructor() MyStack {
+	return MyStack{
+		queues: make([][]int, 2),
+		cur:    0,
+	}
+}
+
+func (this *MyStack) Push(x int) {
+	this.queues[this.cur] = append(this.queues[this.cur], x)
+}
+
+func (this *MyStack) Pop() int {
+	//如果q1的长度为1,则直接返回即可
+	res := -1
+	if len(this.queues[this.cur]) == 0 {
+		for len(this.queues[1-this.cur]) > 1 {
+			head := this.queues[1-this.cur][0]
+			this.queues[this.cur] = append(this.queues[this.cur], head)
+			this.queues[1-this.cur] = this.queues[1-this.cur][1:]
+		}
+		res = this.queues[1-this.cur][0]
+		this.queues[1-this.cur] = this.queues[1-this.cur][1:]
+		return res
+	}
+	for len(this.queues[this.cur]) > 1 {
+		head := this.queues[this.cur][0]
+		this.queues[1-this.cur] = append(this.queues[1-this.cur], head)
+		this.queues[this.cur] = this.queues[this.cur][1:]
+	}
+	res = this.queues[this.cur][0]
+	this.queues[this.cur] = this.queues[this.cur][1:]
+	return res
+}
+
+func (this *MyStack) Top() int {
+	res := -1
+	if len(this.queues[this.cur]) == 0 {
+		for len(this.queues[1-this.cur]) > 1 {
+			head := this.queues[1-this.cur][0]
+			this.queues[this.cur] = append(this.queues[this.cur], head)
+			this.queues[1-this.cur] = this.queues[1-this.cur][1:]
+		}
+		res = this.queues[1-this.cur][0]
+		this.cur = 1 - this.cur
+		return res
+	}
+	for len(this.queues[this.cur]) > 1 {
+		head := this.queues[this.cur][0]
+		this.queues[1-this.cur] = append(this.queues[1-this.cur], head)
+		this.queues[this.cur] = this.queues[this.cur][1:]
+	}
+	res = this.queues[this.cur][0]
+	return res
+}
+
+func (this *MyStack) Empty() bool {
+	return len(this.queues[1-this.cur]) == 0 && len(this.queues[this.cur]) == 0
+}
+
 //232. 用栈实现队列
 type MyQueue struct {
 	Stack1 []int
 	Stack2 []int
 }
 
-func Constructor() MyQueue {
+func Constructor2() MyQueue {
 	return MyQueue{
 		Stack1: []int{},
 		Stack2: []int{},

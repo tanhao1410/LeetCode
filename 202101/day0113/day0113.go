@@ -16,6 +16,57 @@ func main() {
 	fmt.Println(res)
 }
 
+//542. 01 矩阵
+func updateMatrix(matrix [][]int) [][]int {
+
+	for i := 0; i < len(matrix); i++ {
+		for j := 0; j < len(matrix[0]); j++ {
+			if matrix[i][j] == 1 {
+				matrix[i][j] = 999
+			}
+		}
+	}
+
+	setDis := func(i, j, dis int) {
+		if i-1 >= 0 {
+			if matrix[i-1][j] > dis {
+				matrix[i-1][j] = dis
+			}
+		}
+		if i+1 < len(matrix) {
+			if matrix[i+1][j] > dis {
+				matrix[i+1][j] = dis
+			}
+		}
+		if j-1 >= 0 {
+			if matrix[i][j-1] > dis {
+				matrix[i][j-1] = dis
+			}
+		}
+
+		if j+1 < len(matrix[0]) {
+			if matrix[i][j+1] > dis {
+				matrix[i][j+1] = dis
+			}
+		}
+	}
+
+	for flag, dis := true, 0; flag; dis++ {
+		flag = false
+		for i := 0; i < len(matrix); i++ {
+			for j := 0; j < len(matrix[0]); j++ {
+				if matrix[i][j] == dis {
+					//它的上下左右都改为dis + 1
+					setDis(i, j, dis+1)
+					flag = true
+				}
+			}
+		}
+	}
+
+	return matrix
+}
+
 //528. 按权重随机选择
 type Solution struct {
 	sum int

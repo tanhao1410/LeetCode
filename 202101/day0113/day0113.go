@@ -1,9 +1,74 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand"
+)
 
 func main() {
 	fmt.Println(findRedundantConnection([][]int{{1, 2}, {2, 3}, {3, 4}, {1, 4}, {1, 5}}))
+	ex := []int{1, 2, 2, 2, 10}
+	solution := Constructor(ex)
+	res := make([]int, len(ex))
+	for i := 0; i < 1000; i++ {
+		res[solution.PickIndex()]++
+	}
+	fmt.Println(res)
+}
+
+//528. 按权重随机选择
+type Solution struct {
+	sum int
+	w   []int
+}
+
+func Constructor(w []int) Solution {
+	sum := 0
+	for i := 0; i < len(w); i++ {
+		sum += w[i]
+		w[i] = sum
+	}
+
+	return Solution{
+		sum: sum,
+		w:   w,
+	}
+}
+
+func (this *Solution) PickIndex() int {
+	res := 0
+	randNum := rand.Intn(this.sum) + 1
+	//需要知道这个数在哪一个区间
+	//通过二分法查找该数在哪个区间
+	start, end := 0, len(this.w)-1
+	middle := (start + end) / 2
+	for ; start <= end; middle = (start + end) / 2 {
+		if this.w[middle] == randNum {
+			return middle
+		}
+
+		if this.w[middle] < randNum {
+			if this.w[middle+1] >= randNum {
+				return middle + 1
+			}
+			start = middle + 1
+		} else {
+
+			if middle == 0 {
+				return 0
+			}
+
+			if this.w[middle-1] > randNum {
+				end = middle - 1
+			} else if this.w[middle-1] == randNum {
+				return middle - 1
+			} else {
+				return middle
+			}
+		}
+
+	}
+	return res
 }
 
 //每日一题：684. 冗余连接

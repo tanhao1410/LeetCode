@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	fmt.Println(removeStones([][]int{{0, 0}, {0, 2}, {1, 1}, {2, 0}, {2, 2}}))
+	fmt.Println(removeStones2([][]int{{0, 0}, {0, 2}, {1, 1}, {2, 0}, {2, 2}}))
 	fmt.Println(countArrangement(15))
 }
 
@@ -71,6 +71,34 @@ func getValidT9Words(num string, words []string) []string {
 		}
 	}
 	return res
+}
+
+//每日一题：947. 移除最多的同行或同列石头
+func removeStones2(stones [][]int) int {
+	//采用连通分量并查集的方式。图的变种
+	selected := make(map[int]bool)
+	res := 0
+	//先把第一个加进去
+	for i := 0; i < len(stones); i++ {
+		if !selected[i] {
+			//没有被选的话，才进行重新一个分量
+			c := map[int]bool{i: true}
+			for len(c) > 0 {
+				for k, _ := range c {
+					for j := 0; j < len(stones); j++ {
+						if !selected[j] && (stones[j][0] == stones[k][0] || stones[j][1] == stones[k][1]) {
+							//加入进来
+							c[j] = true
+							selected[j] = true
+						}
+					}
+					delete(c, k)
+				}
+			}
+			res++
+		}
+	}
+	return len(stones) - res
 }
 
 //每日一题：947. 移除最多的同行或同列石头--方法错误，未解决

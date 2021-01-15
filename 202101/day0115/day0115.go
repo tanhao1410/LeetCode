@@ -9,6 +9,28 @@ func main() {
 	fmt.Println(removeStones([][]int{{0, 0}, {0, 2}, {1, 1}, {2, 0}, {2, 2}}))
 }
 
+//面试题 16.20. T9键盘
+func getValidT9Words(num string, words []string) []string {
+	res := []string{}
+	//思路：每一个单词都有一个对应的数字
+	m := map[byte]string{'a': "2", 'b': "2", 'c': "2", 'd': "3", 'e': "3", 'f': "3", 'g': "4", 'h': "4", 'i': "4", 'j': "5", 'k': "5", 'l': "5", 'm': "6", 'n': "6", 'o': "6", 'p': "7", 'q': "7", 'r': "7", 's': "7", 't': "8", 'v': "8", 'u': "8", 'w': "9", 'x': "9", 'y': "9", 'z': "9"}
+
+	word2num := func(word string) string {
+		res := ""
+		for j := 0; j < len(word); j++ {
+			//单词对应的数字
+			res += m[word[j]]
+		}
+		return res
+	}
+	for i := 0; i < len(words); i++ {
+		if len(words[i]) == len(num) && num == word2num(words[i]) {
+			res = append(res, words[i])
+		}
+	}
+	return res
+}
+
 //每日一题：947. 移除最多的同行或同列石头--方法错误，未解决
 func removeStones(stones [][]int) int {
 	//用一个数代表一个点 int = 20000 * stones[0]  + stones[1]

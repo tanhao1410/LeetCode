@@ -7,6 +7,48 @@ import (
 
 func main() {
 	fmt.Println(removeStones([][]int{{0, 0}, {0, 2}, {1, 1}, {2, 0}, {2, 2}}))
+	fmt.Println(countArrangement(15))
+}
+
+//526. 优美的排列
+func countArrangement(n int) int {
+	res := 0
+	nums := make([][]int, n)
+	for i := 0; i < n; i++ {
+		numsItem := []int{}
+		//先加上比它小的
+		for j := 1; j <= i+1; j++ {
+			if (i+1)%j == 0 {
+				numsItem = append(numsItem, j)
+			}
+		}
+		for j := i + 2; j <= n; j++ {
+			if j%(i+1) == 0 {
+				numsItem = append(numsItem, j)
+			}
+		}
+		nums[i] = numsItem
+	}
+
+	var assignNum func(index int, used []int)
+	assignNum = func(index int, used []int) {
+		if index == n {
+			res++
+			return
+		}
+		//遍历可以选择的数
+		for _, v := range nums[index] {
+			//没被使用
+			if used[v-1] == 0 {
+				used[v-1] = 1
+				assignNum(index+1, used)
+				//不使用了
+				used[v-1] = 0
+			}
+		}
+	}
+	assignNum(0, make([]int, n))
+	return res
 }
 
 //面试题 16.20. T9键盘

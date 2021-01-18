@@ -10,6 +10,34 @@ func main() {
 		"David4@m.co"}, {"David", "David4@m.co", "David5@m.co"}, {"David", "David2@m.co", "David3@m.co"}, {"David", "David1@m.co", "David2@m.co"}}))
 }
 
+//654. 最大二叉树
+func constructMaximumBinaryTree(nums []int) *TreeNode {
+	if len(nums) == 0 {
+		return nil
+	}
+	//先找最大值
+	max := 0
+	for i := 1; i < len(nums); i++ {
+		if nums[i] > nums[max] {
+			max = i
+		}
+	}
+
+	root := TreeNode{
+		Val:   nums[max],
+		Left:  constructMaximumBinaryTree(nums[:max]),
+		Right: constructMaximumBinaryTree(nums[max+1:]),
+	}
+
+	return &root
+}
+
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
 //每日一题：721. 账户合并
 func accountsMerge(accounts [][]string) [][]string {
 

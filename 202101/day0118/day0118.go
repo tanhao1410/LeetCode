@@ -3,11 +3,34 @@ package main
 import (
 	"fmt"
 	"sort"
+	"strings"
 )
 
 func main() {
 	fmt.Println(accountsMerge([][]string{{"David", "David0@m.co", "David1@m.co"}, {"David", "David3@m.co",
 		"David4@m.co"}, {"David", "David4@m.co", "David5@m.co"}, {"David", "David2@m.co", "David3@m.co"}, {"David", "David1@m.co", "David2@m.co"}}))
+}
+
+//677. 键值映射
+type MapSum struct {
+	m map[string]int
+}
+
+func Constructor() MapSum {
+	return MapSum{m: map[string]int{}}
+}
+func (this *MapSum) Insert(key string, val int) {
+	this.m[key] = val
+}
+func (this *MapSum) Sum(prefix string) int {
+	//求和
+	res := 0
+	for k, v := range this.m {
+		if strings.HasPrefix(k, prefix) {
+			res += v
+		}
+	}
+	return res
 }
 
 //654. 最大二叉树

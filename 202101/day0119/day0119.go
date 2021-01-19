@@ -16,6 +16,65 @@ func main() {
 }
 
 //每日一题：1584. 连接所有点的最小费用
+func minCostConnectPoints3(points [][]int) int {
+	res := 0
+	//思路：从一个点开始，每一次都找一个最近的，加入其中。直到没有加入进来的为空。
+	//joined := map[int]bool{0: true}
+
+	getDis := func(point1, point2 []int) int {
+		res := 0
+		if point1[0]-point2[0] > 0 {
+			res += point1[0] - point2[0]
+		} else {
+			res += point2[0] - point1[0]
+		}
+		if point1[1]-point2[1] > 0 {
+			res += point1[1] - point2[1]
+		} else {
+			res += point2[1] - point1[1]
+		}
+		return res
+	}
+
+	//记录点到树的最终距离，先加入第一个节点。
+	dis := make([]int, len(points))
+	for i := 1; i < len(points); i++ {
+		dis[i] = math.MaxInt32
+	}
+
+	//下一个循环加入离树最近的点
+	checkPoint := 0
+	for i := 1; i < len(points); i++ {
+		//到树的最近距离是多少，是检查点
+
+		//确定谁离树最近？然后把它加入树中。
+		min := math.MaxInt32
+		minIndex := -1
+		for j := 0; j < len(points); j++ {
+
+			if dis[j] > 0 {
+				//更新点到树的距离
+				p2TreeDis := getDis(points[checkPoint], points[j])
+				if p2TreeDis < dis[j] {
+					dis[j] = p2TreeDis
+				}
+
+				if dis[j] < min {
+					min = dis[j]
+					minIndex = j
+				}
+			}
+
+		}
+		//更新检查点
+		checkPoint = minIndex
+		dis[checkPoint] = 0
+		res += min
+	}
+	return res
+}
+
+//每日一题：1584. 连接所有点的最小费用
 func minCostConnectPoints2(points [][]int) int {
 	res := 0
 	//此为最小生成树，采用克鲁斯卡尔加边法。每一次加入最小的边。

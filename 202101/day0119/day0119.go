@@ -9,6 +9,51 @@ import (
 func main() {
 	fmt.Println(findNumberOfLIS([]int{2, 2, 2, 2, 2}))
 	fmt.Println(triangleNumber([]int{0, 1, 0, 1}))
+	fmt.Println(findShortestSubArray([]int{1, 1, 2, 2, 3, 3, 4, 4}))
+
+}
+
+//697. 数组的度
+func findShortestSubArray(nums []int) int {
+	//先求度
+	m := make(map[int]int)
+	du := 0
+	for i := 0; i < len(nums); i++ {
+		if _, ok := m[nums[i]]; ok {
+			m[nums[i]]++
+		} else {
+			m[nums[i]] = 1
+		}
+		if m[nums[i]] > du {
+			du = m[nums[i]]
+		}
+	}
+	duNum := make(map[int][]int)
+	for k, v := range m {
+		if v == du {
+			duNum[k] = []int{math.MaxInt32, math.MinInt32}
+		}
+	}
+
+	//记录每一个数第一此和最后一次出现的位置
+	for i := 0; i < len(nums); i++ {
+		if indexs, ok := duNum[nums[i]]; ok {
+			if i < indexs[0] {
+				indexs[0] = i
+			}
+			if i > indexs[1] {
+				indexs[1] = i
+			}
+		}
+	}
+	res := math.MaxInt32
+	for _, indexs := range duNum {
+		if indexs[1]-indexs[0]+1 < res {
+			res = indexs[1] - indexs[0] + 1
+		}
+	}
+	return res
+
 }
 
 //611. 有效三角形的个数

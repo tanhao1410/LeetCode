@@ -3,10 +3,39 @@ package main
 import (
 	"fmt"
 	"math"
+	"sort"
 )
 
 func main() {
 	fmt.Println(findNumberOfLIS([]int{2, 2, 2, 2, 2}))
+	fmt.Println(triangleNumber([]int{0, 1, 0, 1}))
+}
+
+//611. 有效三角形的个数
+func triangleNumber(nums []int) int {
+	//先排序
+	sort.Ints(nums)
+	res := 0
+	for i := 0; i < len(nums)-2; i++ {
+		for j := i + 1; j < len(nums)-1; j++ {
+			//短边的两边之和
+			sum := nums[i] + nums[j]
+			//用二分法的方式查找第三个的量
+			start, end := i+2, len(nums)-1
+			middle := (start + end) / 2
+			for ; start <= end; middle = (start + end) / 2 {
+				if nums[middle] >= sum {
+					end = middle - 1
+				} else {
+					start = middle + 1
+				}
+			}
+			if end > j {
+				res += (end - j)
+			}
+		}
+	}
+	return res
 }
 
 //673. 最长递增子序列的个数

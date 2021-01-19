@@ -11,6 +11,86 @@ func main() {
 	fmt.Println(triangleNumber([]int{0, 1, 0, 1}))
 	fmt.Println(findShortestSubArray([]int{1, 1, 2, 2, 3, 3, 4, 4}))
 
+	fmt.Println(minCostConnectPoints2([][]int{{0, 0}, {2, 2}, {3, 10}, {5, 2}, {7, 0}}))
+
+}
+
+//每日一题：1584. 连接所有点的最小费用
+func minCostConnectPoints2(points [][]int) int {
+	res := 0
+	//此为最小生成树，采用克鲁斯卡尔加边法。每一次加入最小的边。
+
+	//边的集合，边用四个数来表示。
+	edges := make([][]int, (len(points)*(len(points)-1))/2)
+	k := 0
+	for i := 0; i < len(points)-1; i++ {
+		for j := i + 1; j < len(points); j++ {
+			edges[k] = []int{i, j}
+			k++
+		}
+	}
+
+	getDis := func(i, j int) int {
+		res := 0
+		if points[i][0]-points[j][0] > 0 {
+			res += points[i][0] - points[j][0]
+		} else {
+			res += points[j][0] - points[i][0]
+		}
+		if points[i][1]-points[j][1] > 0 {
+			res += points[i][1] - points[j][1]
+		} else {
+			res += points[j][1] - points[i][1]
+		}
+		return res
+	}
+
+	//排序边
+	sort.Slice(edges, func(i, j int) bool {
+		return getDis(edges[i][0], edges[i][1]) < getDis(edges[j][0], edges[j][1]) //小的在前
+	})
+
+	c := make([]int, len(points))
+	//每一个点都对应一个并查集，开始时，并查集是自己的序号
+	for i := 0; i < len(points); i++ {
+		c[i] = i
+	}
+
+	//获取点的并查集序号
+	getCIndex := func(index int) int {
+		for c[index] != index {
+			c[index] = c[c[index]]
+			index = c[index]
+		}
+		return index
+	}
+
+	//合并两个并查集
+	unionC := func(i, j int) {
+		iCIndex := getCIndex(i)
+		jCIndex := getCIndex(j)
+		c[jCIndex] = iCIndex
+	}
+
+	already := make(map[int]bool)
+
+	for _, edge := range edges {
+
+		if already[edge[0]] && already[edge[1]] {
+			continue
+		}
+		//判断这个边的两个点是否都在同一个并查集中
+		if getCIndex(edge[0]) != getCIndex(edge[1]) {
+			//不同的并查集，可以加入进来
+			//合并两个并查集
+			unionC(edge[0], edge[1])
+			res += getDis(edge[0], edge[1])
+			already[edge[0]] = true
+			already[edge[1]] = true
+		}
+	}
+
+	return res
 }
 
 //697. 数组的度

@@ -1,7 +1,35 @@
 package main
 
+import "strings"
+
 func main() {
 
+}
+
+//648. 单词替换
+func replaceWords(dictionary []string, sentence string) string {
+	res := ""
+	//先把词典变成map方便查询
+	dic := make(map[string]bool)
+	for _, v := range dictionary {
+		dic[v] = true
+	}
+
+	words := strings.Split(sentence, " ")
+	for _, word := range words {
+		for i := 1; i <= len(word); i++ {
+			if dic[word[:i]] {
+				res += word[:i]
+				break
+			}
+			if i == len(word) {
+				res += word
+			}
+		}
+		res += " "
+	}
+
+	return strings.TrimSpace(res)
 }
 
 //每日一题：628. 三个数的最大乘积

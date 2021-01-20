@@ -1,9 +1,47 @@
 package main
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 func main() {
+	fmt.Println(minSteps(1000))
+}
 
+//650. 只有两个键的键盘
+func minSteps(n int) int {
+	//求一千以内的素数。
+	//如果n是素数，直接返回即可。否则，它肯定是某个数的倍数。
+	suNum := map[int]bool{2: true, 3: true}
+	suNumSeq := []int{2, 3}
+	for i := 4; i <= n; i++ {
+		j := 2
+		for ; j*j <= i; j++ {
+			if i%j == 0 {
+				break
+			}
+		}
+		if j*j > i {
+			suNum[i] = true
+			suNumSeq = append(suNumSeq, i)
+		}
+	}
+
+	var minStep2 func(suNum map[int]bool, suNumSeq []int, n int) int
+	minStep2 = func(suNum map[int]bool, suNumSeq []int, n int) int {
+		if suNum[n] {
+			return n
+		}
+		for _, v := range suNumSeq {
+			if n%v == 0 {
+				return minStep2(suNum, suNumSeq, n/v) + v
+			}
+		}
+		return 0
+	}
+
+	return minStep2(suNum, suNumSeq, n)
 }
 
 //622. 设计循环队列

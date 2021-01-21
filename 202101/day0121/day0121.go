@@ -4,6 +4,80 @@ func main() {
 
 }
 
+//641. 设计循环双端队列
+type MyCircularDeque struct {
+	nums     []int
+	front    int
+	rear     int
+	capacity int
+}
+
+func Constructor(k int) MyCircularDeque {
+	return MyCircularDeque{
+		nums:     make([]int, k+1),
+		front:    0,
+		rear:     0,
+		capacity: k + 1,
+	}
+}
+
+func (this *MyCircularDeque) InsertFront(value int) bool {
+	if this.IsFull() {
+		return false
+	}
+	//从头插入
+	this.front = (this.front + 1) % this.capacity
+	this.nums[this.front] = value
+	return true
+}
+
+func (this *MyCircularDeque) InsertLast(value int) bool {
+	if this.IsFull() {
+		return false
+	}
+	this.nums[this.rear] = value
+	this.rear = (this.rear - 1 + this.capacity) % this.capacity
+	return true
+}
+
+func (this *MyCircularDeque) DeleteFront() bool {
+	if this.IsEmpty() {
+		return false
+	}
+	this.front = (this.front - 1 + this.capacity) % this.capacity
+	return true
+}
+
+func (this *MyCircularDeque) DeleteLast() bool {
+	if this.IsEmpty() {
+		return false
+	}
+	this.rear = (this.rear + 1) % this.capacity
+	return true
+}
+
+func (this *MyCircularDeque) GetFront() int {
+	if this.IsEmpty() {
+		return -1
+	}
+	return this.nums[this.front]
+}
+
+func (this *MyCircularDeque) GetRear() int {
+	if this.IsEmpty() {
+		return -1
+	}
+	return this.nums[(this.rear+1)%this.capacity]
+}
+
+func (this *MyCircularDeque) IsEmpty() bool {
+	return this.rear == this.front
+}
+
+func (this *MyCircularDeque) IsFull() bool {
+	return (this.front+1)%this.capacity == this.rear
+}
+
 //623. 在二叉树中增加一行
 func addOneRow(root *TreeNode, v int, d int) *TreeNode {
 	if d == 1 {

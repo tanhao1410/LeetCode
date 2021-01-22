@@ -10,6 +10,32 @@ func main() {
 
 }
 
+//面试题 16.02. 单词频率
+type WordsFrequency struct {
+	m map[string]int
+}
+
+func Constructor(book []string) WordsFrequency {
+	m := make(map[string]int)
+	for _, word := range book {
+		if num, ok := m[word]; ok {
+			m[word] = num + 1
+		} else {
+			m[word] = 1
+		}
+	}
+	return WordsFrequency{
+		m: m,
+	}
+}
+
+func (this *WordsFrequency) Get(word string) int {
+	if num, ok := this.m[word]; ok {
+		return num
+	}
+	return 0
+}
+
 //524. 通过删除字母匹配到字典里最长单词
 func findLongestWord(s string, d []string) string {
 	//思路：字典中字符串先按长度排序，同长度按字母序，按顺序一个个判断是否能取出来

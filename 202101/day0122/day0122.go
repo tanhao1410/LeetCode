@@ -1,7 +1,51 @@
 package main
 
-func main() {
+import (
+	"fmt"
+	"sort"
+)
 
+func main() {
+	fmt.Println(findLongestWord("aaa", []string{"abc", "bcd", "abd", "dafae", "dafee"}))
+
+}
+
+//524. 通过删除字母匹配到字典里最长单词
+func findLongestWord(s string, d []string) string {
+	//思路：字典中字符串先按长度排序，同长度按字母序，按顺序一个个判断是否能取出来
+	stractStr := func(s2 string) bool {
+		for i, j := 0, 0; j < len(s2); j++ {
+			curLetter := s2[j]
+			for ; i < len(s) && s[i] != curLetter; i++ {
+			}
+			if i >= len(s) {
+				return false
+			}
+			i++
+		}
+		return true
+	}
+
+	sort.Slice(d, func(i, j int) bool {
+		//先比较长度
+		if len(d[i]) != len(d[j]) {
+			return len(d[i]) > len(d[j])
+		} else {
+			for k := 0; k < len(d[i]); k++ {
+				if d[i][k] != d[j][k] {
+					return d[i][k] < d[j][k]
+				}
+			}
+			return true
+		}
+	})
+
+	for i := 0; i < len(d); i++ {
+		if stractStr(d[i]) {
+			return d[i]
+		}
+	}
+	return ""
 }
 
 //每日一题：989. 数组形式的整数加法

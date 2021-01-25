@@ -1,5 +1,7 @@
 package main
 
+import "sort"
+
 func main() {
 	queue := Constructor()
 	queue.Push(1)
@@ -7,6 +9,31 @@ func main() {
 	queue.Peek()  // 返回 1
 	queue.Pop()   // 返回 1
 	queue.Empty() // 返回 false
+}
+
+//面试题 16.06. 最小差
+func smallestDifference(a []int, b []int) int {
+	//先排序,两个指针，谁小，谁往后走，并更新最小值
+	sort.Ints(a)
+	sort.Ints(b)
+	min := 2147483647
+	for i, j := 0, 0; i < len(a) && j < len(b); {
+		//遇到相等的了，直接返回即可
+		if a[i] < b[j] {
+			if b[j]-a[i] < min {
+				min = b[j] - a[i]
+			}
+			i++
+		} else if a[i] > b[j] {
+			if a[i]-b[j] < min {
+				min = a[i] - b[j]
+			}
+			j++
+		} else {
+			return 0
+		}
+	}
+	return min
 }
 
 //面试题 03.04. 化栈为队

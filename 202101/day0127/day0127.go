@@ -9,6 +9,22 @@ func main() {
 
 }
 
+//633. 平方数之和
+func judgeSquareSum(c int) bool {
+	//思路：记录所有的平方数，判断是否存在两个之和
+	m := map[int]bool{}
+	for i := 0; i < 1<<16 && i*i <= c; i++ {
+		m[i*i] = true
+	}
+
+	for k, _ := range m {
+		if m[c-k] {
+			return true
+		}
+	}
+	return false
+}
+
 //692. 前K个高频单词
 func topKFrequent(words []string, k int) []string {
 	m := make(map[string]int)

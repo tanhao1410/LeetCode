@@ -1,7 +1,52 @@
 package main
 
+import (
+	"sort"
+	"strings"
+)
+
 func main() {
 
+}
+
+//692. 前K个高频单词
+func topKFrequent(words []string, k int) []string {
+	m := make(map[string]int)
+	for _, s := range words {
+		if _, ok := m[s]; ok {
+			m[s] += 1
+		} else {
+			m[s] = 1
+		}
+	}
+
+	type StrNum struct {
+		s string
+		c int
+	}
+	l := []*StrNum{}
+
+	for k, v := range m {
+		l = append(l, &StrNum{
+			s: k,
+			c: v,
+		})
+	}
+
+	sort.Slice(l, func(i, j int) bool {
+		//数量相等的话
+		if l[i].c == l[j].c {
+			return strings.Compare(l[i].s, l[j].s) < 0
+		}
+		return l[i].c > l[j].c
+	})
+
+	res := make([]string, k)
+	for i := 0; i < k; i++ {
+		res[i] = l[i].s
+	}
+
+	return res
 }
 
 //676. 实现一个魔法字典

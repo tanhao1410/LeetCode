@@ -4,6 +4,55 @@ import "fmt"
 
 func main() {
 	fmt.Println(pyramidTransition("BCD", []string{"BCG", "CDE", "GEA", "FFF"}))
+
+	fmt.Println(numSubarrayProductLessThanK([]int{10, 5, 2, 6, 4, 6, 77, 7, 100, 12, 111, 12, 12, 3, 1, 6}, 100))
+}
+
+//713. 乘积小于K的子数组
+func numSubarrayProductLessThanK(nums []int, k int) int {
+	res := 0
+
+	dp := make([]int, len(nums))
+	dp2 := make([]int, len(nums))
+	for i := 0; i < len(nums); i++ {
+		if nums[i] >= k {
+			dp[i] = -1
+			dp2[i] = -1
+			continue
+		}
+		//前面没有的情况，即前一个数大于k或没有数
+		if i < 1 || dp[i-1] == -1 {
+			j := i + 1
+			num := nums[i]
+			for ; j < len(nums) && num*nums[j] < k; j++ {
+				num *= nums[j]
+			}
+			dp[i] = j - 1
+			dp2[i] = num
+		} else {
+
+			num := 0
+			j := dp[i-1] + 1
+
+			if dp[i-1] >= i {
+				num = dp2[i-1] / nums[i-1]
+			} else {
+				num = nums[i]
+				j = i + 1
+			}
+			for ; j < len(nums) && num*nums[j] < k; j++ {
+				num *= nums[j]
+			}
+			dp[i] = j - 1
+			dp2[i] = num
+		}
+	}
+	for i := 0; i < len(nums); i++ {
+		if dp[i] >= i {
+			res += (dp[i] - i + 1)
+		}
+	}
+	return res
 }
 
 //756. 金字塔转换矩阵

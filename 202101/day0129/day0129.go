@@ -9,6 +9,57 @@ func main() {
 	fmt.Println(minimumEffortPath([][]int{{1, 2, 1, 1, 1}, {1, 2, 1, 2, 1}, {1, 2, 1, 2, 1}, {1, 2, 1, 2, 1}, {1, 1, 1, 2, 1}}))
 }
 
+//705. 设计哈希集合
+type MyHashSet struct {
+	//数据集合
+	nums [][]int
+}
+
+func Constructor() MyHashSet {
+	nums := make([][]int, 100)
+	return MyHashSet{
+		nums: nums,
+	}
+}
+
+//默认分成100份
+func (this *MyHashSet) hash(key int) int {
+	return key % 100
+}
+
+func (this *MyHashSet) Add(key int) {
+	nums := this.nums[this.hash(key)]
+	for i := 0; i < len(nums); i++ {
+		if nums[i] == key {
+			return
+		}
+	}
+	this.nums[this.hash(key)] = append(this.nums[this.hash(key)], key)
+}
+
+func (this *MyHashSet) Remove(key int) {
+	if this.Contains(key) {
+		nums := this.nums[this.hash(key)]
+		for i := 0; i < len(nums); i++ {
+			if nums[i] == key {
+				nums[i] = nums[len(nums)-1]
+				break
+			}
+		}
+		this.nums[this.hash(key)] = this.nums[this.hash(key)][:len(nums)-1]
+	}
+}
+
+func (this *MyHashSet) Contains(key int) bool {
+	nums := this.nums[this.hash(key)]
+	for i := 0; i < len(nums); i++ {
+		if nums[i] == key {
+			return true
+		}
+	}
+	return false
+}
+
 //每日一题：1631. 最小体力消耗路径
 func minimumEffortPath(heights [][]int) int {
 

@@ -122,3 +122,34 @@ func minimumEffortPath(heights [][]int) int {
 	return dp[len(dp)-1][len(dp[0])-1]
 
 }
+
+//784. 字母大小写全排列
+func letterCasePermutation(S string) []string {
+	//总共有多少种是已知的，数量为2^字母数量，通过调整字母的变化返回即可。使用递归形式完成。
+	res := []string{}
+
+	var selectLetter func(index int, s string)
+	selectLetter = func(index int, s string) {
+		//如果选择的字母是最后一个了，递归结束
+		if index == len(S) {
+			res = append(res, s)
+			return
+		}
+
+		//该位置是数字
+		if S[index] <= '9' && S[index] >= '0' {
+			selectLetter(index+1, s+string(S[index]))
+		} else {
+			//大写与小写
+			if S[index] <= 'Z' && S[index] >= 'A' {
+				selectLetter(index+1, s+string(S[index]))
+				selectLetter(index+1, s+string(S[index]+'a'-'A'))
+			} else {
+				selectLetter(index+1, s+string(S[index]))
+				selectLetter(index+1, s+string(S[index]+'A'-'a'))
+			}
+		}
+	}
+	selectLetter(0, "")
+	return res
+}

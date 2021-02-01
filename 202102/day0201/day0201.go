@@ -8,6 +8,74 @@ func main() {
 	cache.Put(2, 2)
 	cache.Put(3, 3)
 	fmt.Println(cache.Get(1))
+
+	dic := Constructor2()
+	dic.AddWord("bad")
+	dic.AddWord("dad")
+	dic.AddWord("mad")
+	fmt.Println(dic.Search("pad"))
+	fmt.Println(dic.Search("bad"))
+}
+
+//211. 添加与搜索单词 - 数据结构设计
+type WordDictionary struct {
+	tries []*WordDictionary
+	flag  bool
+}
+
+func Constructor2() WordDictionary {
+	return WordDictionary{
+		tries: make([]*WordDictionary, 26),
+	}
+}
+
+func (this *WordDictionary) AddWord(word string) {
+	//
+	curTrie := this
+	for i := 0; ; i++ {
+		if curTrie.tries[word[i]-'a'] == nil {
+			curTrie.tries[word[i]-'a'] = &WordDictionary{
+				tries: make([]*WordDictionary, 26),
+			}
+		}
+
+		curTrie = curTrie.tries[word[i]-'a']
+
+		//最后一个字母的话，添加字符串
+		if i == len(word)-1 {
+			curTrie.flag = true
+			break
+		}
+
+	}
+}
+
+func (this *WordDictionary) Search(word string) bool {
+
+	curTrie := this
+	for i := 0; i < len(word); i++ {
+		//可以代替任何字母
+		if word[i] == '.' {
+			for _, v := range curTrie.tries {
+				if v != nil && v.Search(word[i+1:]) {
+					return true
+				}
+			}
+			return false
+		}
+
+		//没有该字母
+		if curTrie.tries[word[i]-'a'] == nil {
+			return false
+		}
+
+		curTrie = curTrie.tries[word[i]-'a']
+		//最后一个字母了
+		if i == len(word)-1 {
+			return curTrie.flag
+		}
+	}
+	return curTrie.flag
 }
 
 //面试题 16.25. LRU 缓存

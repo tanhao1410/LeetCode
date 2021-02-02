@@ -9,6 +9,40 @@ func main() {
 	fmt.Println(characterReplacement("AABABBA", 1))
 }
 
+//1381. 设计一个支持增量操作的栈
+type CustomStack struct {
+	nums     []int
+	capacity int
+}
+
+func Constructor4(maxSize int) CustomStack {
+	return CustomStack{
+		nums:     make([]int, 0),
+		capacity: maxSize,
+	}
+}
+
+func (this *CustomStack) Push(x int) {
+	if this.capacity != len(this.nums) {
+		this.nums = append(this.nums, x)
+	}
+}
+
+func (this *CustomStack) Pop() int {
+	if len(this.nums) == 0 {
+		return -1
+	}
+	res := this.nums[len(this.nums)-1]
+	this.nums = this.nums[:len(this.nums)-1]
+	return res
+}
+
+func (this *CustomStack) Increment(k int, val int) {
+	for i := 0; i < len(this.nums) && i < k; i++ {
+		this.nums[i] += val
+	}
+}
+
 type Num struct {
 	val   int
 	index int

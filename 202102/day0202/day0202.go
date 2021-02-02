@@ -1,9 +1,45 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
 
 func main() {
 	fmt.Println(characterReplacement("AABABBA", 1))
+}
+
+type Num struct {
+	val   int
+	index int
+}
+
+//1331. 数组序号转换
+func arrayRankTransform(arr []int) []int {
+	//思路：排序。用怎么安排数字，原来的位置信息还能记录吗
+	res := make([]int, len(arr))
+	arrNums := make([]Num, len(arr))
+	for i := 0; i < len(arr); i++ {
+		arrNums[i] = Num{
+			val:   arr[i],
+			index: i,
+		}
+	}
+	sort.Slice(arrNums, func(i, j int) bool {
+		return arrNums[i].val < arrNums[j].val
+	})
+
+	seq := 1
+
+	for i := 0; i < len(arrNums); i++ {
+		res[arrNums[i].index] = seq
+		//如果为最后一个了，或者，下一个和当前不相等
+		if i == len(arrNums)-1 || arrNums[i].val != arrNums[i+1].val {
+			seq++
+		}
+	}
+
+	return res
 }
 
 //208. 实现 Trie (前缀树)

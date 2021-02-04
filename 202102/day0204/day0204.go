@@ -8,6 +8,50 @@ func main() {
 	}
 }
 
+//923. 三数之和的多种可能
+func threeSumMulti(arr []int, target int) int {
+
+	var twoSumMulti func(arr []int, target int) int
+	twoSumMulti = func(arr []int, target int) int {
+		m := make(map[int]int)
+		for _, v := range arr {
+			if _, ok := m[v]; ok {
+				m[v]++
+			} else {
+				m[v] = 1
+			}
+		}
+
+		res := 0
+
+		already := make(map[int]bool)
+
+		for k, count := range m {
+			if !already[k] {
+				if target-k != k {
+					if oCount, ok := m[target-k]; ok {
+						res += (oCount * count)
+						already[target-k] = true
+					}
+				} else {
+					//两个数相等的话
+					res += (count * (count - 1) / 2)
+				}
+			}
+
+		}
+		return res
+	}
+
+	res := 0
+	for i := 0; i < len(arr)-2; i++ {
+		res += twoSumMulti(arr[i+1:], target-arr[i])
+		res %= 1000000007
+	}
+
+	return res
+}
+
 //1396. 设计地铁系统
 type UndergroundSystem struct {
 	m                map[string][]float64 //站名+站名-->[总时间，次数]

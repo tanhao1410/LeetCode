@@ -8,6 +8,53 @@ func main() {
 	}
 }
 
+//1396. 设计地铁系统
+type UndergroundSystem struct {
+	m                map[string][]float64 //站名+站名-->[总时间，次数]
+	customsStartTime map[int]int          //顾客id-->上车时间
+	customsStation   map[int]string       // 顾客id-->上车的站
+}
+
+func Constructor() UndergroundSystem {
+	return UndergroundSystem{
+		m:                make(map[string][]float64),
+		customsStartTime: map[int]int{},
+		customsStation:   map[int]string{},
+	}
+}
+
+func (this *UndergroundSystem) CheckIn(id int, stationName string, t int) {
+	//顾客进站
+	this.customsStation[id] = stationName
+	this.customsStartTime[id] = t
+}
+
+func (this *UndergroundSystem) CheckOut(id int, stationName string, t int) {
+
+	//顾客的进站点
+	startStation := this.customsStation[id]
+	delete(this.customsStation, id)
+	//计算本次时间
+	time := t - this.customsStartTime[id]
+	delete(this.customsStartTime, id)
+
+	if pre, ok := this.m[startStation+stationName]; ok {
+		res := []float64{pre[0] + float64(time), pre[1] + 1}
+		this.m[startStation+stationName] = res
+	} else {
+		res := []float64{float64(time), 1}
+		this.m[startStation+stationName] = res
+	}
+
+}
+
+func (this *UndergroundSystem) GetAverageTime(startStation string, endStation string) float64 {
+	if res, ok := this.m[startStation+endStation]; ok {
+		return res[0] / res[1]
+	}
+	return 0.0
+}
+
 //873. 最长的斐波那契子序列的长度-时间超时。。。
 func lenLongestFibSubseq2(arr []int) int {
 	//

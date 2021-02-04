@@ -6,6 +6,69 @@ func main() {
 	for i := 1; i < 1000; i++ {
 		fmt.Print(i, ",")
 	}
+	fmt.Println(mostCommonWord("Bob hit a ball, the hit BALL flew far after it was hit.", []string{"hit"}))
+}
+
+//819. 最常见的单词
+func mostCommonWord(paragraph string, banned []string) string {
+
+	paragraphs := []byte(paragraph)
+	//大写变小写
+	for i := 0; i < len(paragraphs); i++ {
+		if paragraphs[i] <= 'Z' && paragraphs[i] >= 'A' {
+			paragraphs[i] += ('a' - 'A')
+		}
+	}
+	//分割单词
+	words := []string{}
+	start := -1
+	for i := 0; i < len(paragraphs); i++ {
+		//是字母
+		if paragraphs[i] >= 'a' && paragraphs[i] <= 'z' {
+			//记录一个新单词的开始
+			if start == -1 {
+				start = i
+			}
+		} else {
+			//记录一个单词的结束
+			if i > start && start != -1 {
+				words = append(words, string(paragraphs[start:i]))
+			}
+			start = -1
+		}
+	}
+	//最后一个单词
+	if start != -1 {
+		words = append(words, string(paragraphs[start:]))
+	}
+
+	m := make(map[string]int)
+	//map处理
+	for _, word := range words {
+		if _, ok := m[word]; ok {
+			m[word]++
+		} else {
+			m[word] = 1
+		}
+	}
+
+	//取出ban
+	for _, word := range banned {
+		if _, ok := m[word]; ok {
+			delete(m, word)
+		}
+	}
+
+	max := 0
+	res := ""
+	for word, count := range m {
+		if count > max {
+			res = word
+			max = count
+		}
+	}
+
+	return res
 }
 
 //923. 三数之和的多种可能

@@ -9,6 +9,31 @@ func main() {
 
 }
 
+//1539. 第 k 个缺失的正整数
+func findKthPositive(arr []int, k int) int {
+	seq := 0
+	for i, j := 1, 0; ; {
+		if j < len(arr) {
+			if arr[j] == i {
+				i++
+				j++
+			} else {
+				seq++
+				if seq == k {
+					return i
+				}
+				i++
+			}
+		} else {
+			seq++
+			if seq == k {
+				return i
+			}
+			i++
+		}
+	}
+}
+
 //每日一题：1208. 尽可能使字符串相等
 func equalSubstring(s string, t string, maxCost int) int {
 	//思路：判断两字符串个差值是多少。优先选择小的。最大不超过maxCost

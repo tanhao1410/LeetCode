@@ -1,13 +1,59 @@
 package main
 
 import (
+	"fmt"
 	"math"
 	"math/rand"
+	"strconv"
 	"time"
 )
 
 func main() {
+	fmt.Println(readBinaryWatch(7))
+}
 
+//401. 二进制手表
+func readBinaryWatch(num int) []string {
+	//上面最多亮三个灯
+	//下面最多亮5个
+	//一个都不亮的话，是0:00
+	res := []string{}
+
+	//记录从0到59所需要的灯的数量,最多也就5个灯
+	m := make([][]int, 6)
+	for i := 0; i < 60; i++ {
+		count := 0
+		for j := i; j > 0; j >>= 1 {
+			if 1&j == 1 {
+				count++
+			}
+		}
+		m[count] = append(m[count], i)
+	}
+
+	//先求小时的可能性，然后求分钟的可能性
+	for i := 0; i <= 3 && i <= num; i++ {
+		//可能的小时数
+		h := m[i]
+		//可能的小时数
+		if num-i <= 5 {
+			mm := m[num-i]
+			for j := 0; j < len(h); j++ {
+				if h[j] > 11 {
+					continue
+				}
+				for k := 0; k < len(mm); k++ {
+					item := strconv.Itoa(h[j]) + ":"
+					if mm[k] < 10 {
+						item += "0"
+					}
+					item += strconv.Itoa(mm[k])
+					res = append(res, item)
+				}
+			}
+		}
+	}
+	return res
 }
 
 //492. 构造矩形

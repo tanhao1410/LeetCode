@@ -10,6 +10,17 @@ func main() {
 
 }
 
+//492. 构造矩形
+func constructRectangle(area int) []int {
+	//从根号area 到1 开始 找数，直到1为止
+	num := int(math.Sqrt(float64(area)))
+	for i := num; ; i-- {
+		if area%i == 0 {
+			return []int{i, area / i}
+		}
+	}
+}
+
 //496. 下一个更大元素 I
 func nextGreaterElement(nums1 []int, nums2 []int) []int {
 	//先用一个map记录所有的位置

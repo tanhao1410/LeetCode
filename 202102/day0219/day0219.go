@@ -7,6 +7,22 @@ import (
 
 func main() {
 	fmt.Println(thirdMax([]int{1, 2, -2147483648}))
+	fmt.Println(isSubsequence("hf", "sdkjhfgdfe"))
+}
+
+//392. 判断子序列
+func isSubsequence(s string, t string) bool {
+	if len(s) == 0 {
+		return true
+	}
+	//采用递归的形式
+	i := 0
+	for ; i < len(t) && t[i] != s[0]; i++ {
+	}
+	if i == len(t) {
+		return false
+	}
+	return isSubsequence(s[1:], t[i+1:])
 }
 
 //485. 最大连续 1 的个数

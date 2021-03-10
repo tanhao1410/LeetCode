@@ -8,6 +8,7 @@ import (
 
 func main() {
 	fmt.Println(numberToWords(10000080))
+	fmt.Println(solveNQueens(4))
 }
 
 //面试题 03.06. 动物收容所
@@ -168,4 +169,55 @@ func numberToWords(num int) string {
 	}
 
 	return strings.Trim(res, " ")
+}
+
+//面试题 08.12. 八皇后
+func solveNQueens(n int) [][]string {
+
+	res := [][]string{}
+	//用一个数组来记录每行放置的列号
+	m := make([]int, n)
+
+	nextLocation(m, 0, &res)
+
+	return res
+}
+
+func nextLocation(m []int, l int, res *[][]string) {
+
+	//说明放置成功了
+	if l == len(m) {
+		//把数字转成对应的棋盘形式
+		resItem := []string{}
+		for i := 0; i < l; i++ {
+			row := ""
+			for j := 0; j < l; j++ {
+				if j == m[i] {
+					row += "Q"
+				} else {
+					row += "."
+				}
+			}
+			resItem = append(resItem, row)
+		}
+		*res = append(*res, resItem)
+	}
+
+	//判断是否可以放置，1，不能和前面相等，2，不能斜对角相等
+out:
+	for i := 0; i < len(m); i++ {
+
+		for j := 0; j < l; j++ {
+			if m[j] == i || l-j == m[j]-i || l-j == -m[j]+i {
+				continue out
+			}
+		}
+
+		m[l] = i
+
+		//放置下一个
+		nextLocation(m, l+1, res)
+
+	}
+
 }

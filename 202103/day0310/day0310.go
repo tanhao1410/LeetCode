@@ -1,9 +1,13 @@
 package main
 
-import "container/list"
+import (
+	"container/list"
+	"fmt"
+	"strings"
+)
 
 func main() {
-
+	fmt.Println(numberToWords(10000080))
 }
 
 //面试题 03.06. 动物收容所
@@ -95,4 +99,73 @@ func (this *AnimalShelf) DequeueCat() []int {
 
 	this.Animals.Remove(res)
 	return res.Value.([]int)
+}
+
+//面试题 16.08. 整数的英语表示
+func numberToWords(num int) string {
+	dict1 := map[int]string{
+		1: "One", 2: "Two", 3: "Three", 4: "Four", 5: "Five", 6: "Six", 7: "Seven", 8: "Eight", 9: "Nine", 0: "Zero",
+		10: "Ten", 11: "Eleven", 12: "Twelve", 13: "Thirteen", 14: "Fourteen", 15: "Fifteen", 16: "Sixteen", 17: "Seventeen",
+		18: "Eighteen", 19: "Nineteen",
+	}
+
+	dic2 := map[int]string{
+		2: "Twenty", 3: "Thirty", 4: "Forty", 5: "Fifty", 6: "Sixty", 7: "Seventy", 8: "Eighty", 9: "Ninety",
+	}
+
+	res := ""
+
+	if num >= 1000000000 {
+		pre := num / 1000000000
+		res += numberToWords(pre)
+		res += " Billion "
+		num %= 1000000000
+		if num == 0 {
+			return strings.Trim(res, " ")
+		}
+	}
+
+	if num >= 1000000 {
+		pre := num / 1000000
+		res += numberToWords(pre)
+		res += " Million "
+		num %= 1000000
+		if num == 0 {
+			return strings.Trim(res, " ")
+		}
+	}
+
+	if num >= 1000 {
+		pre := num / 1000
+		res += numberToWords(pre)
+		res += " Thousand "
+		num %= 1000
+		if num == 0 {
+			return strings.Trim(res, " ")
+		}
+	}
+
+	if num >= 100 {
+		pre := num / 100
+		res += numberToWords(pre)
+		res += " Hundred "
+		num %= 100
+		if num == 0 {
+			return strings.Trim(res, " ")
+		}
+	}
+
+	if num < 20 {
+		res += dict1[num]
+		return strings.Trim(res, " ")
+	}
+
+	res += dic2[num/10]
+
+	if num%10 > 0 {
+		res += " "
+		res += dict1[num%10]
+	}
+
+	return strings.Trim(res, " ")
 }

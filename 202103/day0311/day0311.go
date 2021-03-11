@@ -9,6 +9,22 @@ func main() {
 	fmt.Println(oper.Multiply(12345, -1234))
 }
 
+//面试题 16.11. 跳水板
+func divingBoard(shorter int, longer int, k int) []int {
+	if k == 0 {
+		return nil
+	}
+	if shorter == longer {
+		return []int{shorter * k}
+	}
+	res := make([]int, k+1)
+	for i := 0; i <= k; i++ {
+		res[i] = shorter*(k-i) + longer*i
+	}
+
+	return res
+}
+
 //面试题 16.10. 生存人数
 func maxAliveYear(birth []int, death []int) int {
 	//分别计算每年的人数，复杂度 年数 * 人数

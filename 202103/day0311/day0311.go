@@ -1,12 +1,21 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 func main() {
 	oper := Constructor()
 	fmt.Println(oper.Minus(2, 6))
 	fmt.Println(oper.Divide(1909390, 3))
 	fmt.Println(oper.Multiply(12345, -1234))
+}
+
+//面试题 01.09. 字符串轮转
+func isFlipedString(s1 string, s2 string) bool {
+	//拼接两个s2，看是否包含s1
+	return strings.Contains(s2+s2, s1) && len(s2) == len(s1)
 }
 
 //面试题 16.11. 跳水板

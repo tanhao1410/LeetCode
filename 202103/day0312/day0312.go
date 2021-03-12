@@ -10,6 +10,37 @@ func main() {
 	fmt.Println(isValidSerialization2("9,3,4,#,#,1,#,#,2,#,6,#,#"))
 }
 
+//面试题 04.04. 检查平衡性
+func isBalanced(root *TreeNode) bool {
+	//求左子树高度，求右子树高度，两者如果差距大于1，返回false
+	//怎么样效率比较高呢，先求子树
+	_, res := heightAndBalanced(root)
+	return res
+}
+
+func heightAndBalanced(root *TreeNode) (int, bool) {
+
+	if root == nil {
+		return 0, true
+	}
+
+	leftHeight, leftBalanced := heightAndBalanced(root.Left)
+	rightHeight, rightBalaced := heightAndBalanced(root.Right)
+
+	resHeight := 0
+	resBalanced := true
+	//高度由最高的决定，
+	if leftHeight > rightHeight {
+		resHeight = leftHeight + 1
+		resBalanced = (leftHeight-resHeight) < 2 && leftBalanced && rightBalaced
+	} else {
+		resHeight = rightHeight + 1
+		resBalanced = (rightHeight-leftHeight) < 2 && leftBalanced && rightBalaced
+	}
+
+	return resHeight, resBalanced
+}
+
 type TreeNode struct {
 	Val   int
 	Left  *TreeNode

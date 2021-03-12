@@ -2,11 +2,66 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
 func main() {
 	fmt.Println(isValidSerialization2("9,3,4,#,#,1,#,#,2,#,6,#,#"))
+}
+
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+//面试题 04.10. 检查子树
+func checkSubTree(t1 *TreeNode, t2 *TreeNode) bool {
+	if t2 == nil {
+		return true
+	}
+
+	middleT1 := serializedTree(t1)
+	middleT2 := serializedTree(t2)
+	preT1 := serializedTree2(t1)
+	pret2 := serializedTree2(t2)
+
+	return strings.Contains(middleT1, middleT2) && strings.Contains(preT1, pret2)
+
+}
+
+//中序遍历
+func serializedTree(root *TreeNode) string {
+	res := ""
+	if root != nil {
+		if root.Left != nil {
+			res += serializedTree(root.Left)
+		}
+		res += ","
+		res += strconv.Itoa(root.Val)
+		res += ","
+		if root.Right != nil {
+			res += serializedTree(root.Right)
+		}
+	}
+	return strings.Trim(res, ",")
+}
+
+func serializedTree2(root *TreeNode) string {
+	res := ""
+	if root != nil {
+		res += strconv.Itoa(root.Val)
+		res += ","
+		if root.Left != nil {
+			res += serializedTree2(root.Left)
+		}
+		res += ","
+		if root.Right != nil {
+			res += serializedTree2(root.Right)
+		}
+	}
+	return strings.Trim(res, ",")
 }
 
 //331. 验证二叉树的前序序列化

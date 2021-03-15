@@ -1,6 +1,54 @@
 package main
 
+import (
+	"fmt"
+	"sort"
+)
+
 func main() {
+	strings := permutation("aabc")
+	for _, s := range strings {
+		fmt.Println(s)
+	}
+}
+
+//面试题 08.08. 有重复字符串的排列组合
+func permutation(S string) []string {
+	//1.hash去重，2.字符串先进行排序。
+	bytes := []byte(S)
+	sort.Slice(bytes, func(i, j int) bool {
+		return bytes[i] < bytes[j]
+	})
+
+	res := []string{}
+	nextLetter("", bytes, &res)
+
+	return res
+}
+
+func nextLetter(s string, letters []byte, res *[]string) {
+
+	if len(letters) == 0 {
+		*res = append(*res, s)
+	}
+
+	//从剩下的字母中选中一个
+	for i := 0; i < len(letters); i++ {
+
+		if i > 0 && letters[i] == letters[i-1] {
+			continue
+		}
+
+		nextLetters := []byte{}
+		//下一个字母应该要少一个
+		for j := 0; j < len(letters); j++ {
+			if j != i {
+				nextLetters = append(nextLetters, letters[j])
+			}
+		}
+		nextLetter(s+string(letters[i]), nextLetters, res)
+
+	}
 
 }
 

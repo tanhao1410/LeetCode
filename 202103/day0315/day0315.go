@@ -4,6 +4,22 @@ func main() {
 
 }
 
+//面试题 05.01. 插入
+func insertBits(N int, M int, i int, j int) int {
+	//i - j 位置改为0
+	num := 0
+	for k := 0; k < 32; k++ {
+		if k > j || k < i {
+			num += 1 << k
+		}
+	}
+	num &= N
+	//求插入的数M，i-0代表M应该右移的位置数
+	m := M << i
+	res := int32(num | m)
+	return int(res)
+}
+
 type TreeNode struct {
 	Val   int
 	Left  *TreeNode

@@ -4,6 +4,17 @@ func main() {
 	//
 }
 
+//面试题 05.06. 整数转换
+func convertInteger(A int, B int) int {
+	res := 0
+	for i := 0; i < 32; i++ {
+		if A&(1<<i) != B&(1<<i) {
+			res++
+		}
+	}
+	return res
+}
+
 //面试题 05.03. 翻转数位
 func reverseBits(num int) int {
 

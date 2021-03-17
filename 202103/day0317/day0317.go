@@ -3,6 +3,33 @@ package main
 func main() {
 }
 
+//面试题 05.07. 配对交换
+func exchangeBits(num int) int {
+	bytes := make([]int8, 32)
+	for i := 0; i < 32; i++ {
+
+		if (num & (1 << (31 - i))) != 0 {
+			if i%2 == 0 {
+				bytes[i+1] = 1
+			} else {
+				bytes[i-1] = 1
+			}
+
+		}
+
+	}
+
+	var res int32 = 0
+	for i := 0; i < 32; i++ {
+		res <<= 1
+		if bytes[i] != 0 {
+			res += 1
+		}
+	}
+
+	return int(res)
+}
+
 //面试题 08.09. 括号
 func generateParenthesis(n int) []string {
 	//n最大为11

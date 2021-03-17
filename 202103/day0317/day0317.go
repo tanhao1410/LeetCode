@@ -3,6 +3,34 @@ package main
 func main() {
 }
 
+//面试题 08.09. 括号
+func generateParenthesis(n int) []string {
+	//n最大为11
+	res := []string{}
+
+	var next func(leftCount, rightCount int, str string)
+	next = func(leftCount, rightCount int, str string) {
+		//生成了合法的括号
+		if leftCount == 0 && rightCount == 0 {
+			res = append(res, str)
+			return
+		}
+
+		//左括号比右括号少，所以，有两种放置方法
+		if leftCount > 0 && leftCount < rightCount {
+			next(leftCount-1, rightCount, str+"(")
+			next(leftCount, rightCount-1, str+")")
+		} else if leftCount == 0 {
+			next(leftCount, rightCount-1, str+")")
+		} else if rightCount == leftCount {
+			next(leftCount-1, rightCount, str+"(")
+		}
+	}
+
+	next(n-1, n, "(")
+	return res
+}
+
 //面试题 08.11. 硬币
 func waysToChange(n int) int {
 

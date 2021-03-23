@@ -1,7 +1,53 @@
 package main
 
+import "sort"
+
 func main() {
 
+}
+
+//面试题 16.19. 水域大小
+func pondSizes(land [][]int) []int {
+
+	if len(land) == 0 || len(land[0]) == 0 {
+		return nil
+	}
+
+	//计算所有池塘的大小，然后排序返回
+	res := []int{}
+
+	//求池塘的面积
+	var getSum func(i, j int) int
+	getSum = func(i, j int) int {
+		if i < 0 || j < 0 || i >= len(land) || j >= len(land[0]) || land[i][j] != 0 {
+			return 0
+		}
+		//表示计算过了
+		land[i][j] = -1
+		res := 1
+		res += getSum(i+1, j)
+		res += getSum(i-1, j)
+		res += getSum(i, j+1)
+		res += getSum(i, j-1)
+		res += getSum(i+1, j+1)
+		res += getSum(i+1, j-1)
+		res += getSum(i-1, j+1)
+		res += getSum(i-1, j-1)
+		return res
+	}
+
+	for i := 0; i < len(land); i++ {
+
+		for j := 0; j < len(land[0]); j++ {
+			if land[i][j] == 0 {
+				//说明碰到了池塘
+				res = append(res, getSum(i, j))
+			}
+		}
+	}
+
+	sort.Ints(res)
+	return res
 }
 
 //面试题 08.01. 三步问题

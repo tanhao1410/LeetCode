@@ -1,8 +1,49 @@
 package main
 
-import "sort"
+import (
+	"fmt"
+	"sort"
+)
 
 func main() {
+	fmt.Println(tail(6, 0, 0, 0))
+}
+
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+//面试题 04.02. 最小高度树
+func sortedArrayToBST(nums []int) *TreeNode {
+	if len(nums) == 0 {
+		return nil
+	}
+	//中间的作为新的根节点
+	middle := len(nums) / 2
+	root := TreeNode{
+		Val:   nums[middle],
+		Left:  sortedArrayToBST(nums[:middle]),
+		Right: sortedArrayToBST(nums[middle+1:]),
+	}
+	return &root
+}
+
+func tail(n, temp, pre1, pre2 int) int {
+	if n+1 == temp {
+		//结束了
+		fmt.Println(pre1 + pre2)
+		return pre1 + pre2
+	}
+
+	if temp == 1 {
+		return tail(n, temp+1, 0, 0)
+	} else if temp == 2 {
+		return tail(n, temp+1, 1, 0)
+	} else {
+		return tail(n, temp+1, pre1+pre2, pre1)
+	}
 
 }
 

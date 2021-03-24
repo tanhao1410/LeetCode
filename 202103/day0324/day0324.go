@@ -4,6 +4,45 @@ func main() {
 
 }
 
+//面试题 08.03. 魔术索引
+func findMagicIndex(nums []int) int {
+	//暴力方法，简单遍历。
+	//for i:=0;i < len(nums);i ++{
+	//	if nums[i] == i{
+	//		return i
+	//	}
+	//}
+	//return -1
+
+	//可以将整个拆成左边和右边，若左边有符合的，右边不用查了，否则右边也要查
+	var getAnswer func(left, right int) int
+	getAnswer = func(left, right int) int {
+		if left > right {
+			return -1
+		}
+
+		//看中间是否符合
+		middle := (left + right) / 2
+
+		//先求左边
+		leftRes := getAnswer(left, middle-1)
+
+		//优先返回左边的
+		if leftRes != -1 {
+			return leftRes
+		}
+
+		if nums[middle] == middle {
+			return middle
+		}
+
+		return getAnswer(middle+1, right)
+
+	}
+
+	return getAnswer(0, len(nums))
+}
+
 //面试题 16.16. 部分排序
 func subSort(array []int) []int {
 	//先分别找从前从后哪个位置开始无序的

@@ -4,6 +4,66 @@ func main() {
 
 }
 
+//面试题 16.16. 部分排序
+func subSort(array []int) []int {
+	//先分别找从前从后哪个位置开始无序的
+	mm, nn := -1, -1
+	for i := 1; i < len(array); i++ {
+		if array[i] < array[i-1] {
+			mm = i
+			break
+		}
+	}
+
+	for i := len(array) - 2; i >= 0; i-- {
+		if array[i] > array[i+1] {
+			nn = i
+			break
+		}
+	}
+
+	//有序的
+	if mm == -1 || nn == -1 {
+		return []int{-1, -1}
+	}
+
+	//必有 m <= mm - 1 ,n >= nn + 1
+	//寻找[mm,nn]中的最大值和最小值，
+	min, max := array[mm-1], array[nn+1]
+	for i := mm - 1; i <= nn+1; i++ {
+		if array[i] < min {
+			min = array[i]
+		}
+
+		if array[i] > max {
+			max = array[i]
+		}
+	}
+
+	//看min应在的位置,m应该尽可能的大。即如果碰到相等的，应该继续走。
+	for i := 0; i <= len(array); i++ {
+		if array[i] > min {
+			//最小的数可以放在它的前面
+			mm = i
+			break
+		}
+	}
+
+	if max > array[len(array)-1] {
+		nn = len(array) - 1
+	} else {
+		//看max应在的位置,max 可以放到最后的
+		for i := nn + 1; i < len(array); i++ {
+			if array[i] >= max {
+				nn = i - 1
+				break
+			}
+		}
+	}
+
+	return []int{mm, nn}
+}
+
 //每日一题：456. 132模式
 func find132pattern(nums []int) bool {
 

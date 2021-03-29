@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
 	cache := Constructor(2)
@@ -14,6 +16,19 @@ func main() {
 	fmt.Println(cache.Get(1))
 	fmt.Println(cache.Get(3))
 	fmt.Println(cache.Get(4))
+}
+
+//367. 有效的完全平方数
+func isPerfectSquare(num int) bool {
+	for i := 1; ; i++ {
+		if i*i < num {
+			continue
+		} else if i*i == num {
+			return true
+		} else {
+			return false
+		}
+	}
 }
 
 //146. LRU 缓存机制
@@ -46,7 +61,6 @@ func (this *LRUCache) Get(key int) int {
 	if node, ok := this.M[key]; ok {
 		//需要将它移动至头部
 		if this.Head != node {
-
 			//它的前一个指向自己的后一个
 			node.Pre.Next = node.Next
 

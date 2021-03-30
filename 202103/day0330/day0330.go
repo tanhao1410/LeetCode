@@ -16,6 +16,73 @@ func main() {
 	fmt.Println(queue.PopMiddle())
 	fmt.Println(queue.PopBack())
 	fmt.Println(queue.PopFront())
+
+}
+
+//1286. 字母组合迭代器
+type CombinationIterator struct {
+	Characters string
+	N          int
+	Sum        int
+	Cur        []int
+}
+
+func Constructor2(characters string, combinationLength int) CombinationIterator {
+	//求总数
+	sum := 1
+	for i := len(characters); i > combinationLength; i-- {
+		sum *= i
+	}
+
+	return CombinationIterator{
+		Characters: characters,
+		N:          combinationLength,
+		Sum:        sum,
+	}
+}
+
+func (this *CombinationIterator) Next() string {
+
+	if this.Cur != nil {
+	Out:
+		for i := this.N - 1; i >= 0; i-- {
+			if this.Cur[i] < len(this.Characters)-1 {
+
+				this.Cur[i] += 1
+				//后面的也要重新开始选，可能存在选不上的情况
+				for j := i + 1; j < this.N; j++ {
+					this.Cur[j] = this.Cur[j-1] + 1
+					//说明不能这样选
+					if this.Cur[j] >= len(this.Characters) {
+						continue Out
+					}
+				}
+				break
+			}
+		}
+
+	} else {
+		this.Cur = make([]int, this.N)
+		for i := 0; i < this.N; i++ {
+			this.Cur[i] = i
+		}
+	}
+
+	res := make([]byte, this.N)
+	for i := 0; i < this.N; i++ {
+		res[i] = this.Characters[this.Cur[i]]
+	}
+
+	return string(res)
+}
+
+func (this *CombinationIterator) HasNext() bool {
+
+	if this.Cur != nil && this.Cur[0] == len(this.Characters)-this.N {
+		return false
+	}
+
+	return true
 }
 
 //1670. 设计前中后队列

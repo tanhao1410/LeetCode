@@ -13,6 +13,32 @@ func main() {
 	fmt.Println(serialize)
 }
 
+//889. 根据前序和后序遍历构造二叉树
+func constructFromPrePost(pre []int, post []int) *TreeNode {
+	if len(pre) == 0 {
+		return nil
+	}
+
+	//第一个节点为
+	root := &TreeNode{
+		Val: pre[0],
+	}
+
+	if len(pre) == 1 {
+		return root
+	}
+
+	//将pre,post分成两个，要求新
+	for i := 0; ; i++ {
+		if post[i] == pre[1] {
+			//找到了要切割的地方了
+			root.Left = constructFromPrePost(pre[1:2+i], post[:i+1])
+			root.Right = constructFromPrePost(pre[2+i:], post[i+1:len(post)-1])
+			return root
+		}
+	}
+}
+
 //297. 二叉树的序列化与反序列化
 type TreeNode struct {
 	Val   int

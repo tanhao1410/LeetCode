@@ -4,6 +4,48 @@ func main() {
 
 }
 
+//1357. 每隔 n 个顾客打折
+type Cashier struct {
+	products map[int]int // 商品对应的价格
+	discount int
+	n        int
+	cur      int
+}
+
+func Constructor2(n int, discount int, products []int, prices []int) Cashier {
+
+	productsMap := make(map[int]int, len(products))
+	for i := 0; i < len(products); i++ {
+		productsMap[products[i]] = prices[i]
+	}
+
+	return Cashier{
+		products: productsMap,
+		discount: discount,
+		n:        n,
+		cur:      0,
+	}
+}
+
+func (this *Cashier) GetBill(product []int, amount []int) float64 {
+	this.cur++
+
+	resInt := 0
+	for i := 0; i < len(product); i++ {
+		resInt += this.products[product[i]] * amount[i]
+	}
+
+	var res float64 = float64(resInt)
+
+	if this.cur%this.n == 0 {
+
+		discountValue := (float64(this.discount) / 100.0) * res
+
+		res = res - discountValue
+	}
+	return res
+}
+
 //1472. 设计浏览器历史记录
 type BrowserHistory struct {
 	Pages []string

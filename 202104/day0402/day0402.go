@@ -11,6 +11,46 @@ func main() {
 	}
 }
 
+//1797. 设计一个验证系统
+type AuthenticationManager struct {
+	tokens     map[string]int
+	timeToLive int
+}
+
+func Constructor(timeToLive int) AuthenticationManager {
+	return AuthenticationManager{
+		tokens:     make(map[string]int),
+		timeToLive: timeToLive,
+	}
+}
+
+func (this *AuthenticationManager) Generate(tokenId string, currentTime int) {
+	this.tokens[tokenId] = currentTime
+}
+
+func (this *AuthenticationManager) Renew(tokenId string, currentTime int) {
+	//有的情况下更新
+	if time, ok := this.tokens[tokenId]; ok {
+		//没过期
+		if currentTime < time+this.timeToLive {
+			this.tokens[tokenId] = currentTime
+		}
+	}
+}
+
+func (this *AuthenticationManager) CountUnexpiredTokens(currentTime int) int {
+	res := 0
+	time := currentTime - this.timeToLive
+	for k, v := range this.tokens {
+		if v > time {
+			res++
+		} else {
+			delete(this.tokens, k)
+		}
+	}
+	return res
+}
+
 //面试题 17.21. 直方图的水量
 func trap(height []int) int {
 	//思路：访问到第一个高度不为0，以此为基点，往后走，直到找到比它的为止，如果没有，则下一个

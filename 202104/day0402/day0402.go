@@ -11,6 +11,41 @@ func main() {
 	}
 }
 
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+//剑指 Offer 52. 两个链表的第一个公共节点
+func getIntersectionNode(headA, headB *ListNode) *ListNode {
+	//双指针法
+	if headA == nil || headB == nil {
+		return nil
+	}
+
+	flagA, flagB := true, true
+	l1, l2 := headA, headB
+	for l1 != nil || l2 != nil {
+		if l1 == l2 {
+			return l1
+		}
+		if l1 != nil {
+			l1 = l1.Next
+		} else if flagA {
+			l1 = headB
+			flagA = false
+		}
+		if l2 != nil {
+			l2 = l2.Next
+		} else if flagB {
+			l2 = headA
+			flagB = false
+		}
+		//退出条件呢
+	}
+	return nil
+}
+
 //1797. 设计一个验证系统
 type AuthenticationManager struct {
 	tokens     map[string]int

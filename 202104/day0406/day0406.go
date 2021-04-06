@@ -13,6 +13,39 @@ func main() {
 	fmt.Println(dst)
 }
 
+//剑指 Offer 60. n个骰子的点数
+func dicesProbability(n int) []float64 {
+	//所有可能出现的点数之和，他们出现的次数
+	count := make([]int, 5*n+1)
+	//pre，前面摇到的所有号之和
+	// nn 还剩几次，即还要摇几个。
+	var next func(pre int, nn int)
+	next = func(pre int, nn int) {
+		//还剩一个筛子的时候，直接加上，不递归了，节约时间。
+		if nn == 1 {
+			for i := 1; i < 7; i++ {
+				count[pre-n+i]++
+			}
+			return
+		}
+		//本次可能出现的点数
+		for i := 1; i < 7; i++ {
+			//递归求下一个
+			next(i+pre, nn-1)
+		}
+	}
+	next(0, n)
+	all := 0
+	for _, v := range count {
+		all += v
+	}
+	res := make([]float64, 5*n+1)
+	for i := 0; i < 5*n+1; i++ {
+		res[i] = float64(count[i]) / float64(all)
+	}
+	return res
+}
+
 //797. 所有可能的路径
 func allPathsSourceTarget(graph [][]int) [][]int {
 	//图的遍历 从 0 --> n - 1

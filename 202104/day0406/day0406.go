@@ -13,6 +13,43 @@ func main() {
 	fmt.Println(dst)
 }
 
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+//剑指 Offer 68 - II. 二叉树的最近公共祖先
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+	if root.Val == p.Val || root.Val == q.Val {
+		return root
+	}
+
+	var childNum func(root *TreeNode) int
+	childNum = func(root *TreeNode) int {
+		if root == nil {
+			return 0
+		}
+		res := 0
+		if root.Val == p.Val || root.Val == q.Val {
+			res++
+		}
+		res += childNum(root.Left)
+		res += childNum(root.Right)
+
+		return res
+	}
+
+	leftNum := childNum(root.Left)
+	rightNum := childNum(root.Right)
+	if leftNum == 2 {
+		return lowestCommonAncestor(root.Left, p, q)
+	} else if rightNum == 2 {
+		return lowestCommonAncestor(root.Right, p, q)
+	}
+	return root
+}
+
 //剑指 Offer 60. n个骰子的点数
 func dicesProbability(n int) []float64 {
 	//所有可能出现的点数之和，他们出现的次数

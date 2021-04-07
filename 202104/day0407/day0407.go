@@ -4,6 +4,20 @@ func main() {
 
 }
 
+//258. 各位相加
+func addDigits(num int) int {
+	if num < 10 {
+		return num
+	}
+
+	count := 0
+	for ; num != 0; num /= 10 {
+		count += (num % 10)
+	}
+
+	return addDigits(count)
+}
+
 //1143. 最长公共子序列
 func longestCommonSubsequence(text1 string, text2 string) int {
 	//先写个递归的方式，

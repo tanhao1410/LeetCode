@@ -14,6 +14,33 @@ func main() {
 	}
 }
 
+//494. 目标和
+func findTargetSumWays(nums []int, S int) int {
+	//暴力方法，2^20  递归形式
+	res := 0
+
+	var next func(index, preSum int)
+	next = func(index, preSum int) {
+		//最后一个
+		if index == len(nums)-1 {
+			if preSum+nums[index] == S {
+				res += 1
+			}
+			//如果是0的话，+-都可以
+			if preSum-nums[index] == S {
+				res += 1
+			}
+			return
+		}
+		//+ -
+		next(index+1, preSum+nums[index])
+		next(index+1, preSum-nums[index])
+
+	}
+	next(0, 0)
+	return res
+}
+
 //每日一题：153. 寻找旋转排序数组中的最小值
 func findMin(nums []int) int {
 

@@ -14,6 +14,28 @@ func main() {
 	}
 }
 
+//每日一题：153. 寻找旋转排序数组中的最小值
+func findMin(nums []int) int {
+
+	if len(nums) == 1 {
+		return nums[0]
+	}
+
+	//数组是递增的
+	if nums[len(nums)-1] > nums[0] {
+		return nums[0]
+	}
+
+	start, end := 0, len(nums)-1
+	middle := (start + end) / 2
+	//说明前面是递增
+	if nums[middle] > nums[end] {
+		return findMin(nums[middle+1:])
+	} else {
+		return findMin(nums[:middle+1])
+	}
+}
+
 //322. 零钱兑换
 func coinChange(coins []int, amount int) int {
 	//背包问题： 最少硬币个数

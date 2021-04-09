@@ -5,6 +5,49 @@ func main() {
 
 }
 
+//剑指 Offer 57 - II. 和为s的连续正数序列
+func findContinuousSequence(target int) [][]int {
+
+	//先求最多可能有多少个数
+	maxN := []int{0, 1}
+	for i := 2; maxN[len(maxN)-1] <= 100000; i++ {
+		maxN = append(maxN, maxN[len(maxN)-1]+i)
+	}
+	res := [][]int{}
+	//需要i个连续的数，依次减少一个数来求
+	for i := len(maxN); i > 1; i-- {
+		//当i为偶数时
+		if i%2 == 0 && target%(i/2) == 0 {
+			dHead := target*2/i - i + 1
+			if dHead > 0 && dHead%2 == 0 {
+				//head = tail + 1 - i
+				item := make([]int, i)
+				head := dHead / 2
+				for j := 0; j < i; j++ {
+					item[j] = head
+					head++
+				}
+				res = append(res, item)
+			}
+		} else if i%2 == 1 && target%i == 0 {
+			//需要奇数个，
+			head := target/i - i/2
+			if head > 0 {
+				item := make([]int, i)
+				for j := 0; j < i; j++ {
+					item[j] = head
+					head++
+				}
+				res = append(res, item)
+			}
+
+		}
+	}
+
+	return res
+
+}
+
 //剑指 Offer 11. 旋转数组的最小数字
 func minArray(numbers []int) int {
 	if len(numbers) == 1 {

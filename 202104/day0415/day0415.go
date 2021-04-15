@@ -13,6 +13,45 @@ func main() {
 	}
 }
 
+//162. 寻找峰值
+func findPeakElement(nums []int) int {
+	//最简单思路：遍历一遍
+	//
+	// for i:=0;i < len(nums);i ++{
+	//     if (i - 1 < 0 || nums[i - 1] < nums[i]) && (i + 1 >= len(nums) || nums[i + 1] < nums[i]){
+	//         return i
+	//     }
+	// }
+	// return -1
+
+	//二分思路，从中间开始找，如果是峰，返回，如果是谷，则前面或后面肯定有个峰，如果递增，则后面有
+	start, end := 0, len(nums)-1
+	middle := (end + start) / 2
+	for ; ; middle = (start + end) / 2 {
+
+		//区间的数字不超过两个时
+		if middle == start {
+			if nums[end] > nums[middle] {
+				return end
+			} else {
+				return middle
+			}
+		}
+
+		if nums[middle] > nums[middle-1] && nums[middle] > nums[middle+1] {
+			return middle
+		}
+
+		//递增
+		if nums[middle] > nums[middle-1] && nums[middle+1] > nums[middle] {
+			start = middle + 1
+		} else {
+			end = middle - 1
+		}
+
+	}
+}
+
 //213. 打家劫舍 II
 func rob(nums []int) int {
 

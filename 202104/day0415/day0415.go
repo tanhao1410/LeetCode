@@ -1,16 +1,72 @@
 package main
 
-import (
-	"fmt"
-	"math/rand"
-	"time"
-)
+import "fmt"
 
 func main() {
-	rand.Seed(time.Now().UnixNano())
-	for i := 0; i < 100; i++ {
-		fmt.Print(rand.Intn(1000), ",")
+	fmt.Print(countDigitOne(45))
+}
+
+//233. 数字 1 的个数
+func countDigitOne(n int) int {
+
+	res := 0
+	if n == 0 {
+		return 0
 	}
+	if n < 10 {
+		return 1
+	}
+
+	tenN := func(n int) int {
+		res := 1
+		for ; n > 0; n-- {
+			res *= 10
+		}
+		return res
+	}
+
+	dp := make([]int, 12)
+	dp[1] = 1
+	for i := 1; i < 12; i++ {
+		dp[i] = 10*dp[i-1] + tenN(i-1)
+	}
+
+	//先求高位
+	getMaxBit := func(n int) int {
+		for n > 9 {
+			n /= 10
+			if n < 10 {
+				return n
+			}
+		}
+		return n
+	}
+
+	//求位数
+	getBitNum := func(n int) int {
+		res := 1
+		for ; n > 9; res++ {
+			n /= 10
+		}
+		return res
+	}
+
+	bitNum := getBitNum(n)
+
+	res += dp[bitNum-1] //比这个数小一位的所有1的数量。
+
+	maxBit := getMaxBit(n)
+
+	if maxBit > 1 {
+		res += tenN(bitNum - 1)
+		res += (maxBit - 1) * dp[bitNum-1]
+	} else {
+		res += n%tenN(bitNum-1) + 1
+	}
+
+	res += countDigitOne(n % tenN(bitNum-1))
+
+	return res
 }
 
 //162. 寻找峰值

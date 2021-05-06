@@ -1,7 +1,43 @@
 package main
 
-func main() {
+import (
+	"fmt"
+	"sort"
+)
 
+func main() {
+	fmt.Print(nthUglyNumber(12))
+}
+
+//剑指 Offer 49. 丑数
+func nthUglyNumber(n int) int {
+	//把所有的丑数全都求出来，
+	nums := []int{}
+
+	getN := func(base, n int) int {
+		res := 1
+		for i := 0; i < n; i++ {
+			res *= base
+		}
+		return res
+	}
+
+	for i := 0; i < 32; i++ {
+		for j := 0; j < 32; j++ {
+			for k := 0; k < 16; k++ {
+				num := getN(2, i) * getN(3, j) * getN(5, k)
+				if num > 0 {
+					nums = append(nums, num)
+				} else {
+					break
+				}
+			}
+		}
+	}
+
+	sort.Ints(nums)
+
+	return nums[n-1]
 }
 
 //1720. 解码异或后的数组

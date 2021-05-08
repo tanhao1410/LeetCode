@@ -1,5 +1,43 @@
+use std::rc::Rc;
+use std::cell::RefCell;
+
 fn main() {
     println!("Hello, world!");
+}
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct TreeNode {
+    pub val: i32,
+    pub left: Option<Rc<RefCell<TreeNode>>>,
+    pub right: Option<Rc<RefCell<TreeNode>>>,
+}
+
+impl TreeNode {
+    #[inline]
+    pub fn new(val: i32) -> Self {
+        TreeNode {
+            val,
+            left: None,
+            right: None,
+        }
+    }
+
+    //404. 左叶子之和
+    pub fn sum_of_left_leaves(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        //只有根节点才算
+        let mut res = 0;
+        if let Some(mut node) = root {
+            if let Some(left) = node.borrow_mut().left.take() {
+                if left.borrow().left.is_none() && left.borrow().right.is_none() {
+                    res += left.borrow().val;
+                } else {
+                    res += TreeNode::sum_of_left_leaves(Some(left));
+                }
+            }
+            res += TreeNode::sum_of_left_leaves(node.borrow_mut().right.take());
+        }
+        res
+    }
 }
 
 struct Solution {}

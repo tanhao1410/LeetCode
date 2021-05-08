@@ -5,6 +5,34 @@ fn main() {
     println!("Hello, world!");
 }
 
+#[derive(PartialEq, Eq, Clone, Debug)]
+pub struct ListNode {
+    pub val: i32,
+    pub next: Option<Box<ListNode>>,
+}
+
+impl ListNode {
+    #[inline]
+    pub(crate) fn new(val: i32) -> Self {
+        ListNode {
+            next: None,
+            val,
+        }
+    }
+
+    //1290. 二进制链表转整数
+    pub fn get_decimal_value(head: Option<Box<ListNode>>) -> i32 {
+        let mut head = head;
+        let mut res = 0;
+        while let Some(mut node) = head.take() {
+            res <<= 1;
+            res += node.val;
+            head = node.next.take();
+        }
+        res
+    }
+}
+
 #[derive(Debug, PartialEq, Eq)]
 pub struct TreeNode {
     pub val: i32,

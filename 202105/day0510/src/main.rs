@@ -87,6 +87,29 @@ impl TreeNode {
         }
     }
 
+    //1302. 层数最深叶子节点的和
+    pub fn deepest_leaves_sum(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        //层次遍历，
+        let mut queue = vec![root];
+        let mut res = 0;
+        while queue.len() > 0 {
+            let queue_len = queue.len();
+            res = 0;
+            for i in 0..queue_len {
+                if let Some(node) = queue.remove(0) {
+                    res += node.borrow().val;
+                    if node.borrow().left.is_some() {
+                        queue.push(node.borrow_mut().left.take());
+                    }
+                    if node.borrow().right.is_some() {
+                        queue.push(node.borrow_mut().right.take());
+                    }
+                }
+            }
+        }
+        res
+    }
+
     //872. 叶子相似的树
     pub fn leaf_similar(root1: Option<Rc<RefCell<TreeNode>>>, root2: Option<Rc<RefCell<TreeNode>>>) -> bool {
         let mut leaf1: Vec<i32> = vec![];

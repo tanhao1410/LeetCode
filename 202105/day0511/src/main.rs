@@ -22,6 +22,36 @@ impl TreeNode {
         }
     }
 
+    //1734. 解码异或后的排列
+    pub fn decode(encoded: Vec<i32>) -> Vec<i32> {
+        //前n个正整数
+        let mut res = vec![0;encoded.len() + 1];
+        //res[0]^res[1]^...res[n-1] = 1 ^ 2...
+        //res[0] ^res[1] ^ ....res[n-2] = encoded[0]^....
+        //res[n-1] =
+
+        let total_res = (1..encoded.len() + 1).into_iter()
+            .fold(0,|pre,pro| pre ^ pro as i32);
+
+        //不是所有，而是奇数部分
+        // let total_encoded = encoded.iter().enumerate()
+        //     .filter(|&(index,_)| index % 2 == 0)
+        //     .fold(0,|pre,(_, & pro)| pre ^ pro);
+        let total_encoded = encoded.iter().step_by(2)
+            .fold(0,|pre, & pro| pre ^ pro);
+
+        //即 res[n-1] ^ total_encode = total_res =>
+        res[encoded.len()] = total_encoded ^ total_res;
+
+        (0..encoded.len()).rev().for_each(|index|res[i] = encoded[i] ^ res[i + 1]);
+
+        // for i in (0..encoded.len()).rev(){
+        //     res[i] = encoded[i] ^ res[i + 1]
+        // }
+        res
+    }
+
+
     //563. 二叉树的坡度
     pub fn find_tilt(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
         Self::child_sum_tilt(&root).1

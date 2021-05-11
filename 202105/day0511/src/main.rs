@@ -22,6 +22,21 @@ impl TreeNode {
         }
     }
 
+    //563. 二叉树的坡度
+    pub fn find_tilt(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        Self::child_sum_tilt(&root).1
+    }
+    //子树包含自身之和，坡度
+    pub fn child_sum_tilt(root:&Option<Rc<RefCell<TreeNode>>>)->(i32,i32){
+        if let Some(node) = root.as_ref(){
+            //先求它的左子树，和右子树
+            let (left_sum,left_tilt) = Self::child_sum_tilt(&node.borrow().left);
+            let (right_sum,right_tilt) = Self::child_sum_tilt(&node.borrow().right);
+            return (left_sum + right_sum + node.borrow().val ,left_tilt+right_tilt + (left_sum-right_sum).abs());
+        }
+        (0,0)
+    }
+
     //671. 二叉树中第二小的节点
     pub fn find_second_minimum_value(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
         if let Some(node) = root {

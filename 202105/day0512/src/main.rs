@@ -5,6 +5,56 @@ fn main() {
 pub struct Solution {}
 
 impl Solution {
+
+    //229. 求众数 II-间复杂度为 O(n)、空间复杂度为 O(1)
+    pub fn majority_element2(nums: Vec<i32>) -> Vec<i32> {
+        //最简单的思路，采用map
+        // let mut map = std::collections::HashMap::new();
+        // nums.iter().for_each(|&num| { * map.entry(num).or_insert(0) += 1; });
+        // map.iter().filter(|&(_, &v)| { v > nums.len() / 3 }).map(|(&k, _)| { k }).collect()
+
+        let mut vec: Vec<(i32, i32)> = vec![];
+        nums.iter().for_each(|&num| {
+            //投票数组为空，或只有一个时
+            if vec.is_empty() || (vec.len() == 1 && vec[0].0 != num) {
+                vec.push((num, 1))
+            } else if vec[0].0 == num {
+                //与第一个相同
+                vec[0].1 += 1;
+            } else if vec[1].0 == num {
+                //与第二个相同
+                vec[1].1 += 1;
+            } else {
+                //与两个都不相等
+                vec[0].1 -= 1;
+                vec[1].1 -= 1;
+                if vec[0].1 < 1 {
+                    vec.remove(0);
+                }
+                if vec[1].1 < 1 {
+                    vec.remove(0);
+                }
+                if vec.len() < 2 {
+                    vec.push((num, 1));
+                }
+            }
+        });
+        //未保证一定存在两个
+        vec.iter().map(|&(num, _)| num).collect()
+    }
+
+    //229. 求众数 II
+    pub fn majority_element(nums: Vec<i32>) -> Vec<i32> {
+        //最简单的思路，采用map
+        let mut map = std::collections::HashMap::new();
+        let count = nums.len() / 3;
+        nums.iter().for_each(|&num| {
+            let entry = map.entry(num).or_insert(0);
+            *entry += 1;
+        });
+        map.iter().filter(|&(_, &v)| { v > count }).map(|(&k, _)| { k }).collect()
+    }
+
     //260. 只出现一次的数字 III
     pub fn single_number(nums: Vec<i32>) -> Vec<i32> {
         //有两个元素只出现一次，其余的出现两次。

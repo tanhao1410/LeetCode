@@ -6,6 +6,27 @@ pub struct Solution {}
 
 impl Solution {
 
+    //1310. 子数组异或查询
+    pub fn xor_queries2(arr: Vec<i32>, queries: Vec<Vec<i32>>) -> Vec<i32> {
+        //前缀异或数组解决 前缀异或数组不包含自身。所以，[2,6]^ = pre[2]^pre[6+1]
+        let mut pre = vec![0;arr.len() + 1];
+        // for i in 1..arr.len()+1{
+        //     pre[i] = pre[i - 1] ^ arr[i - 1]
+        // }
+        (1..arr.len() + 1).for_each(|i| pre[i] = pre[i - 1] ^ arr[i - 1]);
+
+        queries.iter().map(|v|{
+            pre[v[0] as usize] ^ pre[v[1] as usize + 1]
+        }).collect()
+
+    }
+
+    //1310. 子数组异或查询
+    pub fn xor_queries(arr: Vec<i32>, queries: Vec<Vec<i32>>) -> Vec<i32> {
+        //暴力法
+        queries.iter().map(|v| (v[0]..v[1] + 1).fold(0, |i, j| i ^ arr[j as usize])).collect()
+    }
+
     //229. 求众数 II-间复杂度为 O(n)、空间复杂度为 O(1)
     pub fn majority_element2(nums: Vec<i32>) -> Vec<i32> {
         //最简单的思路，采用map

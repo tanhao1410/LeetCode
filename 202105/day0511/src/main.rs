@@ -30,8 +30,7 @@ impl TreeNode {
         //res[0] ^res[1] ^ ....res[n-2] = encoded[0]^....
         //res[n-1] =
 
-        let total_res = (1..encoded.len() + 1).into_iter()
-            .fold(0,|pre,pro| pre ^ pro as i32);
+        let total_res = (1..encoded.len() + 2).fold(0,|pre,pro| pre ^ pro as i32);
 
         //不是所有，而是奇数部分
         // let total_encoded = encoded.iter().enumerate()
@@ -43,7 +42,7 @@ impl TreeNode {
         //即 res[n-1] ^ total_encode = total_res =>
         res[encoded.len()] = total_encoded ^ total_res;
 
-        (0..encoded.len()).rev().for_each(|index|res[i] = encoded[i] ^ res[i + 1]);
+        (0..encoded.len()).rev().for_each(|i|res[i] = encoded[i] ^ res[i + 1]);
 
         // for i in (0..encoded.len()).rev(){
         //     res[i] = encoded[i] ^ res[i + 1]

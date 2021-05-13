@@ -46,3 +46,21 @@ impl Solution {
         dp[n as usize]
     }
 }
+
+//303. 区域和检索 - 数组不可变
+//标准解法，与求区间异或一样，先算出各位之和，然后取中间的即可。
+struct NumArray {
+    nums: Vec<i32>,
+}
+
+impl NumArray {
+    fn new(nums: Vec<i32>) -> Self {
+        NumArray {
+            nums: nums,
+        }
+    }
+
+    fn sum_range(&self, left: i32, right: i32) -> i32 {
+        (left..right + 1).fold(0, |i, j| i + self.nums[j as usize])
+    }
+}

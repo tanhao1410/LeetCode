@@ -2,6 +2,31 @@ fn main() {
     println!("Hello, world!");
 }
 
+//318. 最大单词长度乘积
+pub fn max_product(words: Vec<String>) -> i32 {
+    let bit_string: Vec<i32> = words.iter().map(|w| {
+        //String  => 26位的 i32
+        let mut res = 0;
+        for i in w.chars() {
+            res |= (1 << i as usize - 'a' as usize)
+        }
+        res
+    }).collect();
+
+    match bit_string.iter().enumerate().map(|(outer_index, i)| {
+        match bit_string.iter().enumerate()
+            .filter(|(index, j)| *i & **j == 0)
+            .map(|(index, j)| words[index].len() * words[outer_index].len())
+            .max() {
+            Some(max) => max as i32,
+            _ => 0
+        }
+    }).max() {
+        Some(res) => res,
+        _ => 0
+    }
+}
+
 //342. 4的幂
 pub fn is_power_of_four(n: i32) -> bool {
     //你能不使用循环或者递归

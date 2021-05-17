@@ -1,10 +1,66 @@
 fn main() {
     println!("Hello, world!");
 }
+use std::rc::Rc;
+use std::cell::RefCell;
 
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct TreeNode {
+    pub val: i32,
+    pub left: Option<Rc<RefCell<TreeNode>>>,
+    pub right: Option<Rc<RefCell<TreeNode>>>,
+}
 pub struct Solution {}
 
 impl Solution {
+
+    //993. 二叉树的堂兄弟节点
+    pub fn is_cousins(root: Option<Rc<RefCell<TreeNode>>>, x: i32, y: i32) -> bool {
+        //层次遍历，
+        let mut queue = vec![root];
+        while !queue.is_empty() {
+            let old_len = queue.len();
+            for i in 0..old_len {
+                if let Some(node) = queue.remove(0) {
+                    let mut flag = false;
+                    if node.borrow().left.is_some() {
+                        if node.borrow().left.as_ref().unwrap().borrow().val == x
+                            || node.borrow().left.as_ref().unwrap().borrow().val == y {
+                            flag = true;
+                        }
+                        queue.push(node.borrow_mut().left.take());
+                    }
+                    if node.borrow().right.is_some() {
+                        //处在同一个父节点之下
+                        if flag && (node.borrow().right.as_ref().unwrap().borrow().val == x
+                            || node.borrow().right.as_ref().unwrap().borrow().val == y) {
+                            return false;
+                        }
+                        queue.push(node.borrow_mut().right.take());
+                    }
+                }
+            }
+
+            let count = queue.iter().fold(0, |mut p, q| {
+                if let Some(node) = q {
+                    if node.borrow().val == x || node.borrow().val == y {
+                        p += 1;
+                    }
+                }
+                p
+            });
+            //判断x,y 是否是在同一层中
+            if count == 2 {
+                return true;
+            } else if count == 1 {
+                return false;
+            }
+        }
+
+        false
+    }
+
 
     //405. 数字转换为十六进制数
     pub fn to_hex(num: i32) -> String {

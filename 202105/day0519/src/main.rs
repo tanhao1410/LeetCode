@@ -2,6 +2,58 @@ fn main() {
     println!("Hello, world!");
 }
 
+//65. 有效数字
+pub fn is_number(s: String) -> bool {
+    //一个 小数 或者 整数
+    // （可选）一个 'e' 或 'E' ，后面跟着一个 整数
+    //先确定e/E,
+    if s.contains(&['e', 'E'][..]) {
+        let ss: Vec<&str> = s.split(&['e', 'E'][..]).collect();
+        match ss.len() {
+            2 => Self::is_small_number(ss[0].to_string())
+                && Self::is_zhengshu(ss[1].to_string()),
+            _ => false
+        }
+    } else {
+        Self::is_small_number(s)
+    }
+}
+
+//判断字符串是不是小数 +.8
+pub fn is_small_number(mut s: String) -> bool {
+    let ss: Vec<&str> = s.split('.').collect();
+    match ss.len() {
+        //一个的情况下，必须是数
+        1 => Self::is_zhengshu(ss[0].to_string()),
+        //前面是数，后面可以为空，或数
+        2 => (Self::is_zhengshu(ss[0].to_string())
+            && (Self::is_shuzi(ss[1].to_string()) || ss[1].len() == 0))
+            || ((ss[0].len() == 0 || ss[0] == "+" || ss[0] == "-") && Self::is_shuzi(ss[1].to_string())),
+        _ => false
+    }
+}
+
+//判断字符串是不是整数
+pub fn is_zhengshu(mut s: String) -> bool {
+    if s.len() == 0 {
+        return false;
+    }
+    match s.remove(0) {
+        '+' | '-' => Self::is_shuzi(s),
+        '0'...'9' => s.len() == 0 || Self::is_shuzi(s),
+        _ => false,
+    }
+}
+//判断是不是数字
+pub fn is_shuzi(s: String) -> bool {
+    for i in s.as_bytes() {
+        if *i > b'9' || *i < b'0' {
+            return false;
+        }
+    }
+    s.len() != 0
+}
+
 //1738. 找出第 K 大的异或坐标值
 pub fn kth_largest_value(matrix: Vec<Vec<i32>>, k: i32) -> i32 {
     //思路：v[m][n] = v[m-1][n] ^ v[m][n-1]^ v[m-1][n-1] ^ matrix[m][n]

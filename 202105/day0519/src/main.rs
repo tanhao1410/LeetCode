@@ -2,6 +2,22 @@ fn main() {
     println!("Hello, world!");
 }
 
+//409. 最长回文串
+pub fn longest_palindrome(s: String) -> i32 {
+    //偶数个的直接加进来，奇数个的+上，-1，最后+1
+    let mut m = std::collections::HashMap::new();
+    s.as_bytes().iter().for_each(|&c| {
+        let mut count = m.entry(c).or_insert(0);
+        *count += 1;
+    });
+    m.iter().fold((0, true), |(count, is_first_odd), (_, &v)|
+        match (v & 1, is_first_odd) {
+            (1, true) => (count + v, false),
+            (1, _) => (count + v - 1, false),
+            _ => (count + v, is_first_odd)
+        }).0
+}
+
 //65. 有效数字
 pub fn is_number(s: String) -> bool {
     //一个 小数 或者 整数

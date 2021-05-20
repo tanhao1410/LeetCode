@@ -2,6 +2,20 @@ fn main() {
     println!("Hello, world!");
 }
 
+//442. 数组中重复的数据
+pub fn find_duplicates(mut nums: Vec<i32>) -> Vec<i32> {
+    const BASE:i32 = 1_000_000_000;
+    for i in 0..nums.len(){
+        let i = nums[i];
+        nums[(i % BASE) as usize - 1] += BASE
+    }
+    //nums.into_iter().filter(|&n| n / BASE == 2).map(|i| i % BASE).collect()
+    nums.iter().enumerate().filter_map(|(i,&n)|match n/BASE {
+        2=>Some(i as i32 + 1),
+        _=>None
+    }).collect()
+}
+
 //692. 前K个高频单词
 pub fn top_k_frequent(words: Vec<String>, k: i32) -> Vec<String> {
     // let mut dic = std::collections::HashMap::new();

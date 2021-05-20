@@ -2,6 +2,29 @@ fn main() {
     println!("Hello, world!");
 }
 
+//905. 按奇偶排序数组
+pub fn sort_array_by_parity(nums: Vec<i32>) -> Vec<i32> {
+    //思路：双指针法，第一个指针往后走，找到一个为奇数的点，第二个指针，从后往前走，找到一个为偶数的地方，
+    let mut i = 0;
+    let mut j = nums.len()-1;
+    let mut nums = nums;
+    while i < j{
+        while i < nums.len() && nums[i] % 2 == 0{
+            i += 1;
+        }
+        while j > 0 && nums[j] % 2== 1{
+            j -=1;
+        }
+        if i < j{
+            let temp = nums[i];
+            nums[i]  = nums[j];
+            nums[j] = temp;
+        }
+    }
+
+    nums
+}
+
 //448. 找到所有数组中消失的数字
 pub fn find_disappeared_numbers(mut nums: Vec<i32>) -> Vec<i32> {
     let BASE = nums.len() + 1;

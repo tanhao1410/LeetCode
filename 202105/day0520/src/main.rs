@@ -2,6 +2,25 @@ fn main() {
     println!("Hello, world!");
 }
 
+//448. 找到所有数组中消失的数字
+pub fn find_disappeared_numbers(mut nums: Vec<i32>) -> Vec<i32> {
+    let BASE = nums.len() + 1;
+
+    for i in 0..nums.len(){
+        let index = nums[i] % BASE as i32 - 1 ;
+        nums[index as usize] += BASE as i32
+    }
+
+    let mut res =vec![];
+    for i in 0..nums.len(){
+        if nums[i] < BASE as i32 {
+            res.push(i as i32 + 1);
+        }
+    }
+
+    res
+}
+
 //442. 数组中重复的数据
 pub fn find_duplicates(mut nums: Vec<i32>) -> Vec<i32> {
     const BASE:i32 = 1_000_000_000;

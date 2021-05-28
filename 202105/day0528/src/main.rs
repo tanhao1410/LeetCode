@@ -2,6 +2,16 @@ fn main() {
     println!("Hello, world!");
 }
 
+//451. 根据字符出现频率排序
+pub fn frequency_sort(s: String) -> String {
+    //统计字母出现的次数，排序，然后生成新的字符串
+    let mut char_count: Vec<i32> = vec![0; 128];
+    s.as_bytes().iter().for_each(|&c| char_count[c as usize] += 1);
+    let mut char_count = char_count.iter().enumerate().collect::<Vec<(usize, &i32)>>();
+    char_count.sort_by_key(|&(c, v)| -v);
+    char_count.iter().fold(String::new(), |res, &(c, &count)| res + &String::from_utf8(vec![c as u8; count as usize]).unwrap())
+}
+
 //412. Fizz Buzz
 pub fn fizz_buzz(n: i32) -> Vec<String> {
     //3的倍数 fiz,5

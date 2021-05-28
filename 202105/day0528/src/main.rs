@@ -2,6 +2,17 @@ fn main() {
     println!("Hello, world!");
 }
 
+//412. Fizz Buzz
+pub fn fizz_buzz(n: i32) -> Vec<String> {
+    //3的倍数 fiz,5
+    (1..n + 1).map(|num| match num % 15 {
+        0 => "FizzBuzz".to_string(),
+        3 | 6 | 9 | 12 => "Fizz".to_string(),
+        5 | 10 => "Buzz".to_string(),
+        _ => num.to_string()
+    }).collect()
+}
+
 //477. 汉明距离总和
 pub fn total_hamming_distance(nums: Vec<i32>) -> i32 {
     //思路：记录每一位0,1的总个数，该位总和为其相乘，总的相加即得答案

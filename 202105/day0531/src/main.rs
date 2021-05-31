@@ -2,6 +2,27 @@ fn main() {
     println!("Hello, world!");
 }
 
+//1366. 通过投票对团队排名
+pub fn rank_teams(votes: Vec<String>) -> String {
+    use std::cmp::Ordering;
+    let mut v = votes.iter().fold(std::collections::HashMap::new(), |mut map, s| {
+        s.chars().enumerate().for_each(|(i, x)| map.entry(x).or_insert([0; 26])[i] += 1);
+        map
+    }).into_iter().collect::<Vec<_>>();
+    v.sort_by(|&p, &q| {
+        //先比较每个名次
+        for i in 0..26 {
+            match p.1[i].cmp(&q.1[i]) {
+                Ordering::Equal => (),
+                v @ _ => return v
+            }
+        }
+        //字母序倒序
+        q.0.cmp(&p.0)
+    });
+    v.iter().rev().map(|&m| m.0).collect::<String>()
+}
+
 //16. 最接近的三数之和
 pub fn three_sum_closest(nums: Vec<i32>, target: i32) -> i32 {
     use std::cmp::Ordering;

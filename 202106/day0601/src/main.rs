@@ -2,6 +2,23 @@ fn main() {
     println!("Hello, world!");
 }
 
+//128. 最长连续序列
+pub fn longest_consecutive(nums: Vec<i32>) -> i32 {
+    use std::iter::FromIterator;
+    let mut m = std::collections::HashSet::<i32>::from_iter(nums.clone().into_iter());
+    let mut res = 0;
+    for i in &nums {
+        if !m.contains(&(i - 1)) {
+            let mut cur_len = 1;
+            while m.contains(&(i + cur_len)) {
+                cur_len += 1;
+            }
+            res = res.max(cur_len );
+        }
+    }
+    res
+}
+
 //1013. 将数组分成和相等的三个部分
 pub fn can_three_parts_equal_sum(arr: Vec<i32>) -> bool {
     let sum: i32 = arr.iter().sum();

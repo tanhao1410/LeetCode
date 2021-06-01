@@ -2,6 +2,19 @@ fn main() {
     println!("Hello, world!");
 }
 
+//1013. 将数组分成和相等的三个部分
+pub fn can_three_parts_equal_sum(arr: Vec<i32>) -> bool {
+    let sum: i32 = arr.iter().sum();
+    sum % 3 == 0 &&
+        arr.iter().take(arr.len() - 1).fold((false, false, 0), |r, &num| {
+            match (r.0, r.1) {
+                (true, false) => (true, num + r.2 == sum * 2 / 3, num + r.2),
+                (true, true) => (true, true, num + r.2),
+                _ => (r.2 + num == sum / 3, false, num + r.2),
+            }
+        }) == (true, true, sum - arr.last().unwrap())
+}
+
 //1744. 你能在你最喜欢的那天吃到你最喜欢的糖果吗？
 pub fn can_eat(candies_count: Vec<i32>, queries: Vec<Vec<i32>>) -> Vec<bool> {
     ///思路：怎么样才能算迟到type类型的 1，type类型前面最多(不包括type)有多少糖果，每天最多吃多少， < day * cap

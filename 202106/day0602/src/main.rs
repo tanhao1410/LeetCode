@@ -2,6 +2,32 @@ fn main() {
     println!("Hello, world!");
 }
 
+//523. 连续的子数组和
+pub fn check_subarray_sum(nums: Vec<i32>, k: i32) -> bool {
+    //思路：前缀和 + %k 余数 相等 余数相等，说明 相减 即为 整除
+    //思路：前缀和 + %k 余数 相等 余数相等，说明 相减 即为 整除
+    let mut m = std::collections::HashMap::new();
+    //先求前缀和
+    let mut sums = nums;
+    for i in 0..sums.len() {
+        if i > 0{
+            sums[i] += sums[i - 1];
+        }
+        let mo = sums[i] % k;
+        if mo == 0{
+            return true;
+        }
+        if m.contains_key(&mo){
+            if i - m.get(&mo).unwrap() > 1{
+                return true;
+            }
+        }else{
+            m.insert(mo,i);
+        }
+    }
+    false
+}
+
 use std::rc::Rc;
 use std::cell::RefCell;
 

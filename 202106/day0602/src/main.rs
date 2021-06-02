@@ -22,6 +22,27 @@ impl TreeNode {
         }
     }
 
+    //606. 根据二叉树创建字符串
+    pub fn tree2str(root: Option<Rc<RefCell<TreeNode>>>) -> String {
+        let res = Self::tree2str2(root.as_ref());
+        res[1..res.len() - 1].to_string()
+    }
+
+    pub fn tree2str2(root: Option<&Rc<RefCell<TreeNode>>>) -> String {
+        if let Some(node) = root {
+            match (node.borrow().left.as_ref(), node.borrow().right.as_ref()) {
+                (None, None) => String::from("(") + &node.borrow().val.to_string() + ")",
+                (_, None) => "(".to_string() + &node.borrow().val.to_string() + &Self::tree2str2(node.borrow().left.as_ref()) + ")",
+                _ => "(".to_string() + &node.borrow().val.to_string()
+                    + &Self::tree2str2(node.borrow().left.as_ref())
+                    + &Self::tree2str2(node.borrow().right.as_ref())
+                    + ")"
+            }
+        } else {
+            "()".to_string()
+        }
+    }
+
     //面试题 17.12. BiNode
     pub fn convert_bi_node(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
         //把二叉搜索树转换为单向链表，要求依然符合二叉搜索树的性质

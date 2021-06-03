@@ -2,6 +2,23 @@ fn main() {
     println!("Hello, world!");
 }
 
+//1287. 有序数组中出现次数超过25%的元素
+pub fn find_special_integer(arr: Vec<i32>) -> i32 {
+    let sum = arr.len();
+    let mut cur_len = 1;
+    for i in 1..arr.len() {
+        if arr[i] == arr[i - 1] {
+            cur_len += 1;
+        } else {
+            cur_len = 1;
+        }
+        if 4 * cur_len > sum {
+            return arr[i];
+        }
+    }
+    arr[0]
+}
+
 //1160. 拼写单词
 pub fn count_characters(words: Vec<String>, chars: String) -> i32 {
     let letter_count = |s: &String| -> std::collections::HashMap<char, i32>{

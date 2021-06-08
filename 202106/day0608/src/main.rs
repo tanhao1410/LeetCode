@@ -2,6 +2,31 @@ fn main() {
     println!("Hello, world!");
 }
 
+//1049. 最后一块石头的重量 II
+pub fn last_stone_weight_ii(stones: Vec<i32>) -> i32 {
+    //思路：该题可总结为，将石头分成两推，求两堆的最小差值
+    let all = stones.iter().sum::<i32>();
+    let cap = all / 2;
+    //转换成背包问题的话，就是背包的容量是一半
+    //一维数组的话
+    let mut dp = vec![vec![0; cap as usize + 1]; stones.len() + 1];
+    for i in 1..stones.len() + 1 {
+        for j in 0..cap as usize + 1 {
+            //dp[i][j] =
+            if stones[i - 1] > j as i32 {
+                //放不进背包中
+                dp[i][j] = dp[i - 1][j];
+            } else {
+                //能放进背包，但需要选择是否放进去
+                //如果要放进去，则 上一个必须留下这么多的空间 dp[i-1][j-stones[i]]
+                //不放进去，则和上一个相等
+                dp[i][j] = i32::max(dp[i - 1][j], dp[i - 1][j - stones[i - 1] as usize] + stones[i01]);
+            }
+        }
+    }
+    all - dp[stones.len()][cap as usize]
+}
+
 //324. 摆动排序 II
 pub fn wiggle_sort(nums: &mut Vec<i32>) {
     //摆动排序思路：先排序，然后将最最小的插入到每个中间。

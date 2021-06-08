@@ -2,6 +2,23 @@ fn main() {
     println!("Hello, world!");
 }
 
+//324. 摆动排序 II
+pub fn wiggle_sort(nums: &mut Vec<i32>) {
+    //摆动排序思路：先排序，然后将最最小的插入到每个中间。
+    let mut temp = nums.clone();
+    temp.sort();
+    let mut k = temp.len() - 1;
+    //奇数位插入大的
+    for i in (1..temp.len()).step_by(2){
+        nums[i] = temp[k];
+        k -= 1;
+    }
+    for i in (0..temp.len()).step_by(2){
+        nums[i] = temp[k];
+        k -= 1;
+    }
+}
+
 //239. 滑动窗口最大值
 pub fn max_sliding_window(nums: Vec<i32>, k: i32) -> Vec<i32> {
     //思路：第一次的时候，找到最大值及所在的位置 k

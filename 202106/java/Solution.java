@@ -6,6 +6,45 @@ import java.util.HashSet;
  */
 public class Solution {
 
+    //792. 匹配子序列的单词数
+    public int numMatchingSubseq(String s, String[] words) {
+        HashSet<String> setY = new HashSet();
+        HashSet<String> setN = new HashSet();
+        int res = 0;
+        for(String word : words){
+            if(setN.contains(word)){
+                break;
+            }else if(setY.contains(word)){
+                res ++;
+            }else if(isChild(s,word)){
+                res ++;
+                setY.add(word);
+            }else{
+                setN.add(word);
+            }
+        }
+        return res;
+    }
+
+    //效率低了。
+    //怎么样更高呢
+    private boolean isChild(String s,String child){
+        if (child.length() > s.length()){
+            return false;
+        }
+        int i = 0;
+        int j = 0;
+        while(j < child.length() && i < s.length()){
+            if(s.charAt(i) == child.charAt(j)){
+                i ++;
+                j ++;
+            }else{
+                i ++;
+            }
+        }
+        return j == child.length();
+    }
+
     //820. 单词的压缩编码
     public int minimumLengthEncoding(String[] words) {
         //1.word 去重

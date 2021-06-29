@@ -1,13 +1,38 @@
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * @author tanhao
  * @date 2021/06/29 14:06
  */
 public class Solution {
+
+    //149. 直线上最多的点数
+    public int maxPoints(int[][] points) {
+        //思路：总共有三百个点。包含某点的直线 共有300种，剩余的点在不在其中，最多298中情况，总的时间复杂度 o(n^3)
+        //先用 一个点（x1,y1），然后以此点为开始，另找一个点(x2,y2)划线，看还有多少个点在这条线上。
+        //怎么确定其他点是否在这条线上，(x3,y3) (y2-y1)*(x3-x1) == (y3-y1)*(x2-x1)
+        int res = 1;
+        for(int i = 0;i < points.length-1;i ++){
+            int x1 = points[i][0];
+            int y1 = points[i][1];
+            for (int j = i + 1;j < points.length;j ++){
+                int x2 = points[j][0];
+                int y2 = points[j][1];
+                int curRes = 2;
+                for (int k = j + 1; k < points.length;k ++){
+                    int x3 =  points[k][0];
+                    int y3 =  points[k][1];
+                    if((y2-y1)*(x3-x1) == (y3-y1)*(x2-x1) ){
+                        curRes ++;
+                    }
+                }
+                if (curRes > res){
+                    res = curRes;
+                }
+            }
+        }
+        return res;
+    }
 
     //815. 公交路线
     public int numBusesToDestination(int[][] routes, int source, int target) {

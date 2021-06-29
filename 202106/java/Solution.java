@@ -1,10 +1,58 @@
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * @author tanhao
  * @date 2021/06/29 14:06
  */
 public class Solution {
+
+    //791. 自定义字符串排序
+    public String customSortString(String order, String str) {
+        //思路：每个字母对应一个数字，0-25，重新排序即可。
+
+        Map<Integer,Character> int2Char = new TreeMap();
+        Map<Character,Integer> char2Int = new HashMap();
+        for(int i = 0;i < order.length();i ++){
+            int2Char.put(i,order.charAt(i));
+            char2Int.put(order.charAt(i),i);
+        }
+
+        //各个字母的数量
+        StringBuilder tail = new StringBuilder();
+        int[] strCharCount= new int[26];
+        for (int i = 0;i< str.length();i ++){
+            char c = str.charAt(i);
+            if(char2Int.containsKey(c)){
+                strCharCount[c - 'a'] ++;
+            }else{
+                tail.append(c);
+            }
+        }
+
+        StringBuilder res = new StringBuilder();
+        // for(int i = 0;i < 26;i ++){
+        //     if(int2Char.containsKey(i)){
+        //         for (int j = 0;j < strCharCount[int2Char.get(i) - 'a'];j ++){
+        //             res.append(int2Char.get(i));
+        //         }
+        //     }
+        // }
+
+        int2Char.entrySet()
+                .stream()
+                .forEach(e->{
+                    //value是字母
+                    for (int j = 0;j < strCharCount[e.getValue() - 'a'];j ++){
+                        res.append(e.getValue());
+                    }
+                });
+
+
+        return res.append(tail).toString();
+    }
 
     //792. 匹配子序列的单词数
     public int numMatchingSubseq(String s, String[] words) {

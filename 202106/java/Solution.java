@@ -9,6 +9,96 @@ import java.util.TreeMap;
  */
 public class Solution {
 
+    //815. 公交路线
+    public int numBusesToDestination(int[][] routes, int source, int target) {
+        if(source == target){
+            return 0;
+        }
+
+        HashSet<Integer> sourceLine = new HashSet();
+        HashSet<Integer> targetLine = new HashSet();
+        //新思路，不以正常的点为计算，而是以公交路线来计算，可以走的路线，map中的key为公交路线编号
+        Map<Integer,HashSet<Integer>> m = new HashMap();
+        //点能到达的路线
+        Map<Integer,HashSet<Integer>> point2Line = new HashMap();
+        for(int i = 0;i < routes.length;i ++){
+            int[] route = routes[i];
+            HashSet<Integer> set = new HashSet();
+            for(int j = 0;j < route.length;j ++){
+                set.add(route[j]);
+
+                HashSet<Integer> point2LineSet = point2Line.get(route[j]);
+                if(point2LineSet == null){
+                    point2LineSet = new HashSet<>();
+                    point2Line.put(route[j],point2LineSet);
+                }
+                point2LineSet.add(i);
+            }
+            m.put(i,set);
+            if(set.contains(source)){
+                sourceLine.add(i);
+            }
+            if(set.contains(target)){
+                targetLine.add(i);
+            }
+        }
+
+
+        //记录已经坐过的路线
+        HashSet<Integer> oldRoad = new HashSet();
+        oldRoad.addAll(sourceLine);
+
+        //在当前步数下可以到达的路线
+        HashSet<Integer> curPoint = new HashSet();
+        curPoint.addAll(sourceLine);
+
+        int res = 1;
+        //不包含目标点，及当前可以到达的点不为空，就一直循环
+        while(!containsOne(oldRoad,targetLine) && curPoint.size() > 0){
+            res ++;
+
+            //本次可以走向那些路线
+            HashSet<Integer> newCurPoint = new HashSet();
+            for(Integer p : curPoint){
+                //该条路线，能到达的点
+                HashSet<Integer> canReach = m.get(p);
+                if(canReach!=null){
+                    //只有未走过的点加入到newCurPoint
+                    for(Integer pp :canReach){
+                        //从该点能够达到的路线有
+                        HashSet<Integer> canReachLine = point2Line.get(pp);
+                        for(Integer line : canReachLine){
+                            if(!oldRoad.contains(line)){
+                                newCurPoint.add(line);
+                            }
+                        }
+                    }
+                }
+            }
+
+            //更新已经走过的路线
+            oldRoad.addAll(newCurPoint);
+
+            //不能往下走了，并且目标点未到达，返回-1
+            if(newCurPoint.size() == 0 && !containsOne(oldRoad,targetLine)){
+                return -1;
+            }
+            //更新当前可在位置
+            curPoint = newCurPoint;
+        }
+
+        return res;
+    }
+
+    public boolean containsOne(HashSet<Integer> set1,HashSet<Integer> set2){
+        for(Integer i : set2){
+            if(set1.contains(i)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     //791. 自定义字符串排序
     public String customSortString(String order, String str) {
         //思路：每个字母对应一个数字，0-25，重新排序即可。

@@ -6,6 +6,44 @@ import java.util.*;
  */
 public class Solution {
 
+    //395. 至少有 K 个重复字符的最长子串
+    public int longestSubstring(String s, int k) {
+
+        ArrayList<Integer> split = new ArrayList();
+        int[] chars = new int[26];
+        for(int i = 0;i < s.length();i ++){
+            char c = s.charAt(i);
+            chars[c - 'a'] ++;
+        }
+
+        for(int i = 0;i < s.length();i ++){
+            char c = s.charAt(i);
+            if(chars[ c - 'a'] > 0 && chars[c - 'a'] < k){
+                split.add(i);
+            }
+        }
+        if(split.size() == 0){
+            return s.length();
+        }
+        //否则递归去解决
+        //思路：先看所有的，看哪些字母不适合加入进来，分隔点便是这些字母的位置。
+        int res = 0;
+        if(split.get(0) != 0){
+            res =  Math.max(res,longestSubstring(s.substring(0,split.get(0)),k));
+        }
+        for(int i = 0;i < split.size();i ++){
+            String subStr = null;
+            if(i + 1 == split.size()){
+                subStr = s.substring(split.get(i) + 1);
+            }else{
+                subStr = s.substring(split.get(i) + 1,split.get(i + 1));
+            }
+            int subRes = longestSubstring(subStr,k);
+            res = Math.max(res,subRes);
+        }
+        return res;
+    }
+
     //149. 直线上最多的点数
     public int maxPoints(int[][] points) {
         //思路：总共有三百个点。包含某点的直线 共有300种，剩余的点在不在其中，最多298中情况，总的时间复杂度 o(n^3)

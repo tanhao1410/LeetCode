@@ -1,6 +1,32 @@
 use std::str::FromStr;
 
 impl Solution {
+
+    //504. 七进制数
+    pub fn convert_to_base7(mut num: i32) -> String {
+        if num == 0{
+            return "0".to_string();
+        }
+        let mut res = String::new();
+        if num < 0{
+            num = -num;
+            res.push('-');
+        }
+        let mut flag = false;
+        for i in (0..10).rev(){
+            let n = i32::pow(7, i);
+            if num >= n{
+                flag = true;
+                res.push_str( (num/ n).to_string().as_str());
+                num %= n;
+            }else if flag{
+                res.push('0');
+            }
+        }
+        //贪心算法，从最高开始加起
+        res
+    }
+
     fn diff_way_to_compute_vec(vec1: &[OperaOrNum]) -> Vec<i32> {
         let mut res = vec![];
         //大小为1 说明里面就一个数字

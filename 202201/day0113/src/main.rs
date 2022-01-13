@@ -11,9 +11,9 @@ impl Solution {
             .iter()
             .enumerate()
             .fold((0, 0, 0), |(index, max, big), (i, &n)| //index,max,bigger
-                match (*num.1 > pre.1, *num.1 > pre.2) {
+                match (n > max, n > big) {
                     (true, _) => (i, n, max),
-                    (_, true) => (index, max, *num.1),
+                    (_, true) => (index, max, n),
                     _ => (index, max, big)
                 },
             ) {

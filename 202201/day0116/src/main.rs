@@ -15,6 +15,50 @@ struct Solution {
 }
 
 impl Solution {
+
+    //310. 最小高度树
+    pub fn find_min_height_trees(n: i32, edges: Vec<Vec<i32>>) -> Vec<i32> {
+        use std::collections::HashSet;
+        use std::collections::HashMap;
+
+        if n == 1 {
+            return vec![0];
+        }
+
+        let mut map = HashMap::<i32, HashSet<i32>>::new();
+        for edge in edges {
+            let p1 = edge[0];
+            let p2 = edge[1];
+            let entry1 = map.entry(p1).or_insert(HashSet::new());
+            entry1.insert(p2);
+            let entry2 = map.entry(p2).or_insert(HashSet::new());
+            entry2.insert(p1);
+        }
+        //去除只有一个连接的叶子节点
+        while map.len() > 2 {
+            //要删除哪些
+            let remove_keys = map
+                .iter()
+                .filter_map(|(k, v)| match v.len() {
+                    1 => Some(*k),
+                    _ => None
+                })
+                .collect::<Vec<i32>>();
+
+            for remove_key in remove_keys{
+                let set = map.remove(&remove_key).unwrap();
+                let other_point = set.iter().next().unwrap();
+                //找到对方
+                map.get_mut(other_point).unwrap().remove(&remove_key);
+            }
+        }
+
+        map
+            .keys()
+            .map(|v| *v)
+            .collect()
+    }
+
     fn new(mut head: Option<Box<ListNode>>) -> Self {
         let mut nums = vec![];
         let mut size = 0;

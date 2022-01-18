@@ -3,13 +3,36 @@ use std::collections::HashSet;
 fn main() {
     println!("Hello, world!");
     println!("{}", can_measure_water(1, 2, 3));
+    println!("{}", combination_sum4(vec![1, 2, 3], 4));
+}
+
+//377. 组合总和 Ⅳ
+pub fn combination_sum4(nums: Vec<i32>, target: i32) -> i32 {
+    let mut dp = vec![0;target as usize + 1];
+    //每一个target可以由对应的数组成一个
+    for &num in nums.iter(){
+        let num = num as usize;
+        if num < dp.len(){
+            dp[num] = 1;
+        }
+    }
+    // dp[t + num] += dp[t] //在原来的组合数上加一个数，
+    for t in 0..=target as usize{
+        for &num in &nums{
+            let num = num as usize;
+            if t + num <= target as usize {
+                dp[t + num] += dp[t];
+            }
+        }
+    }
+    dp[target as usize]
 }
 
 //365. 水壶问题
 pub fn can_measure_water(jug1_capacity: i32, jug2_capacity: i32, target_capacity: i32) -> bool {
     let mut res_set = std::collections::HashSet::new();
     let mut state_set = std::collections::HashSet::new();
-    operate(jug1_capacity,jug2_capacity,0,0,&mut res_set,&mut state_set);
+    operate(jug1_capacity, jug2_capacity, 0, 0, &mut res_set, &mut state_set);
     println!("{:?}", state_set);
     res_set.contains(&target_capacity)
 }

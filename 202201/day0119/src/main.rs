@@ -2,6 +2,19 @@ fn main() {
     println!("Hello, world!");
 }
 
+//598. 范围求和 II
+pub fn max_count(m: i32, n: i32, ops: Vec<Vec<i32>>) -> i32 {
+    //matrix[0][0]肯定是最大的整数，其它的只要根据ops来不断的缩小范围即可。
+    ops
+        .iter()
+        .map(|v|(v[0],v[1]))
+        .fold((m,n,m * n),|(m,n,mul),(i,j)|{
+            let (m,n) = (i.min(m),j.min(n));
+            (m,n,m * n)
+        })
+        .2
+}
+
 pub fn contains_nearby_duplicate2(nums: Vec<i32>, k: i32) -> bool {
     use std::collections::HashSet;
     //滑动窗口的大小为k,每一次都往里添加元素，如果添加元素后，窗口小于k，说明又重复的了。

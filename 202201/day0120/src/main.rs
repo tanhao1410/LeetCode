@@ -38,10 +38,10 @@ impl Solution {
     fn rand_point(&self) -> Vec<f64> {
         let x = self.rand_f64() + self.left_down_point.0;
         let y = self.rand_f64() + self.left_down_point.1;
-        if self.is_out_circle((x,y)){
+        if self.is_out_circle((x, y)) {
             return self.rand_point();
         }
-        vec![x,y]
+        vec![x, y]
     }
 }
 
@@ -107,5 +107,21 @@ pub fn rob(mut nums: Vec<i32>) -> i32 {
 
 //2029. 石子游戏 IX
 pub fn stone_game_ix(stones: Vec<i32>) -> bool {
-    true
+    //如果类型 0 的石子的个数为偶数，那么 Alice 获胜当且仅当类型 1和类型 2 的石子至少都有 1 个；
+    //
+    // 如果类型 0 的石子的个数为奇数，那么 Alice 获胜当且仅当
+    // 「在没有类型 0 石子的情况下，Bob 获胜且原因不是因为所有石子都被移除」。
+    // 对应到上面的分析即为「类型 1 的石子比类型 2 多超过 2个」或者「类型 2 的石子比类型 1 多超过 2 个」。
+    //
+    let stones = stones
+        .into_iter()
+        .fold((0, 0, 0i32), |(i, j, k), n| match n % 3 {
+            0 => (i + 1, j, k),
+            1 => (i, j + 1, k),
+            _ => (i, j, k + 1)
+        });
+    match stones {
+        (i, j, k) if i % 2 == 0 => j >= 1 && k >= 1,
+        (_, j, k) => (j - k).abs() > 2
+    }
 }

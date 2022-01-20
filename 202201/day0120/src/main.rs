@@ -1,7 +1,48 @@
-use std::arch::x86_64::_mm256_mask_compress_epi32;
+use std::arch::x86_64::_rdrand64_step;
 
 fn main() {
     println!("Hello, world!");
+}
+
+//478. 在圆内随机生成点
+struct Solution {
+    diameter: f64,
+    left_down_point: (f64, f64),
+    center: (f64, f64),
+}
+
+impl Solution {
+    fn new(radius: f64, x_center: f64, y_center: f64) -> Self {
+        //平台自带的随机方式为随机一个u64,将随机到的u64转变为一个0-1之间的f64
+        Self {
+            diameter: 2.0 * radius,
+            left_down_point: (x_center - radius, y_center - radius),
+            center: (x_center, y_center),
+        }
+    }
+
+    fn rand_f64(&self) -> f64 {
+        let mut num = 0;
+        unsafe {
+            _rdrand64_step(&mut num)
+        };
+        (num as f64 / u64::MAX as f64) * self.diameter
+    }
+
+    fn is_out_circle(&self, (x, y): (f64, f64)) -> bool {
+        (x - self.center.0).powi(2) + (y - self.center.1).powi(2)
+            > self.diameter * self.diameter / 4.0
+    }
+
+
+    fn rand_point(&self) -> Vec<f64> {
+        let x = self.rand_f64() + self.left_down_point.0;
+        let y = self.rand_f64() + self.left_down_point.1;
+        if self.is_out_circle((x,y)){
+            return self.rand_point();
+        }
+        vec![x,y]
+    }
 }
 
 //740. 删除并获得点数
@@ -10,13 +51,13 @@ pub fn delete_and_earn(nums: Vec<i32>) -> i32 {
     let min = *nums.iter().min().unwrap();
     let max = *nums.iter().max().unwrap();
     //创建一个数组，
-    let mut nums2 = vec![0;(max - min) as usize + 1];
-    for num in nums{
+    let mut nums2 = vec![0; (max - min) as usize + 1];
+    for num in nums {
         nums2[(num - min) as usize] += num;
     }
 
     //即就一种数字
-    if nums2.len()== 1{
+    if nums2.len() == 1 {
         return nums2[0];
     }
 
@@ -24,7 +65,7 @@ pub fn delete_and_earn(nums: Vec<i32>) -> i32 {
     let mut pre = nums2[0];
     let mut cur = nums2[1];
 
-    for i in 2..nums2.len(){
+    for i in 2..nums2.len() {
         let temp = cur.max(pre + nums2[i]);
         pre = cur.max(pre);
         cur = temp;

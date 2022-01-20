@@ -4,6 +4,34 @@ fn main() {
     println!("Hello, world!");
 }
 
+//740. 删除并获得点数
+pub fn delete_and_earn(nums: Vec<i32>) -> i32 {
+    //每一个数都对应有一个值，先求nums中的最大值以及最小值，然后依次遍历，转化成打家劫舍问题
+    let min = *nums.iter().min().unwrap();
+    let max = *nums.iter().max().unwrap();
+    //创建一个数组，
+    let mut nums2 = vec![0;(max - min) as usize + 1];
+    for num in nums{
+        nums2[(num - min) as usize] += num;
+    }
+
+    //即就一种数字
+    if nums2.len()== 1{
+        return nums2[0];
+    }
+
+    //转化成了rob问题。
+    let mut pre = nums2[0];
+    let mut cur = nums2[1];
+
+    for i in 2..nums2.len(){
+        let temp = cur.max(pre + nums2[i]);
+        pre = cur.max(pre);
+        cur = temp;
+    }
+    pre.max(cur)
+}
+
 //213. 打家劫舍 II
 pub fn rob2(nums: Vec<i32>) -> i32 {
     //区别在于是环形的 dp[i] = max{dp[i-2] + nums[i],dp[i - 1]} 限制是，dp[0] 与dp[len - 1]不可共存

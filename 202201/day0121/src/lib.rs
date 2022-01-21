@@ -4,8 +4,23 @@ mod tests {
 
     #[test]
     fn it_works() {
-        assert_eq!(can_jump(vec![2,3,1,1,4]), true);
+        for i in 2..1 {}
+        assert_eq!(can_jump(vec![2, 3, 1, 1, 4]), true);
     }
+}
+
+//45. 跳跃游戏 II
+pub fn jump(nums: Vec<i32>) -> i32 {
+    //思路1：用一个dp[i]记录，从i位置到达结尾处最小的步骤，dp[nums.len() - 1] = 0
+    let mut dp = vec![0; nums.len()];
+    for i in (0..dp.len() - 1).rev() {
+        let min = (1..=nums[i])
+            .take_while(|&n| n as usize + i < nums.len())//不能超过数组的最大下标
+            .map(|n| 1 + dp[n as usize + i])//该位置走n步到达下一个下标，到达结尾处需要的最重步数
+            .min();//最小步数
+        dp[i] = min.unwrap_or(10000);
+    }
+    dp[0]
 }
 
 //55. 跳跃游戏

@@ -1,12 +1,28 @@
 #[cfg(test)]
 mod tests {
-    use crate::can_jump;
+    use crate::{can_jump, jump2};
 
     #[test]
     fn it_works() {
         for i in 2..1 {}
-        assert_eq!(can_jump(vec![2, 3, 1, 1, 4]), true);
+        assert_eq!(jump2(vec![2, 3, 1, 1, 4]), true);
     }
+}
+
+//45. 跳跃游戏 II
+pub fn jump2(nums: Vec<i32>) -> i32 {
+    //参考解法：每一个位置能走到的最远距离
+    let mut step = 0;
+    let mut end = 0;
+    let mut max_position = 0;
+    for i in 0..nums.len() - 1{
+        max_position = max_position.max(nums[i] + i as i32);
+        if i == end{
+            end = max_position as usize;
+            step += 1;
+        }
+    }
+    step
 }
 
 //45. 跳跃游戏 II

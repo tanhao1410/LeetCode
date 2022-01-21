@@ -9,7 +9,71 @@ mod tests {
         assert_eq!(min_jumps(vec![6,1,9]), 2);
         assert_eq!(min_jumps(vec! [11,22,7,7,7,7,7,7,7,22,13]), 3);
         assert_eq!(min_jumps(vec!  [100,-23,-23,404,100,23,23,23,3,404]), 3);
+
+        assert_eq!(min_jumps(vec!  [100,-23,-23,404,100,23,23,23,3,404]), 3);
+        assert_eq!(min_jumps(vec!  [100,-23,-23,404,100,23,23,23,3,404]), 3);
+        assert_eq!(min_jumps(vec!  [100,-23,-23,404,100,23,23,23,3,404]), 3);
+
     }
+}
+
+//1424. 对角线遍历 II
+pub fn find_diagonal_order2(nums: Vec<Vec<i32>>) -> Vec<i32> {
+    //借鉴思路：同一斜线元素满足下标(i+j)相等
+    let mut matrix = vec![];
+    for row in (0..nums.len()).rev(){
+        for col in 0..nums[row].len(){
+            matrix.push((row+col,nums[row][col]));
+        }
+    }
+    matrix.sort_by_key(|&e|e.0);
+    matrix.iter().map(|e|e.1).collect()
+}
+
+//1424. 对角线遍历 II
+pub fn find_diagonal_order(nums: Vec<Vec<i32>>) -> Vec<i32> {
+    //用一个vec记录上面的没有完毕的row
+    //访问的一趟数字，当还没达到底层的时候，一趟应该有 vec.len + 1个，多一个1是因为当前这一行的存在
+    //应该加入的数字，从下往上依次是 nums[row][cur_row - row]
+    let mut res = vec![];
+    let mut not_comple = vec![];
+    for i in 0..nums.len(){
+        //先加入自己的
+        not_comple.push(i);
+
+        let mut need_rem = vec![];
+        //在依次加入，注意顺序
+        for not_comple_i in (0..not_comple.len()).rev(){
+            res.push(nums[not_comple[not_comple_i]][i - not_comple[not_comple_i]]);
+            if nums[not_comple[not_comple_i]].len() - 1 == i - not_comple[not_comple_i]{
+                need_rem.push(not_comple_i);
+            }
+        }
+        //如果一个row所有的数字已经加入完毕，则，删除它
+        for x in need_rem {
+            not_comple.remove(x);
+        }
+    }
+
+    let mut col_num = 1;
+    //到达尾部之后，
+    while not_comple.len() > 0{
+        let mut need_rem = vec![];
+        //在依次加入，注意顺序
+        for not_comple_i in (0..not_comple.len()).rev(){
+            res.push(nums[not_comple[not_comple_i]][nums.len() - 1 - not_comple[not_comple_i] + col_num]);
+            if nums[not_comple[not_comple_i]].len() - 1 == nums.len() - 1 - not_comple[not_comple_i] + col_num{
+                need_rem.push(not_comple_i);
+            }
+        }
+        //如果一个row所有的数字已经加入完毕，则，删除它
+        for x in need_rem {
+            not_comple.remove(x);
+        }
+        col_num += 1;
+    }
+
+    res
 }
 
 //1345. 跳跃游戏 IV

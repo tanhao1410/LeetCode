@@ -4,30 +4,36 @@ mod tests {
 
     #[test]
     fn it_works() {
-
         assert_eq!(min_jumps(vec![7]), 0);
-        assert_eq!(min_jumps(vec![6,1,9]), 2);
-        assert_eq!(min_jumps(vec! [11,22,7,7,7,7,7,7,7,22,13]), 3);
-        assert_eq!(min_jumps(vec!  [100,-23,-23,404,100,23,23,23,3,404]), 3);
+        assert_eq!(min_jumps(vec![6, 1, 9]), 2);
+        assert_eq!(min_jumps(vec![11, 22, 7, 7, 7, 7, 7, 7, 7, 22, 13]), 3);
+        assert_eq!(min_jumps(vec![100, -23, -23, 404, 100, 23, 23, 23, 3, 404]), 3);
 
-        assert_eq!(min_jumps(vec!  [100,-23,-23,404,100,23,23,23,3,404]), 3);
-        assert_eq!(min_jumps(vec!  [100,-23,-23,404,100,23,23,23,3,404]), 3);
-        assert_eq!(min_jumps(vec!  [100,-23,-23,404,100,23,23,23,3,404]), 3);
-
+        assert_eq!(min_jumps(vec![100, -23, -23, 404, 100, 23, 23, 23, 3, 404]), 3);
+        assert_eq!(min_jumps(vec![100, -23, -23, 404, 100, 23, 23, 23, 3, 404]), 3);
+        assert_eq!(min_jumps(vec![100, -23, -23, 404, 100, 23, 23, 23, 3, 404]), 3);
     }
+}
+
+//771. 宝石与石头
+pub fn num_jewels_in_stones(jewels: String, stones: String) -> i32 {
+    stones
+        .chars()
+        .filter(|c|jewels.contains(*c))
+        .count() as i32
 }
 
 //1424. 对角线遍历 II
 pub fn find_diagonal_order2(nums: Vec<Vec<i32>>) -> Vec<i32> {
     //借鉴思路：同一斜线元素满足下标(i+j)相等
     let mut matrix = vec![];
-    for row in (0..nums.len()).rev(){
-        for col in 0..nums[row].len(){
-            matrix.push((row+col,nums[row][col]));
+    for row in (0..nums.len()).rev() {
+        for col in 0..nums[row].len() {
+            matrix.push((row + col, nums[row][col]));
         }
     }
-    matrix.sort_by_key(|&e|e.0);
-    matrix.iter().map(|e|e.1).collect()
+    matrix.sort_by_key(|&e| e.0);
+    matrix.iter().map(|e| e.1).collect()
 }
 
 //1424. 对角线遍历 II
@@ -37,15 +43,15 @@ pub fn find_diagonal_order(nums: Vec<Vec<i32>>) -> Vec<i32> {
     //应该加入的数字，从下往上依次是 nums[row][cur_row - row]
     let mut res = vec![];
     let mut not_comple = vec![];
-    for i in 0..nums.len(){
+    for i in 0..nums.len() {
         //先加入自己的
         not_comple.push(i);
 
         let mut need_rem = vec![];
         //在依次加入，注意顺序
-        for not_comple_i in (0..not_comple.len()).rev(){
+        for not_comple_i in (0..not_comple.len()).rev() {
             res.push(nums[not_comple[not_comple_i]][i - not_comple[not_comple_i]]);
-            if nums[not_comple[not_comple_i]].len() - 1 == i - not_comple[not_comple_i]{
+            if nums[not_comple[not_comple_i]].len() - 1 == i - not_comple[not_comple_i] {
                 need_rem.push(not_comple_i);
             }
         }
@@ -57,12 +63,12 @@ pub fn find_diagonal_order(nums: Vec<Vec<i32>>) -> Vec<i32> {
 
     let mut col_num = 1;
     //到达尾部之后，
-    while not_comple.len() > 0{
+    while not_comple.len() > 0 {
         let mut need_rem = vec![];
         //在依次加入，注意顺序
-        for not_comple_i in (0..not_comple.len()).rev(){
+        for not_comple_i in (0..not_comple.len()).rev() {
             res.push(nums[not_comple[not_comple_i]][nums.len() - 1 - not_comple[not_comple_i] + col_num]);
-            if nums[not_comple[not_comple_i]].len() - 1 == nums.len() - 1 - not_comple[not_comple_i] + col_num{
+            if nums[not_comple[not_comple_i]].len() - 1 == nums.len() - 1 - not_comple[not_comple_i] + col_num {
                 need_rem.push(not_comple_i);
             }
         }
@@ -110,7 +116,7 @@ pub fn min_jumps(arr: Vec<i32>) -> i32 {
             if dp[i] > dp[i + 1] + 1 || (i > 0 && dp[i - 1] + 1 < dp[i]) {
                 flag = true;
                 dp[i] = dp[i + 1] + 1;
-                if i > 0{
+                if i > 0 {
                     dp[i] = dp[i].min(dp[i - 1] + 1);
                 }
                 //与它相同key的也更新一下

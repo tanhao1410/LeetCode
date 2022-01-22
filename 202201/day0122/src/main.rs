@@ -8,8 +8,8 @@ pub fn rotate(nums: &mut Vec<i32>, k: i32) {
     let k = k as usize % nums.len();
     //使用中间的变量记录
     let mut temp = nums.clone();
-    for i in 0..nums.len(){
-         nums[(i + k) % temp.len()] = temp[i];
+    for i in 0..nums.len() {
+        nums[(i + k) % temp.len()] = temp[i];
     }
 }
 
@@ -20,16 +20,16 @@ pub fn sorted_squares(a: Vec<i32>) -> Vec<i32> {
     } else if a[a.len() - 1] <= 0 {
         return a.into_iter().rev().map(|a| a * a).collect();
     }
-    let mut res = vec![0;a.len()];
+    let mut res = vec![0; a.len()];
     //如果a里都是小于0或大于0，则简单。否则，从两边开始逼近，
     let mut i = 0;
     let mut j = a.len() - 1;
     let mut p = res.len() - 1;
-    while j >= i{
-        if a[j].abs() > a[i].abs(){
+    while j >= i {
+        if a[j].abs() > a[i].abs() {
             res[p] = a[j] * a[j];
             j -= 1;
-        }else{
+        } else {
             res[p] = a[i] * a[i];
             i += 1;
         }
@@ -88,8 +88,29 @@ pub fn max_sub_array(nums: Vec<i32>) -> i32 {
 
 //1332. 删除回文子序列
 pub fn remove_palindrome_sub(s: String) -> i32 {
-    //思路：先删除最大的回文序列,dp[i]代表以i为中心最大的回文序列
-    let mut dp = vec![1; s.len()];
+    //判断是否是回文，如果是，那么就删一次，如果不是，删两次即可。因为，就两种字母，a,b，先删a,再删b
 
-    0
+    //判断是否是回文？简单办法：倒置后看是否相等
+    //
+
+
+    // let mut i = 0;
+    // let mut j = s.len() - 1;
+    // let mut chars = s.as_bytes();
+    // while j > i{
+    //     if chars[i] != chars[j]{
+    //         return 2;
+    //     }
+    //     j -= 1;
+    //     i += 1;
+    // }
+    // 1
+    let mut s = s.as_bytes();
+    while let [first, rest @ .., last] = s {
+        if first != last {
+            return 2;
+        }
+        s = rest;
+    }
+    1
 }

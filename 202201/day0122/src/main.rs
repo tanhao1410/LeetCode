@@ -2,6 +2,17 @@ fn main() {
     println!("Hello, world!");
 }
 
+//189. 轮转数组
+pub fn rotate(nums: &mut Vec<i32>, k: i32) {
+    //思路:如果k大于nums.len，多于的无意义。因为，需要 k %= nums.len()
+    let k = k as usize % nums.len();
+    //使用中间的变量记录
+    let mut temp = nums.clone();
+    for i in 0..nums.len(){
+         nums[(i + k) % temp.len()] = temp[i];
+    }
+}
+
 //977. 有序数组的平方
 pub fn sorted_squares(a: Vec<i32>) -> Vec<i32> {
     if a[0] >= 0 {

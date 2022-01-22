@@ -54,26 +54,32 @@ pub fn sorted_squares(a: Vec<i32>) -> Vec<i32> {
 //918. 环形子数组的最大和
 pub fn max_subarray_sum_circular(nums: Vec<i32>) -> i32 {
     //用上次的手法，同时记录 元素的长度，使得总的长度不超过nums.len
-    let mut max = i32::MIN;
-    let mut pre = -1;
-    let mut count = 0;
-    for i in 0..nums.len() * 2 {
-        if pre > 0 {
-            if count < nums.len() {
-                pre = pre + nums[i % nums.len()];
-                count += 1;
-            } else {
-                //说明前面的已经包括了足够的数了
-                //问题：？前面应该扣除几个？扣除掉最前面的1个
-                //得到最大的值呢？
-            }
-        } else {
-            pre = nums[i % nums.len()];
-            count = 1;
-        }
-        max = max.max(pre);
+    let mut dp = nums.clone();
+    let mut res = i32::MIN;
+    for i in 1..nums.len() {
+        dp[i] = nums[i] + 0.max(dp[i - 1]);
+        res = res.max(dp[i]);
     }
-    max
+
+    let mut dp2_cur = nums.clone();
+    for i in 1..nums.len(){
+        dp2_cur[i] = dp2_cur[i - 1] + nums[i];
+    }
+
+    //用一个dp2 记录，以nums[i..]的最大值，以及当前值
+    let mut dp_max = nums.clone();
+    let mut dp_cur = nums.clone();
+    for i in (0..nums.len() - 1).rev() {
+        dp_cur[i] = dp_cur[i + 1] + nums[i];
+        dp_max[i] = dp_cur[i].max(dp_max[i + 1]);
+    }
+
+    //最大值
+    for i in 0..nums.len() - 1 {
+        //必须要用从0位开始的，不然，和后面的连不起来
+        res = res.max(dp2_cur[i] + dp_max[i + 1]);
+    }
+    res
 }
 
 //53. 最大子数组和

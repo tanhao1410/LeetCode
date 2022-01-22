@@ -2,6 +2,19 @@ fn main() {
     println!("Hello, world!");
 }
 
+//1217. 玩筹码
+pub fn min_cost_to_move_chips(position: Vec<i32>) -> i32 {
+    //思路；先无损移动，2之后的数据，都可以移动到位置1或2上
+    position
+        .iter()
+        .fold((0, 0, 0), |(p, q, _), i|
+            match *i % 2 {
+                0 => (p + 1, q, q.min(p + 1)),
+                _ => (p, q + 1, p.min(q + 1))
+            })
+        .2
+}
+
 //189. 轮转数组
 pub fn rotate(nums: &mut Vec<i32>, k: i32) {
     //思路:如果k大于nums.len，多于的无意义。因为，需要 k %= nums.len()

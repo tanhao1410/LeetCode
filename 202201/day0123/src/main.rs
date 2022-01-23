@@ -8,6 +8,24 @@ fn main() {
     assert_eq!(max_product(vec! [2,3,-2,4]),6);
 }
 
+//283. 移动零
+pub fn move_zeroes(nums: &mut Vec<i32>) {
+    //双指针，i指向第一个为0的地方，j指向i + 1，j不停的往前走，碰到不为0的就将它放到i处，同时，i 放到j位置
+    let mut i = 0;
+    while i < nums.len() && nums[i] != 0{
+        i += 1;
+    }
+    let mut j = i + 1;
+    while j < nums.len(){
+        if nums[j] != 0 {
+            nums[i] = nums[j];
+            nums[j] = 0;
+            i += 1;
+        }
+        j += 1;
+    }
+}
+
 //152. 乘积最大子数组
 pub fn max_product(nums: Vec<i32>) ->  i32 {
     let mut dp_max = vec![0; nums.len()]; //以nums[i]结尾的最大子数组之积

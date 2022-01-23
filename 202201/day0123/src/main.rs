@@ -1,7 +1,8 @@
 #![feature(map_first_last)]
 
 
-use std::collections::{HashMap, BTreeMap};
+use std::collections::{HashMap, BTreeMap, HashSet};
+use std::arch::x86_64::{_rdrand32_step, _rdrand16_step};
 
 fn main() {
     println!("Hello, world!");
@@ -15,6 +16,40 @@ fn main() {
     assert_eq!(get_max_len(vec![0, 1, -2, -3, -4]), 3);
 }
 
+//519. 随机翻转矩阵
+struct Solution {
+    //思路：用一个set存储已经被置1的位置，随机到此位置后，再次随机。
+    set: HashSet<(i32,i32)>,
+    m: i32,
+    n: i32,
+}
+
+impl Solution {
+    fn new(m: i32, n: i32) -> Self {
+        Self{
+            m,n,set:HashSet::new()
+        }
+    }
+
+    fn flip(&mut self) -> Vec<i32> {
+        let mut x = 0;
+        let mut y = 0;
+        unsafe{
+            _rdrand16_step(& mut x);
+            _rdrand16_step(& mut y);
+        }
+        if self.set.contains(&(x as i32 % self.m,y as i32% self.n)){
+            return self.flip();
+        }
+        self.set.insert((x as i32 % self.m,y as i32% self.n));
+        vec![x as i32 % self.m,y as i32% self.n]
+    }
+
+    fn reset(&mut self) {
+        self.set.clear()
+    }
+}
+
 //2034. 股票价格波动
 struct StockPrice {
     current: i32,
@@ -25,28 +60,28 @@ struct StockPrice {
 
 impl StockPrice {
     fn new() -> Self {
-        Self{
-            current:0,
-            prices:HashMap::new(),
-            values:BTreeMap::new(),
+        Self {
+            current: 0,
+            prices: HashMap::new(),
+            values: BTreeMap::new(),
         }
     }
 
     fn update(&mut self, timestamp: i32, price: i32) {
         //看这个时间之前是否存在
-        if let Some(value) = self.prices.get(&timestamp){
+        if let Some(value) = self.prices.get(&timestamp) {
             //之前存在
             //在values中删除原来的
             let count = self.values.get_mut(&value).unwrap();
             *count -= 1;
-            if *count == 0{
+            if *count == 0 {
                 self.values.remove(&price);
             }
         }
-        self.prices.insert(timestamp,price);
+        self.prices.insert(timestamp, price);
         let entry = self.values.entry(price).or_insert(0);
         *entry += 1;
-        if timestamp > self.current{
+        if timestamp > self.current {
             self.current = timestamp;
         }
     }

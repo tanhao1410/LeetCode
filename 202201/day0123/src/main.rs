@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 fn main() {
     println!("Hello, world!");
 
@@ -6,6 +8,112 @@ fn main() {
     assert_eq!(max_product(vec![-2, 3, -4]), 24);
     assert_eq!(max_product(vec![-2, 0, -1]), 0);
     assert_eq!(max_product(vec![2, 3, -2, 4]), 6);
+
+    assert_eq!(get_max_len(vec![0,1,-2,-3,-4]),3);
+}
+
+//1567. 乘积为正数的最长子数组长度
+pub fn get_max_len(nums: Vec<i32>) -> i32 {
+    //思路：用两个dp，一个记录以nums[i]结尾的最长乘积正数子数组长度，一个记录最长乘积负数子数组长度。
+    let mut dp = vec![0;nums.len()];
+    let mut dp2 = vec![0;nums.len()];
+    if nums[0] > 0{
+        dp[0] = 1;
+    }else if nums[0] < 0{
+        dp2[0] = 1;
+    }
+    let mut res = dp[0];
+    for i in 1..nums.len(){
+        if nums[i] == 0{
+            dp[i] = 0;
+            dp2[i] = 0;
+        }else if nums[i] > 0{
+            //
+            dp[i] = 1 + dp[i - 1];
+            //只有前面能形成负数的时候才会+1，否则不会+的
+            if dp2[i - 1] > 0{
+                dp2[i] = 1 + dp2[i - 1];
+            }
+        }else{
+            //如果当前数小于0，
+            if dp2[i - 1] > 0{
+                dp[i] = 1 + dp2[i - 1];
+            }
+            dp2[i] = 1 + dp[i - 1];
+        }
+        res = res.max(dp[i]);
+    }
+    res
+}
+
+//2034. 股票价格波动-时间超时
+struct StockPrice2 {
+    //难点在于，每次更新操作后，会对系统的最大值和最小值产生影响。每次更新，删除一个值的时候
+    //专门用一个结构来记录所有值，每次来插入一个，每次删除一个。olongN.
+    current: i32,
+    //最新时间
+    values: Vec<i32>,
+    //所有的股价
+    map: HashMap<i32, i32>,//时间-股价
+}
+
+impl StockPrice2 {
+    fn new() -> Self {
+        Self {
+            current: 0,
+            values: vec![],
+            map: HashMap::new(),
+        }
+    }
+
+    //二分法定位，或插入位置
+    fn location(&self, v: i32) -> usize {
+        let values = &self.values;
+        let mut i = 0;
+        let mut j = values.len() - 1;
+        let mut middle = (j - i) / 2 + i;
+        while j >= i {
+            if values[middle] == v {
+                return middle;
+            } else if values[middle] < v {
+                i = middle + 1;
+            } else {
+                if middle == 0 {
+                    break;
+                }
+                j = middle - 1;
+            }
+            middle = (j - i) / 2 + i;
+        }
+        i
+    }
+
+    fn update(&mut self, timestamp: i32, price: i32) {
+        if let Some(value) = self.map.get(&timestamp) {
+            //从values中删除该value
+            let location = self.location(*value);
+            self.values.remove(location);
+        }
+        self.map.insert(timestamp, price);
+        //插入新的value
+        self.values.insert(self.location(price), price);
+        //更新最新时间
+        if timestamp > self.current{
+            self.current = timestamp;
+        }
+    }
+
+    fn current(&self) -> i32 {
+        *self.map.get(&self.current).unwrap()
+    }
+
+    fn maximum(&self) -> i32 {
+        self.values[self.values.len() - 1]
+    }
+
+    fn minimum(&self) -> i32 {
+        self.values[0]
+    }
 }
 
 //167. 两数之和 II - 输入有序数组

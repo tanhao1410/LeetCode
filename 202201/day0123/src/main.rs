@@ -1,4 +1,7 @@
-use std::collections::HashMap;
+#![feature(map_first_last)]
+
+
+use std::collections::{HashMap, BTreeMap};
 
 fn main() {
     println!("Hello, world!");
@@ -9,34 +12,83 @@ fn main() {
     assert_eq!(max_product(vec![-2, 0, -1]), 0);
     assert_eq!(max_product(vec![2, 3, -2, 4]), 6);
 
-    assert_eq!(get_max_len(vec![0,1,-2,-3,-4]),3);
+    assert_eq!(get_max_len(vec![0, 1, -2, -3, -4]), 3);
+}
+
+//2034. 股票价格波动
+struct StockPrice {
+    current: i32,
+    prices: HashMap<i32, i32>,
+    //用一个B树存储所有的价格，value 为该价格的数量
+    values: BTreeMap<i32, i32>,
+}
+
+impl StockPrice {
+    fn new() -> Self {
+        Self{
+            current:0,
+            prices:HashMap::new(),
+            values:BTreeMap::new(),
+        }
+    }
+
+    fn update(&mut self, timestamp: i32, price: i32) {
+        //看这个时间之前是否存在
+        if let Some(value) = self.prices.get(&timestamp){
+            //之前存在
+            //在values中删除原来的
+            let count = self.values.get_mut(&value).unwrap();
+            *count -= 1;
+            if *count == 0{
+                self.values.remove(&price);
+            }
+        }
+        self.prices.insert(timestamp,price);
+        let entry = self.values.entry(price).or_insert(0);
+        *entry += 1;
+        if timestamp > self.current{
+            self.current = timestamp;
+        }
+    }
+
+    fn current(&self) -> i32 {
+        *self.prices.get(&self.current).unwrap()
+    }
+
+    fn maximum(&self) -> i32 {
+        *self.values.last_key_value().unwrap().0
+    }
+
+    fn minimum(&self) -> i32 {
+        *self.values.iter().next().unwrap().0
+    }
 }
 
 //1567. 乘积为正数的最长子数组长度
 pub fn get_max_len(nums: Vec<i32>) -> i32 {
     //思路：用两个dp，一个记录以nums[i]结尾的最长乘积正数子数组长度，一个记录最长乘积负数子数组长度。
-    let mut dp = vec![0;nums.len()];
-    let mut dp2 = vec![0;nums.len()];
-    if nums[0] > 0{
+    let mut dp = vec![0; nums.len()];
+    let mut dp2 = vec![0; nums.len()];
+    if nums[0] > 0 {
         dp[0] = 1;
-    }else if nums[0] < 0{
+    } else if nums[0] < 0 {
         dp2[0] = 1;
     }
     let mut res = dp[0];
-    for i in 1..nums.len(){
-        if nums[i] == 0{
+    for i in 1..nums.len() {
+        if nums[i] == 0 {
             dp[i] = 0;
             dp2[i] = 0;
-        }else if nums[i] > 0{
+        } else if nums[i] > 0 {
             //
             dp[i] = 1 + dp[i - 1];
             //只有前面能形成负数的时候才会+1，否则不会+的
-            if dp2[i - 1] > 0{
+            if dp2[i - 1] > 0 {
                 dp2[i] = 1 + dp2[i - 1];
             }
-        }else{
+        } else {
             //如果当前数小于0，
-            if dp2[i - 1] > 0{
+            if dp2[i - 1] > 0 {
                 dp[i] = 1 + dp2[i - 1];
             }
             dp2[i] = 1 + dp[i - 1];
@@ -98,7 +150,7 @@ impl StockPrice2 {
         //插入新的value
         self.values.insert(self.location(price), price);
         //更新最新时间
-        if timestamp > self.current{
+        if timestamp > self.current {
             self.current = timestamp;
         }
     }

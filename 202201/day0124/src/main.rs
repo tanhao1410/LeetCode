@@ -5,6 +5,24 @@ fn main() {
     println!("{}", second_minimum(5, vec![vec![1, 2], vec![1, 3], vec![1, 4], vec![3, 4], vec![4, 5]], 3, 5));
 }
 
+//1534. 统计好三元组
+pub fn count_good_triplets(arr: Vec<i32>, a: i32, b: i32, c: i32) -> i32 {
+    let mut res = 0;
+    for i in 0..arr.len() - 2{
+        for j in i + 1..arr.len() - 1{
+            if (arr[i] - arr[j]).abs() <= a{
+                for k in j + 1..arr.len(){
+                    if (arr[j] - arr[k]).abs() <= b
+                        && (arr[i] - arr[k]).abs() <= c{
+                        res += 1;
+                    }
+                }
+            }
+        }
+    }
+    res
+}
+
 //2045. 到达目的地的第二短时间
 pub fn second_minimum(n: i32, edges: Vec<Vec<i32>>, time: i32, change: i32) -> i32 {
     //思路：结构，点->能到达的点集合。

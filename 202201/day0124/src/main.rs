@@ -2,6 +2,30 @@ fn main() {
     println!("Hello, world!");
 }
 
+//122. 买卖股票的最佳时机 II
+pub fn max_profit2(prices: Vec<i32>) -> i32 {
+    //思路:什么时候买，买一个后面有比它大的，什么时候卖：已经买了，比买入贵，后面又降价了。
+    let mut res = 0;
+    let mut buy = false;
+    let mut buy_num = 0;
+    for i in 0..prices.len() - 1 {
+        if !buy && prices[i + 1] > prices[i] {
+            //如果还没买，可以买
+            buy = true;
+            buy_num = prices[i];
+        }
+        //什么时候可以卖呢，只有买了才能卖，只有，第二天降价了可以卖
+        if buy && prices[i + 1] < prices[i] {
+            buy = false;
+            res += prices[i] - buy_num;
+        }
+    }
+    if buy {
+        res += prices[prices.len() - 1] - buy_num;
+    }
+    res
+}
+
 //121. 买卖股票的最佳时机
 pub fn max_profit(prices: Vec<i32>) -> i32 {
     prices

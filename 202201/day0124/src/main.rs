@@ -1,5 +1,63 @@
+use std::collections::{VecDeque, HashSet};
+
 fn main() {
     println!("Hello, world!");
+    println!("{}", second_minimum(5, vec![vec![1, 2], vec![1, 3], vec![1, 4], vec![3, 4], vec![4, 5]], 3, 5));
+}
+
+//2045. 到达目的地的第二短时间
+pub fn second_minimum(n: i32, edges: Vec<Vec<i32>>, time: i32, change: i32) -> i32 {
+    //思路：结构，点->能到达的点集合。
+    let mut map = vec![HashSet::new(); n as usize];
+    for i in 0..edges.len() {
+        let source = edges[i][0] as usize - 1;
+        let dest = edges[i][1] as usize - 1;
+        //起点能到达的位置 添加进来
+        map[source].insert(dest);
+        map[dest].insert(source);
+    }
+    //广度优先，从1到n
+    let mut cur_time = 0;
+    let mut queue = VecDeque::new();
+    let mut fast_reach = false;
+    queue.push_back(0usize);
+    let mut reach_count = vec![0; n as usize];
+    loop {
+        //从队列中弹出能达到的位置，每次新到达的位置
+        //步数+1
+        // res += 1;
+
+        //判断当前是否是红灯，是否需要等待，怎么判断呢，0123/4567
+        if cur_time / change % 2 == 0 {//是绿灯
+            //走一步
+            cur_time += time;
+        } else {
+            //需要等待的时长
+            cur_time += (change - (cur_time % change));
+            cur_time += time;
+        }
+
+        let mut can_reach = HashSet::new();
+        while let Some(p) = queue.pop_front() {
+            //本次新达到的位置
+            can_reach.extend(map[p].iter());
+            //map[p].iter().for_each(|e|{can_reach.insert(*e);});
+            //看能到达的里面是否包含终点，如果包含终点，第一次的时候，是最短的，下一次就是最长的了
+        }
+        //如果第一次已经访问已经出现了，并且本次也能达到，返回第二近的结果
+        if fast_reach && can_reach.contains(&(n as usize - 1)) {
+            return cur_time;
+        }
+        if can_reach.contains(&(n as usize - 1)) {
+            fast_reach = true;
+        }
+
+        can_reach.iter().for_each(|&p| reach_count[p] += 1);
+        //每一次都直接加入所有的节点。最终会导致时间超时的发生，需要进行优化。
+        // 一个节点，在本次到达后，后面可能还会再来一次，但不会接连进入第三次
+        queue.extend(can_reach.iter().filter(|&&p| reach_count[p] < 3));
+        //can_reach.iter().for_each(|&e|{queue.push_back(e);});
+    }
 }
 
 //122. 买卖股票的最佳时机 II

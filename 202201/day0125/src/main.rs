@@ -1,3 +1,4 @@
+use std::collections::HashSet;
 fn main() {
     println!("Hello, world!");
     let mut head = ListNode::new(1);
@@ -8,6 +9,8 @@ fn main() {
 
     println!("{}", Solution::max_profit2(vec![1, 3, 2, 8, 4, 9], 2));
     println!("{}", Solution::max_profit2(vec![1, 3, 7, 5, 10, 3], 3));
+
+    println!("{:?}", Solution::find_subsequences(vec![4, 4,4,3,2,1]));
 }
 
 #[derive(PartialEq, Eq, Clone, Debug)]
@@ -29,6 +32,39 @@ impl ListNode {
 struct Solution;
 
 impl Solution {
+
+    //491. 递增子序列
+    pub fn find_subsequences(nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut set = HashSet::new();
+        Self::find_subsequences2(0,&mut set,&nums);
+        set
+            .into_iter()
+            .filter(|v|v.len() > 1)
+            .collect()
+    }
+
+    pub fn find_subsequences2(index:usize,mut res:&mut HashSet<Vec<i32>>,nums: &[i32])  {
+        if index < nums.len(){
+            //在当前位置 可以选择要，或不要
+            //要的情况下
+            let new_append = res
+                .iter()
+                .filter(|e|e[e.len()-1] <= nums[index])
+                .map(|e|{
+                    let mut new = e.clone();
+                    new.push(nums[index]);
+                    new
+                })
+                .collect::<HashSet<Vec<i32>>>();
+            //以该数字开头的加入进来
+            res.insert(vec![nums[index]]);
+            res.extend(new_append.into_iter());
+            Self::find_subsequences2(index + 1,res,nums);
+        }
+    }
+
+
+
     //714. 买卖股票的最佳时机含手续费
     pub fn max_profit2(prices: Vec<i32>, fee: i32) -> i32 {
         let mut dp = vec![0; prices.len()];

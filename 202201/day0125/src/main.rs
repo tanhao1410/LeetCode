@@ -5,6 +5,8 @@ fn main() {
     head.next = Some(Box::new(node1));
     let head = Some(Box::new(head));
     println!("{:?}", Solution::middle_node(head));
+
+    println!("{}", Solution::max_profit(vec![1, 2, 3, 0, 2]));
 }
 
 #[derive(PartialEq, Eq, Clone, Debug)]
@@ -26,6 +28,25 @@ impl ListNode {
 struct Solution;
 
 impl Solution {
+    //309. 最佳买卖股票时机含冷冻期
+    pub fn max_profit(prices: Vec<i32>) -> i32 {
+        //分别代表有无股票的最大利润
+        let mut dp = vec![0; prices.len()];
+        let mut dp_no = vec![0; prices.len()];
+        dp[0] = -prices[0];
+        for i in 1..prices.len() {
+            //当前没有股票的最大利润为前面一天有股票 + 今天卖掉，或前面没股票
+            dp_no[i] = dp_no[i - 1].max(dp[i - 1] + prices[i]);
+            //当前面有两天时，且前一天没股票，而且前一天刚卖掉股票的情况，今天不能买股票
+            if i >= 2 {
+                dp[i] = dp[i - 1].max(dp_no[i - 2] - prices[i])
+            } else {
+                dp[i] = dp[i - 1].max(dp_no[i - 1] - prices[i]);
+            }
+        }
+        dp_no[dp.len() - 1]
+    }
+
     //19. 删除链表的倒数第 N 个结点
     pub fn remove_nth_from_end(mut head: Option<Box<ListNode>>, n: i32) -> Option<Box<ListNode>> {
         //最原始思路，遍历一遍，得到链表长度。如何一次遍历即可呢。双指针，一个在前，一个在后，在前的先走n步，

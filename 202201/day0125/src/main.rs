@@ -6,7 +6,8 @@ fn main() {
     let head = Some(Box::new(head));
     println!("{:?}", Solution::middle_node(head));
 
-    println!("{}", Solution::max_profit(vec![1, 2, 3, 0, 2]));
+    println!("{}", Solution::max_profit2(vec![1, 3, 2, 8, 4, 9], 2));
+    println!("{}", Solution::max_profit2(vec![1, 3, 7, 5, 10, 3], 3));
 }
 
 #[derive(PartialEq, Eq, Clone, Debug)]
@@ -28,6 +29,19 @@ impl ListNode {
 struct Solution;
 
 impl Solution {
+    //714. 买卖股票的最佳时机含手续费
+    pub fn max_profit2(prices: Vec<i32>, fee: i32) -> i32 {
+        let mut dp = vec![0; prices.len()];
+        let mut dp_no = vec![0; prices.len()];
+        dp[0] = -prices[0] - fee;
+        //交易费在买入的时候给？卖出的时候给？
+        for i in 1..dp.len() {
+            dp[i] = dp[i - 1].max(dp_no[i - 1] - prices[i] - fee);//要么买，要么不动
+            dp_no[i] = dp_no[i - 1].max(dp[i - 1] + prices[i]);//要么不动，要么把前面有股票的情况下卖掉
+        }
+        dp_no[dp.len() - 1]
+    }
+
     //309. 最佳买卖股票时机含冷冻期
     pub fn max_profit(prices: Vec<i32>) -> i32 {
         //分别代表有无股票的最大利润

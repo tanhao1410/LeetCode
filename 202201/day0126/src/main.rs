@@ -1,17 +1,51 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 fn main() {
     println!("Hello, world!");
 
     let mut square = DetectSquares::new();
-    square.add(vec![3,10]);
-    square.add(vec![11,2]);
-    square.add(vec![3,2]);
+    square.add(vec![3, 10]);
+    square.add(vec![11, 2]);
+    square.add(vec![3, 2]);
     println!("{}", square.count(vec![11, 10]));
     println!("{}", square.count(vec![14, 8]));
-    square.add(vec![11,2]);
+    square.add(vec![11, 2]);
     println!("{}", square.count(vec![11, 10]));
 
+    println!("{}", word_break("catanddogcatdogcatdogcatanddog".to_string(), vec!["cats".to_string(),
+                                                                                 "dog".to_string(),
+                                                                                 "sand".to_string(),
+                                                                                 "and".to_string(),
+                                                                                 "cat".to_string()]));
+}
+
+//42. 接雨水
+pub fn trap(height: Vec<i32>) -> i32 {
+    let mut dp = vec![0; height.len()];
+    let mut max = 0;
+    for i in 1..dp.len() {
+        //找到前面第一个大于等于自己的，或者，当没有一个大于等于自己的，找最大的
+        if height[max] <= height[i] {
+            //最大的都比自己小，直接看两者围出的面积
+            dp[i] = dp[max] + (i - max - 1) * height[max] as usize;
+            for h in max + 1..i {
+                dp[i] -= height[h] as usize;
+            }
+            max = i;
+        } else {
+            for j in (0..i).rev() {
+                if height[j] >= height[i] {
+                    //计算两者围出的面积
+                    dp[i] = dp[j] + (i - j - 1) * height[i] as usize;
+                    for h in j + 1..i {
+                        dp[i] -= height[h] as usize;
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    dp[dp.len() - 1] as i32
 }
 
 //2013. 检测正方形

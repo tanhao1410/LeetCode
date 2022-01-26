@@ -19,8 +19,26 @@ fn main() {
                                                                                  "cat".to_string()]));
 }
 
+//139. 单词拆分
+pub fn word_break(s: String, word_dict: Vec<String>) -> bool {
+    //dp[i] 代表 s[..i]能否构成
+    //dp[i] = dp[j] && s[j..i]在word_dict 之中。
+    let mut dp = vec![false; s.len() + 1];
+    dp[0] = true;
+    let dict = word_dict
+        .into_iter()
+        .collect::<HashSet<String>>();
+    for i in 1..s.len() + 1 {
+        for j in 0..i {
+            dp[i] |= dp[j] && dict.contains(&s[j..i]);
+        }
+    }
+    dp[dp.len() - 1]
+}
+
 //42. 接雨水
 pub fn trap(height: Vec<i32>) -> i32 {
+    //新思路：能接到的水的量等于 height[i] 左边/右边最大高度的较小值，- 自身
     let mut dp = vec![0; height.len()];
     let mut max = 0;
     for i in 1..dp.len() {
@@ -33,15 +51,16 @@ pub fn trap(height: Vec<i32>) -> i32 {
             }
             max = i;
         } else {
+            let mut need_subtract = 0;
+            //找到前面第一个大于等于自己的
+            //怎样更快速呢？
             for j in (0..i).rev() {
                 if height[j] >= height[i] {
                     //计算两者围出的面积
-                    dp[i] = dp[j] + (i - j - 1) * height[i] as usize;
-                    for h in j + 1..i {
-                        dp[i] -= height[h] as usize;
-                    }
+                    dp[i] = dp[j] + (i - j - 1) * height[i] as usize - need_subtract;
                     break;
                 }
+                need_subtract += height[j] as usize;
             }
         }
     }

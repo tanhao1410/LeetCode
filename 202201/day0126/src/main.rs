@@ -2,6 +2,87 @@ use std::collections::HashMap;
 
 fn main() {
     println!("Hello, world!");
+
+    let mut square = DetectSquares::new();
+    square.add(vec![3,10]);
+    square.add(vec![11,2]);
+    square.add(vec![3,2]);
+    println!("{}", square.count(vec![11, 10]));
+    println!("{}", square.count(vec![14, 8]));
+    square.add(vec![11,2]);
+    println!("{}", square.count(vec![11, 10]));
+
+}
+
+//2013. 检测正方形
+struct DetectSquares {
+    x_map: HashMap<i32, HashMap<i32, i32>>,
+    y_map: HashMap<i32, HashMap<i32, i32>>,
+    // key  代表 x,y轴坐标。value 代表 在这条线上，有多少个点，value 中的key代表 另一个轴的坐标。value代表 数量
+    map: HashMap<(i32, i32), i32>,
+}
+
+impl DetectSquares {
+    fn new() -> Self {
+        Self {
+            x_map: HashMap::new(),
+            y_map: HashMap::new(),
+            map: HashMap::new(),
+        }
+    }
+
+    fn add(&mut self, point: Vec<i32>) {
+        let x = point[0];
+        let y = point[1];
+
+        //加入到x轴map中
+        let x_map_value = self.x_map.entry(x).or_insert(HashMap::new());
+        let x_map_value_count = x_map_value.entry(y).or_insert(0);
+        *x_map_value_count += 1;
+
+
+        //加入到y轴map中
+        let y_map_value = self.y_map.entry(y).or_insert(HashMap::new());
+        let y_map_value_count = y_map_value.entry(x).or_insert(0);
+        *y_map_value_count += 1;
+
+        let count = self.map.entry((x, y)).or_insert(0);
+        *count += 1;
+    }
+
+    fn count(&self, point: Vec<i32>) -> i32 {
+        let x = point[0];
+        let y = point[1];
+        //看对应x轴有多少个点，根据他们之间的距离，去对应的 y轴再去寻找，如果都找到了，
+        //看斜对角是否存在这个点。
+        let mut res = 0;
+        let x_map = self.x_map.get(&x);
+        let y_map = self.y_map.get(&y);
+        if x_map.is_none() || y_map.is_none() {
+            return 0;
+        }
+        let x_map = x_map.unwrap();
+        let y_map = y_map.unwrap();
+        //找x轴上点
+        for (&k, &count) in y_map.iter() {
+            //距离
+            let dis = (x - k).abs();
+            if dis == 0 {
+                continue;
+            }
+            //找对应的y轴上的点。上、下
+            let up_y_point = x_map.get(&(y + dis));
+            if let Some(y_count) = up_y_point {
+                //上的y轴的点也找到了，找斜对角
+                res += count * y_count * self.map.get(&(k, y + dis)).unwrap_or(&0);
+            }
+            let down_y_point = x_map.get(&(y - dis));
+            if let Some(y_count) = down_y_point {
+                res += count * y_count * self.map.get(&(k, y - dis)).unwrap_or(&0);
+            }
+        }
+        res
+    }
 }
 
 //567. 字符串的排列

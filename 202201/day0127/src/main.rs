@@ -2,6 +2,26 @@ fn main() {
     println!("Hello, world!");
 }
 
+//413. 等差数列划分
+pub fn number_of_arithmetic_slices(nums: Vec<i32>) -> i32 {
+    if nums.len() < 3 {
+        return 0;
+    }
+    let mut res = 0;
+    let mut start = 0;
+    let mut distance = nums[1] - nums[0];
+    for i in 2..nums.len() {
+        //能继续构成等差数列
+        if nums[i] - nums[i - 1] == distance {
+            res += 0.max(i - start - 1);
+        } else {
+            start = i - 1;
+            distance = nums[i] - nums[i - 1];
+        }
+    }
+    res as i32
+}
+
 //91. 解码方法
 pub fn num_decodings(mut s: String) -> i32 {
     let mut dp = vec![1; s.len()];

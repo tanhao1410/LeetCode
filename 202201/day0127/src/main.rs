@@ -2,6 +2,34 @@ fn main() {
     println!("Hello, world!");
 }
 
+//733. 图像渲染
+pub fn flood_fill(mut image: Vec<Vec<i32>>, sr: i32, sc: i32, new_color: i32) -> Vec<Vec<i32>> {
+    let old_color = image[sr as usize][sc as usize];
+    if old_color == new_color {
+        return image;
+    }
+    //深度遍历
+    let mut stack = vec![(sr as usize, sc as usize)];
+    while let Some((x, y)) = stack.pop() {
+        //把该位置换成其他颜色
+        image[x][y] = new_color;
+        //上下左右加入
+        if y > 0 && image[x][y - 1] == old_color {
+            stack.push((x, y - 1));
+        }
+        if y < image[0].len() - 1 && image[x][y + 1] == old_color {
+            stack.push((x, y + 1));
+        }
+        if x > 0 && image[x - 1][y] == old_color {
+            stack.push((x - 1, y));
+        }
+        if x < image.len() - 1 && image[x + 1][y] == old_color {
+            stack.push((x + 1, y));
+        }
+    }
+    image
+}
+
 //2047. 句子中的有效单词数
 pub fn count_valid_words(sentence: String) -> i32 {
     sentence

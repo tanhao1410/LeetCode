@@ -2,6 +2,37 @@ fn main() {
     println!("Hello, world!");
 }
 
+//91. 解码方法
+pub fn num_decodings(mut s: String) -> i32 {
+    let mut dp = vec![1; s.len()];
+    //1234567987654322
+    //以s[i]结尾的组合个数，不存在0了。dp[i] = s[i] 单独存在，
+    //s[i]与前面结合。所以，dp[i] = dp[i-1]+dp[i-2]
+    //单独求dp[1]
+    let bytes = s.as_bytes();
+    //以0开头的返回0
+    if bytes[0] == b'0' {
+        return 0;
+    }
+    //长度小于2返回1
+    if bytes.len() < 2 {
+        return 1;
+    }
+    for i in 1..bytes.len() {
+        //看前面的数
+        let pre = bytes[i - 1] - b'0';
+        let cur = bytes[i] - b'0';
+        match (pre, cur) {
+            (1..=2, 0) => dp[i] = if i >= 2 { dp[i - 2] } else { 1 },
+            (_, 0) => return 0,
+            (2, cur) if cur < 7 => dp[i] = dp[i - 1] + if i > 1 { dp[i - 2] } else { 1 },
+            (1, _) => dp[i] = dp[i - 1] + if i > 1 { dp[i - 2] } else { 1 },
+            _ => dp[i] = dp[i - 1]
+        }
+    }
+    dp[dp.len() - 1]
+}
+
 //695. 岛屿的最大面积
 pub fn max_area_of_island(mut grid: Vec<Vec<i32>>) -> i32 {
     //思路：遍历，遇到1，遍历能碰到的1，得到面积，同时，将1置0
@@ -40,6 +71,7 @@ pub fn max_area_of_island(mut grid: Vec<Vec<i32>>) -> i32 {
     }
     res
 }
+
 //733. 图像渲染
 pub fn flood_fill(mut image: Vec<Vec<i32>>, sr: i32, sc: i32, new_color: i32) -> Vec<Vec<i32>> {
     let old_color = image[sr as usize][sc as usize];

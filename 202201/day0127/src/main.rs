@@ -2,6 +2,44 @@ fn main() {
     println!("Hello, world!");
 }
 
+//695. 岛屿的最大面积
+pub fn max_area_of_island(mut grid: Vec<Vec<i32>>) -> i32 {
+    //思路：遍历，遇到1，遍历能碰到的1，得到面积，同时，将1置0
+    let row = grid.len();
+    let col = grid[0].len();
+    let mut stack = vec![];
+
+    let mut res = 0;
+    for x in 0..row {
+        for y in 0..col {
+            if grid[x][y] == 1 {
+                let mut square = 0;
+                //碰到陆地了
+                //广度优先遍历
+                stack.push((x, y));
+                while let Some((x, y)) = stack.pop() {
+                    square += grid[x][y];
+                    grid[x][y] = 0;
+                    //看他的上下左右
+                    if y > 0 && grid[x][y - 1] == 1 {
+                        stack.push((x, y - 1));
+                    }
+                    if y < col - 1 && grid[x][y + 1] == 1 {
+                        stack.push((x, y + 1));
+                    }
+                    if x > 0 && grid[x - 1][y] == 1 {
+                        stack.push((x - 1, y));
+                    }
+                    if x < row - 1 && grid[x + 1][y] == 1 {
+                        stack.push((x + 1, y));
+                    }
+                }
+                res = res.max(square);
+            }
+        }
+    }
+    res
+}
 //733. 图像渲染
 pub fn flood_fill(mut image: Vec<Vec<i32>>, sr: i32, sc: i32, new_color: i32) -> Vec<Vec<i32>> {
     let old_color = image[sr as usize][sc as usize];

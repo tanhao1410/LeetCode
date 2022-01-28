@@ -26,6 +26,28 @@ use std::cell::RefCell;
 struct Solution;
 
 impl Solution {
+
+    //264. 丑数 II
+    pub fn nth_ugly_number(n: i32) -> i32 {
+        let mut dp = vec![0;n as usize + 1];
+        let (mut p2,mut p3,mut p5) = (1,1,1);
+        dp[1] = 1;
+        for i in 2..n as usize + 1{
+            dp[i] = (dp[p2] * 2).min(dp[p3] * 3).min(dp[p5] * 5);
+            if dp[i] == dp[p2] * 2{
+                p2 += 1;
+            }
+            if dp[i] == dp[p3] * 3{
+                p3 += 1;
+            }
+            if dp[i] == dp[p5] * 5{
+                p5 += 1;
+            }
+        }
+
+        dp[n as usize]
+    }
+
     //96. 不同的二叉搜索树
     pub fn num_trees(n: i32) -> i32 {
         //思路：以 某一个节点为根节点。则有 比它大的 一部分组成树，比它小的组成树，两者相乘，即总数

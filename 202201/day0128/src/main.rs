@@ -26,6 +26,21 @@ use std::cell::RefCell;
 struct Solution;
 
 impl Solution {
+    //96. 不同的二叉搜索树
+    pub fn num_trees(n: i32) -> i32 {
+        //思路：以 某一个节点为根节点。则有 比它大的 一部分组成树，比它小的组成树，两者相乘，即总数
+        // n = 3 时，1 为根， dp[2] * dp[0],2为根，dp[1] * dp[1] 3为根，dp[2] * dp[1]
+        //dp[i]即，n为几时 数量
+        let mut dp = vec![0; n as usize + 1];
+        dp[0] = 1;
+        for i in 1..n as usize + 1 {
+            for j in 0..i {
+                dp[i] += dp[j] * dp[i - j - 1];
+            }
+        }
+        dp[n as usize]
+    }
+
     //617. 合并二叉树
     pub fn merge_trees(root1: Option<Rc<RefCell<TreeNode>>>, root2: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
         if root1.is_none() {

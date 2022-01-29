@@ -1,7 +1,62 @@
-use std::collections::HashSet;
+use std::collections::{HashSet, VecDeque};
 
 fn main() {
     println!("Hello, world!");
+}
+
+//994. 腐烂的橘子
+pub fn oranges_rotting(mut grid: Vec<Vec<i32>>) -> i32 {
+    //广度优先
+    let mut queue = VecDeque::new();
+    let mut visit = vec![vec![true; grid[0].len()]; grid.len()];
+    //从等于2处开始腐烂
+    for x in 0..grid.len() {
+        for y in 0..grid[0].len() {
+            if grid[x][y] == 2 {
+                queue.push_back((x, y));
+            }
+        }
+    }
+    let mut res = 0;
+    //已经遍历过的需要不再遍历
+    let mut size = queue.len();
+    while size > 0 {
+        for _ in 0..size {
+            let (x, y) = queue.pop_front().unwrap();
+            grid[x][y] = 2;
+            //将它周围的好橘子腐烂
+            if x > 0 && grid[x - 1][y] == 1 && visit[x - 1][y] {
+                visit[x - 1][y] = false;
+                queue.push_back((x - 1, y));
+            }
+            if x + 1 < grid.len() && grid[x + 1][y] == 1 && visit[x + 1][y] {
+                visit[x + 1][y] = false;
+                queue.push_back((x + 1, y));
+            }
+            if y > 0 && grid[x][y - 1] == 1 && visit[x][y - 1] {
+                visit[x][y - 1] = false;
+                queue.push_back((x, y - 1));
+            }
+            if y + 1 < grid[0].len() && grid[x][y + 1] == 1 && visit[x][y + 1] {
+                visit[x][y + 1] = false;
+                queue.push_back((x, y + 1));
+            }
+        }
+        size = queue.len();
+        res += 1;
+    }
+    let mut flag = true;
+    for row in &grid {
+        for &v in row {
+            if v == 1 {
+                return -1;
+            }
+            if v == 2 {
+                flag = false;
+            }
+        }
+    }
+    if flag { 0 } else { res - 1 }
 }
 
 //542. 01 矩阵

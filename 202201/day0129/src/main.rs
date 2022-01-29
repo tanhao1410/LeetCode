@@ -4,6 +4,20 @@ fn main() {
     println!("Hello, world!");
 }
 
+//119. 杨辉三角 II
+pub fn get_row(row_index: i32) -> Vec<i32> {
+    //0 =>1
+    let mut res = vec![1];
+    for _ in 0..row_index{
+        let mut next = vec![1;res.len() + 1];
+        for i in 1..res.len(){
+            next[i] = res[i - 1] + res[i];
+        }
+        res = next;
+    }
+    res
+}
+
 //994. 腐烂的橘子
 pub fn oranges_rotting(mut grid: Vec<Vec<i32>>) -> i32 {
     //广度优先

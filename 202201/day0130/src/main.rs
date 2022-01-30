@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 fn main() {
     println!("Hello, world!");
 }
@@ -5,6 +7,23 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //884. 两句话中的不常见单词
+    pub fn uncommon_from_sentences(s1: String, s2: String) -> Vec<String> {
+        let mut map = HashMap::new();
+        s1
+            .split(" ")
+            .chain(s2.split(" "))
+            .for_each(|w| {
+                let mut count = map.entry(w).or_insert(0);
+                *count += 1;
+            });
+        map
+            .into_iter()
+            .filter(|(_, count)| (*count) == 1)
+            .map(|(k, _)| k.to_string())
+            .collect()
+    }
+
     //120. 三角形最小路径和
     pub fn minimum_total(triangle: Vec<Vec<i32>>) -> i32 {
         //动态规划：dp[i] ,只记录某一行的最小值

@@ -2,6 +2,49 @@ fn main() {
     println!("Hello, world!");
 }
 
+//304. 二维区域和检索 - 矩阵不可变
+struct NumMatrix {
+    dp: Vec<Vec<i32>>
+}
+
+impl NumMatrix {
+    fn new(matrix: Vec<Vec<i32>>) -> Self {
+        let mut dp = matrix.clone();
+        dp[0][0] = matrix[0][0];
+        for j in 1..matrix[0].len() {
+            dp[0][j] = dp[0][j - 1] + matrix[0][j];
+        }
+        for i in 1..matrix.len() {
+            dp[i][0] = dp[i - 1][0] + matrix[i][0];
+        }
+        //思路：记录matrix[i][j]为右下角的区域之和
+        for i in 1..matrix.len() {
+            for j in 1..matrix[0].len() {
+                dp[i][j] = dp[i - 1][j] + dp[i][j - 1] - dp[i - 1][j - 1] + matrix[i][j];
+            }
+        }
+        NumMatrix { dp }
+    }
+
+    fn sum_region(&self, row1: i32, col1: i32, row2: i32, col2: i32) -> i32 {
+        let row1 = row1 as usize;
+        let row2 = row2 as usize;
+        let col1 = col1 as usize;
+        let col2 = col2 as usize;
+        if row1 == 0 && col1 == 0 {
+            return self.dp[row2][col2];
+        }
+        if row1 == 0 {
+            return self.dp[row2][col2] - self.dp[row2][col1 - 1];
+        }
+        if col1 == 0 {
+            return self.dp[row2][col2] - self.dp[row1 - 1][col2];
+        }
+        self.dp[row2 as usize][col2 as usize] - self.dp[row2][col1 - 1] - self.dp[row1 - 1][col2] + self.dp[row1 - 1][col1 - 1]
+    }
+}
+
+
 //784. 字母大小写全排列
 pub fn letter_case_permutation(s: String) -> Vec<String> {
     //字母有小写，有大写，递归思路，每一个都有两个选择，大写或小写

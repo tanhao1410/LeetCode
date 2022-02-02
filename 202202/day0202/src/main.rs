@@ -2,6 +2,11 @@ fn main() {
     println!("Hello, world!");
 }
 
+//231. 2 的幂
+pub fn is_power_of_two(n: i32) -> bool {
+    n > 0 && n.count_ones() == 1
+}
+
 //221. 最大正方形
 pub fn maximal_square(matrix: Vec<Vec<char>>) -> i32 {
     let mut dp = vec![vec![0; matrix[0].len()]; matrix.len()];

@@ -2,6 +2,11 @@ fn main() {
     println!("Hello, world!");
 }
 
+//191. 位1的个数
+pub fn hammingWeight(n: u32) -> i32 {
+    n.count_ones() as i32
+}
+
 //231. 2 的幂
 pub fn is_power_of_two(n: i32) -> bool {
     n > 0 && n.count_ones() == 1

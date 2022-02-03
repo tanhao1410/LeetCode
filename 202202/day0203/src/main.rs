@@ -3,6 +3,27 @@ fn main() {
     println!("{}", longest_palindrome("babbad".to_string()))
 }
 
+//516. 最长回文子序列
+pub fn longest_palindrome_subseq(s: String) -> i32 {
+    //思路：动态规划，dp[i][j]，s[i..j]中最长回文子串。
+    //
+    let mut dp = vec![vec![0; s.len()]; s.len()];
+    let bytes = s.as_bytes();
+    for i in (0..s.len()).rev() {
+        dp[i][i] = 1;
+        for j in i + 1..s.len() {
+            //如果两头相等。则dp[i][j] = 2 + dp[i+1][j - 1]
+            //如果两头不相等，则dp[i][j] = dp[i - 1][j] 或 dp[i][j - 1]
+            if bytes[j] == bytes[i] {
+                dp[i][j] = dp[i][j].max(2 + dp[i + 1][j - 1]);
+            } else {
+                dp[i][j] = dp[i][j - 1].max(dp[i + 1][j])
+            }
+        }
+    }
+    dp[0][s.len() - 1]
+}
+
 //5. 最长回文子串
 pub fn longest_palindrome(s: String) -> String {
     //思路：不用动态规划，强行做，以某个字母为中心，找最大的回文子串

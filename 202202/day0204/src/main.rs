@@ -2,6 +2,24 @@ fn main() {
     println!("Hello, world!");
 }
 
+//1200. 最小绝对差
+pub fn minimum_abs_difference(mut arr: Vec<i32>) -> Vec<Vec<i32>> {
+    //思路：排序
+    arr.sort_unstable();
+    //先求最小绝对值差。
+    let mut min = i32::MAX;
+    for i in 1..arr.len() {
+        min = min.min(arr[i] - arr[i - 1]);
+    }
+    let mut res = vec![];
+    for i in 1..arr.len() {
+        if arr[i] - arr[i - 1] == min {
+            res.push(vec![arr[i - 1], arr[i]]);
+        }
+    }
+    res
+}
+
 //1725. 可以形成最大正方形的矩形数目
 pub fn count_good_rectangles(rectangles: Vec<Vec<i32>>) -> i32 {
     let map = rectangles

@@ -2,6 +2,15 @@ fn main() {
     println!("Hello, world!");
 }
 
+//1725. 可以形成最大正方形的矩形数目
+pub fn count_good_rectangles(rectangles: Vec<Vec<i32>>) -> i32 {
+    let map = rectangles
+        .iter()
+        .map(|v| v[0].min(v[1]));
+    let max_len = map.max().unwrap();
+    map.filter(|v| *v == max_len).count() as i32
+}
+
 //376. 摆动序列
 pub fn wiggle_max_length(nums: Vec<i32>) -> i32 {
     //思路：两个dp，一个是nums[i]结尾的 增， 一个以nums[i]结尾的 减

@@ -1,5 +1,53 @@
+use std::collections::HashSet;
+
 fn main() {
     println!("Hello, world!");
+}
+
+//1219. 黄金矿工
+pub fn get_maximum_gold(grid: Vec<Vec<i32>>) -> i32 {
+    // 思路： 递归法可以解决。深度优先遍历。
+    // 开始时 最多有25个选择
+    // 从每一个选择处出发，怎么确定最大收益？
+    let mut starts = vec![];
+    for i in 0..grid.len() {
+        for j in 0..grid[0].len() {
+            if grid[i][j] != 0 {
+                starts.push((i, j));
+            }
+        }
+    }
+    let mut res = 0;
+    let mut set = HashSet::new();
+    for (x, y) in starts {
+        res = res.max(get_maximum_gold2(&grid, x, y, &mut set));
+    }
+    res
+}
+
+pub fn get_maximum_gold2(grid: &Vec<Vec<i32>>, x: usize, y: usize, already: &mut HashSet<(usize, usize)>) -> i32 {
+    //递归的形式去找最大收益，
+    if grid[x][y] == 0 || already.contains(&(x, y)) {
+        return 0;
+    }
+    let mut res = grid[x][y];
+    already.insert((x, y));
+    //四个方向，哪个最大去哪个
+    let mut other = 0;
+    if x > 0 {
+        other = other.max(get_maximum_gold2(grid, x - 1, y, already));
+    }
+    if y > 0 {
+        other = other.max(get_maximum_gold2(grid, x, y - 1, already));
+    }
+    if x < grid.len() - 1 {
+        other = other.max(get_maximum_gold2(grid, x + 1, y, already));
+    }
+    if y < grid[0].len() - 1 {
+        other = other.max(get_maximum_gold2(grid, x, y + 1, already));
+    }
+    already.remove(&(x, y));
+    res + other
 }
 
 //1143. 最长公共子序列

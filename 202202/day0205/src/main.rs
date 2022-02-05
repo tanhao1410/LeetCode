@@ -2,6 +2,43 @@ use std::collections::HashSet;
 
 fn main() {
     println!("Hello, world!");
+    println!("{}", min_distance("a".to_string(), "b".to_string()));
+}
+
+//72. 编辑距离
+pub fn min_distance(word1: String, word2: String) -> i32 {
+    if word1.len() == 0{
+        return word2.len() as i32;
+    }
+    if word2.len() == 0{
+        return word1.len() as i32;
+    }
+    let word1 = word1.as_bytes();
+    let word2 = word2.as_bytes();
+    let mut dp = vec![vec![0; word2.len() + 1]; word1.len() + 1];
+
+    for i in 1..=word2.len() {
+        dp[0][i] = i as i32;
+    }
+    for i in 1..=word1.len() {
+        dp[i][0] = i as i32;
+    }
+
+    for i in 1..word1.len() + 1 {
+        for j in 1..word2.len() + 1 {
+            //增加一个字母
+            if word1[i - 1] == word2[j - 1] {
+                dp[i][j] = dp[i - 1][j - 1];
+            } else {
+                //增，即 word2中添加一个字母
+                let mut min = dp[i][j - 1] + 1;
+                min = min.min(dp[i - 1][j] + 1);
+                min = min.min(dp[i - 1][j - 1] + 1);
+                dp[i][j] = min;
+            }
+        }
+    }
+    dp[word1.len()][word2.len()]
 }
 
 //1219. 黄金矿工

@@ -1,6 +1,20 @@
 fn main() {
     println!("Hello, world!");
     println!("{}", coin_change(vec![1, 2, 5], 10));
+    println!("{}", change(50, vec![1, 2, 5]));
+}
+
+//518. 零钱兑换 II
+pub fn change(amount: i32, coins: Vec<i32>) -> i32 {
+    //组合总数
+    let mut dp = vec![0;amount as usize + 1];
+    dp[0] = 1;
+    for i in 0..coins.len(){
+        for j in coins[i]..=amount{
+            dp[j as usize] += dp[j as usize- coins[i] as usize];
+        }
+    }
+    dp[dp.len() - 1]
 }
 
 //322. 零钱兑换

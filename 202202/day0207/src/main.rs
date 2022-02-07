@@ -1,5 +1,21 @@
 fn main() {
     println!("Hello, world!");
+    println!("{}", integer_break(58));
+}
+
+//343. 整数拆分
+pub fn integer_break(n: i32) -> i32 {
+    //思路：动态规划，dp[n] = dp[2] * dp[n - 2] ,dp[3] * dp[n -3] ... max
+    let mut dp = vec![0,1,1,2];
+    for i in 4..=n{
+        let mut cur = 0;
+        for j in 2..=i/2{
+            cur = cur.max(j * dp[i as usize - j as usize]);
+            cur = cur.max(j * (i - j));
+        }
+        dp.push(cur);
+    }
+    dp[n as usize]
 }
 
 //279. 完全平方数

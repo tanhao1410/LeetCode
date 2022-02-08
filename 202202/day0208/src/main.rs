@@ -1,6 +1,75 @@
 fn main() {
     println!("Hello, world!");
     println!("{:?}", search_range(vec![0, 1, 1, 1, 1], 1));
+    println!("{}", search(vec![4, 5, 6, 7, 0, 1, 2], 0));
+}
+
+//33. 搜索旋转排序数组
+pub fn search(nums: Vec<i32>, target: i32) -> i32 {
+    // 如果最后一个元素大于第一个元素，说明是有序的。
+    //如果不大于，说明旋转了。找中间位置。如果中间的数大于 第一个数，说明，旋转位置还在后面。如果 小于第一个数，说明旋转的数在前面
+    if nums.len() == 1 {
+        if nums[0] == target {
+            return 0;
+        } else {
+            return -1;
+        }
+    }
+    let binary_search = |nums: &[i32], target: i32| -> i32{
+        if nums.len() == 0 {
+            return -1;
+        }
+        let mut start = 0;
+        let mut end = nums.len() - 1;
+        let mut middle = (end - start) / 2 + start;
+        while end >= start {
+            if nums[middle] == target {
+                return middle as i32;
+            } else if nums[middle] < target {
+                start = middle + 1;
+            } else {
+                if middle == 0 {
+                    break;
+                }
+                end = middle - 1;
+            }
+            middle = (end + start) / 2;
+        }
+        -1
+    };
+
+    //有序的
+    if nums[nums.len() - 1] > nums[0] {
+        return binary_search(&nums, target);
+    }
+
+    let mut start = 0;
+    let mut end = nums.len() - 1;
+    let mut middle = (end - start) / 2 + start;
+    // 如果target 处于 两者之间，则只需要在区间进行查找即可。
+    while start <= end {
+        if nums[middle] >= nums[0] {
+            start = middle + 1;
+        } else {
+            if middle == 0 {
+                break;
+            }
+            end = middle - 1;
+        }
+        middle = (start + end) / 2;
+    }
+    //start指向的位置就是旋转的点
+    //println!("{}-{}",start,end);
+
+    if target > nums[nums.len() - 1] {
+        return binary_search(&nums[..start], target);
+    } else {
+        let res = binary_search(&nums[start..], target);
+        if res == -1 {
+            return -1;
+        }
+        return res + start as i32;
+    }
 }
 
 //34. 在排序数组中查找元素的第一个和最后一个位置

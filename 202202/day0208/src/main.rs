@@ -4,6 +4,29 @@ fn main() {
     println!("{}", search(vec![4, 5, 6, 7, 0, 1, 2], 0));
 }
 
+//74. 搜索二维矩阵
+pub fn search_matrix(matrix: Vec<Vec<i32>>, target: i32) -> bool {
+    //思路：从右上角开始，遇到相等的返回true，遇到比target大的，往左走，遇到比target小的，往下走，走不动了，返回false
+    let (mut x, mut y) = (0, matrix[0].len() - 1);
+    loop {
+        if matrix[x][y] == target {
+            return true;
+        } else if matrix[x][y] > target {
+            //往左边走
+            if y == 0 {
+                return false;
+            }
+            y -= 1;
+        } else {
+            //往下走
+            if x == matrix.len() - 1 {
+                return false;
+            }
+            x += 1;
+        }
+    }
+}
+
 //33. 搜索旋转排序数组
 pub fn search(nums: Vec<i32>, target: i32) -> i32 {
     // 如果最后一个元素大于第一个元素，说明是有序的。

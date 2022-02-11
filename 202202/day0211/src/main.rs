@@ -2,6 +2,40 @@ fn main() {
     println!("Hello, world!");
 }
 
+//11. 盛最多水的容器
+pub fn max_area(height: Vec<i32>) -> i32 {
+    //思路：剪枝。什么样的数字可以删除。当后面有比自己还大或等于的，自己不可能作为结束
+    //当前面有比自己大或相等的，自己不可能作为开始。
+    //不能作为开始和结束的，直接删除。
+    let mut starts = vec![0];
+    let mut max = height[0];
+    for i in 1..height.len() - 1 {
+        if height[i] > max {
+            starts.push(i);
+            max = height[i];
+        }
+    }
+    let mut ends = vec![height.len() - 1];
+    let mut max = height[height.len() - 1];
+    for i in (1..height.len() - 1) {
+        if height[i] > max {
+            ends.push(i);
+            max = height[i];
+        }
+    }
+
+    //从starts中找开始，从ends中找结束，且需要ends > starts
+    let mut res = 0;
+    for i in 0..starts.len() {
+        for j in 0..ends.len() {
+            if j > i {
+                res = res.max((j - i) as i32 * height[i].min(height[j]));
+            }
+        }
+    }
+    res
+}
+
 //986. 区间列表的交集
 pub fn interval_intersection(first_list: Vec<Vec<i32>>, second_list: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
     //怎么样才算有交集？第一，下面的区间的开始应大于等于上面的开始。或下面的区间开始处大于上面的，且结束处大于
@@ -28,7 +62,7 @@ pub fn interval_intersection(first_list: Vec<Vec<i32>>, second_list: Vec<Vec<i32
             if second_list[j][i] == end {
                 j += 1;
             }
-            res.push(vec![start,end]);
+            res.push(vec![start, end]);
         }
     }
     res

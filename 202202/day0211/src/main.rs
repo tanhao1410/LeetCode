@@ -2,6 +2,38 @@ fn main() {
     println!("Hello, world!");
 }
 
+//986. 区间列表的交集
+pub fn interval_intersection(first_list: Vec<Vec<i32>>, second_list: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+    //怎么样才算有交集？第一，下面的区间的开始应大于等于上面的开始。或下面的区间开始处大于上面的，且结束处大于
+    let mut i = 0;
+    let mut j = 0;
+    let mut res = vec![];
+    while i < first_list.len() && j < second_list.len() {
+        //看上下两个区间是否有交集
+        //第一个区间的结束小于第二个区间的开始
+        if first_list[i][1] < second_list[j][0] {
+            i += 1;
+        } else if second_list[j][1] < first_list[i][0] {
+            //下面区间的结束小于上面区间的开始
+            j += 1;
+        } else {
+            //有交集
+            //开始区间取大的，结束区间用小的
+            let start = first_list[i][0].max(second_list[j][0]);
+            let end = first_list[i][1].min(second_list[j][1]);
+            //谁的区间结束了谁往前走
+            if first_list[i][1] == end {
+                i += 1;
+            }
+            if second_list[j][i] == end {
+                j += 1;
+            }
+            res.push(vec![start,end]);
+        }
+    }
+    res
+}
+
 //844. 比较含退格的字符串
 pub fn backspace_compare(s: String, t: String) -> bool {
     let process_str = |s: String| -> String{

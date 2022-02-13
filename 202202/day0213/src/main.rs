@@ -2,6 +2,37 @@ fn main() {
     println!("Hello, world!");
 }
 
+//713. 乘积小于K的子数组
+pub fn num_subarray_product_less_than_k(nums: Vec<i32>, k: i32) -> i32 {
+    //思路：先计算出第一个窗口中，小于k的字数组长度，
+    let mut res = 0;
+    let mut cap = 0;
+    let mut sum = 0;
+    for i in 0..nums.len() {
+        //遇到比k大的数
+        if nums[i] >= k {
+            cap = 0;
+            sum = 0;
+            continue;
+        }
+        if cap == 0 {
+            cap = 1;
+            sum = nums[i];
+        } else {
+            //去掉一个，加上一个。
+            sum /= nums[i - 1];
+            //补上后面的
+            cap -= 1;
+        }
+        while i + cap < nums.len() && sum * nums[cap + i] < k {
+            sum *= nums[cap + i];
+            cap += 1;
+        }
+        res += cap;
+    }
+    res as i32
+}
+
 //438. 找到字符串中所有字母异位词
 pub fn find_anagrams(s: String, p: String) -> Vec<i32> {
     //思路：先统计p中字母的数量。用一个数组统计

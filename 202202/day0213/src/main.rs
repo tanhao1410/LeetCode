@@ -2,6 +2,35 @@ fn main() {
     println!("Hello, world!");
 }
 
+//547. 省份数量
+pub fn find_circle_num(is_connected: Vec<Vec<i32>>) -> i32 {
+    let mut res = 0;
+    //已经加入的城市省份
+    let mut provinces = vec![0; is_connected.len()];
+    for i in 0..is_connected.len() {
+        //说明该省份尚未加入任何省份
+        if provinces[i] == 0 {
+            res += 1;
+            provinces[i] = 1;
+            //能到达的城市有：
+            let mut stack = vec![];
+            stack.push(i);
+            //深度遍历
+            while let Some(n) = stack.pop() {
+                //深度遍历，并把遍历到的城市置位1
+                let connecteds = &is_connected[n];
+                for j in 0..connecteds.len() {
+                    if connecteds[j] == 1 && provinces[j] == 0 {
+                        stack.push(j);
+                        provinces[j] = 1;
+                    }
+                }
+            }
+        }
+    }
+    res
+}
+
 //713. 乘积小于K的子数组
 pub fn num_subarray_product_less_than_k(nums: Vec<i32>, k: i32) -> i32 {
     //思路：先计算出第一个窗口中，小于k的字数组长度，

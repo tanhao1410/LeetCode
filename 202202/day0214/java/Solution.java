@@ -1,5 +1,54 @@
 class Solution {
 
+    //1162. 地图分析
+    public int maxDistance(int[][] grid) {
+        int[][] res = new int[grid.length][grid[0].length];
+        //陆地的数量与位置
+        LinkedList<Location> queue = new LinkedList();
+        for(int i = 0;i < res.length;i ++){
+            for (int j = 0;j < res[0].length;j ++){
+                if (grid[i][j] == 1){
+                    queue.add(new Location(i,j));
+                    res[i][j] = -1;
+                }
+            }
+        }
+        if (queue.size() == 0 || queue.size() == res.length * res[0].length) return -1;
+        int distance = 1;
+        while (queue.size() > 0){
+            //从队列中取出一个
+            int size = queue.size();
+            for(int i = 0;i <size;i ++ ){
+                Location lo = queue.remove(0);
+                //将它周围的未设置位置的设置位置
+                if (lo.x > 0 && res[lo.x - 1][lo.y] == 0){
+                    res[lo.x - 1][lo.y] = distance;
+                    queue.add(new Location(lo.x - 1,lo.y));
+                }
+                if (lo.x < grid.length - 1 && res[lo.x + 1][lo.y] == 0){
+                    res[lo.x + 1][lo.y] = distance;
+                    queue.add(new Location(lo.x + 1,lo.y));
+                }
+                if (lo.y > 0 && res[lo.x][lo.y - 1] == 0){
+                    res[lo.x][lo.y - 1]  = distance;
+                    queue.add(new Location(lo.x,lo.y - 1));
+                }
+                if (lo.y < grid[0].length - 1 && res[lo.x][lo.y + 1] == 0){
+                    res[lo.x][lo.y + 1] = distance;
+                    queue.add(new Location(lo.x,lo.y + 1));
+                }
+            }
+            distance ++ ;
+        }
+        int max = -1;
+        for (int i = 0;i < res.length;i ++){
+            for (int j = 0;j < res[0].length;j ++){
+                max = Math.max(max,res[i][j]);
+            }
+        }
+        return max;
+    }
+
     //1254. 统计封闭岛屿的数目
     public int closedIsland(int[][] grid) {
         //思路：将外围的0以及与0相连的0都变成1,然后剩下的0就是封闭岛屿了

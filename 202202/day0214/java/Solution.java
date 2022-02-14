@@ -1,5 +1,45 @@
 class Solution {
 
+    //1254. 统计封闭岛屿的数目
+    public int closedIsland(int[][] grid) {
+        //思路：将外围的0以及与0相连的0都变成1,然后剩下的0就是封闭岛屿了
+        //计算封闭岛屿个数即可。遍历0，然后将与其相连的0都变为1
+        Stack<Location> stack = new Stack();
+        for(int i = 0;i < grid[0].length;i ++){
+            if (grid[0][i] == 0) stack.push(new Location(0,i));
+            if (grid[grid.length - 1][i] == 0) stack.push(new Location(grid.length - 1,i));
+        }
+        for(int i = 1;i < grid.length - 1;i ++){
+            if (grid[i][0] == 0) stack.push(new Location(i,0));
+            if (grid[i][grid[0].length - 1] == 0) stack.push(new Location(i,grid[0].length - 1));
+        }
+        setOne(grid,stack);
+        //开始计算岛屿数量
+        int res = 0;
+        for(int i = 1;i < grid.length - 1;i ++){
+            for (int j = 1;j < grid[0].length - 1;j ++){
+                if(grid[i][j] == 0){
+                    res ++;
+                    stack.push(new Location(i,j));
+                    setOne(grid,stack);
+                }
+            }
+        }
+        return res;
+    }
+
+    private void setOne(int[][] grid,Stack<Location> stack){
+        //将它周围的0都变成1
+        while(!stack.isEmpty()){
+            Location lo = stack.pop();
+            grid[lo.x][lo.y] = 1;
+            if (lo.x > 0 && grid[lo.x - 1][lo.y] == 0) stack.push(new Location(lo.x - 1,lo.y));
+            if (lo.x < grid.length - 1 && grid[lo.x + 1][lo.y] == 0) stack.push(new Location(lo.x + 1,lo.y));
+            if (lo.y > 0 && grid[lo.x][lo.y - 1] == 0) stack.push(new Location(lo.x,lo.y - 1));
+            if (lo.y < grid[0].length - 1 && grid[lo.x][lo.y + 1] == 0) stack.push(new Location(lo.x,lo.y + 1));
+        }
+    }
+
     //695. 岛屿的最大面积
     public int maxAreaOfIsland(int[][] grid) {
         int width = grid.length;

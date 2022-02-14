@@ -27,6 +27,49 @@ use std::cell::RefCell;
 
 
 impl Solution {
+
+    //1905. 统计子岛屿
+    pub fn count_sub_islands(grid1: Vec<Vec<i32>>, mut grid2: Vec<Vec<i32>>) -> i32 {
+        let m = grid1.len();
+        let n = grid1[0].len();
+        let mut res = 0;
+        //遍历grid2
+        for i in 0..m{
+            for j in 0..n{
+                if grid2[i][j] == 1{
+                    if Self::dfs(&grid1,&mut grid2,i,j){
+                        res += 1;
+                    }
+                }
+            }
+        }
+        res
+    }
+
+    //判断以start为开始的位置是否在grid1中也存在，同时，更改grid1
+    fn dfs(grid1:&Vec<Vec<i32>>,grid2:&mut Vec<Vec<i32>>,x:usize,y : usize)->bool{
+        let mut res = true;
+        let mut stack = vec![(x,y)];
+        while let Some((x,y)) = stack.pop(){
+            res &= grid1[x][y] == 1;
+            //上下左右
+            grid2[x][y] = 0;
+            if x > 0 && grid2[x - 1][y] == 1{
+                stack.push((x - 1,y));
+            }
+            if x < grid2.len() - 1 && grid2[x + 1][y] == 1{
+                stack.push((x + 1,y));
+            }
+            if y > 0 && grid2[x][y - 1] == 1{
+                stack.push((x,y - 1));
+            }
+            if y < grid2[0].len() - 1 && grid2[x][y + 1] == 1{
+                stack.push((x,y + 1));
+            }
+        }
+        res
+    }
+
     //572. 另一棵树的子树
     pub fn is_subtree(root: Option<Rc<RefCell<TreeNode>>>, sub_root: Option<Rc<RefCell<TreeNode>>>) -> bool {
         Self::is_subtree_ref(&root, &sub_root)

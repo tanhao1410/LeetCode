@@ -27,6 +27,29 @@ use std::cell::RefCell;
 
 
 impl Solution {
+    //797. 所有可能的路径
+    pub fn all_paths_source_target(graph: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        //深度优先遍历。
+        // 新思路： 递归，从 a 走到 b，路径。
+        let pre_path = vec![0];
+        Self::all_paths(&graph, 0, &pre_path)
+    }
+    fn all_paths(graph: &Vec<Vec<i32>>, src: usize, pre_path: &Vec<i32>) -> Vec<Vec<i32>> {
+        //走到了最后了
+        if src == graph.len() - 1 {
+            return vec![pre_path.clone()];
+        }
+        let mut res = vec![];
+        //下一步能走到哪？
+        let next_path = &graph[src];
+        for &next in next_path {
+            let mut new_pre_path = pre_path.clone();
+            new_pre_path.push(next);
+            res.append(&mut Self::all_paths(graph, next as usize, &new_pre_path));
+        }
+        res
+    }
+
     //542. 01 矩阵
     pub fn update_matrix(mat: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
         use std::collections::VecDeque;

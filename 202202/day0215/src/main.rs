@@ -2,6 +2,63 @@ fn main() {
     println!("Hello, world!");
 }
 
+//130. 被围绕的区域
+pub fn solve(board: &mut Vec<Vec<char>>) {
+    // 思路：广度或深度优先遍历，从边缘为o的地方遍历，最后统一将内部的o变成X，外部遍历的改回来即可。
+    const temp: char = 'T';
+    let m = board.len();
+    let n = board[0].len();
+    let mut stack = vec![];
+    for i in 0..m {
+        if board[i][0] == 'O' {
+            stack.push((i, 0));
+            board[i][0] = temp;
+        }
+        if board[i][n - 1] == 'O' {
+            stack.push((i, n - 1));
+            board[i][n - 1] = temp;
+        }
+    }
+    for i in 1..n - 1 {
+        if board[0][i] == 'O' {
+            stack.push((0, i));
+            board[0][i] = temp;
+        }
+        if board[m - 1][i] == 'O' {
+            stack.push((m - 1, i));
+            board[m - 1][i] = temp;
+        }
+    }
+    while let Some((x, y)) = stack.pop() {
+        if x > 0 && board[x - 1][y] == 'O' {
+            stack.push((x - 1, y));
+            board[x - 1][y] = temp;
+        }
+        if x < m - 1 && board[x + 1][y] == 'O' {
+            stack.push((x + 1, y));
+            board[x + 1][y] = temp;
+        }
+        if y > 0 && board[x][y - 1] == 'O' {
+            stack.push((x, y - 1));
+            board[x][y - 1] = temp;
+        }
+        if y < n - 1 && board[x][y + 1] == 'O' {
+            stack.push((x, y + 1));
+            board[x][y + 1] = temp;
+        }
+    }
+    //处理
+    for i in 0..m {
+        for j in 0..n {
+            board[i][j] = match board[i][j] {
+                'O' => 'X',
+                'T' => 'O',
+                _ => 'X'
+            };
+        }
+    }
+}
+
 //1091. 二进制矩阵中的最短路径
 pub fn shortest_path_binary_matrix(mut grid: Vec<Vec<i32>>) -> i32 {
     use std::collections::VecDeque;

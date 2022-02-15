@@ -2,6 +2,49 @@ fn main() {
     println!("Hello, world!");
 }
 
+//15. 三数之和
+pub fn three_sum(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
+    use std::collections::HashMap;
+    let mut map = HashMap::new();
+    for &num in &nums {
+        let mut entry = map.entry(num).or_insert(0);
+        *entry += 1;
+    }
+
+    // 选择三个数，只有（0,0,0), 选择有两个相同的数情况。其余的只能选择三个不同的数了。
+    let mut res = vec![];
+    //三个相同的数情况。
+    if let Some(count) = map.get_mut(&0) {
+        if *count > 2 {
+            res.push(vec![0; 3]);
+        }
+    }
+
+    //两个数相等的情况。 =
+    res.append(&mut map
+        .iter()
+        .filter(|(k, v)| **v > 1 && **k != 0)
+        .filter_map(|(k, _)| {
+            match map.contains_key(&(-2 * *k)) {
+                true => Some(vec![*k, *k, -2 * *k]),
+                false => None
+            }
+        })
+        .collect::<Vec<_>>());
+
+    //三个数均不相同的情况，避免重复，按大小顺序排放
+    for (&k, _) in &map {
+        for (&j, _) in &map {
+            let l = -k - j;
+            if l < j && j < k && map.contains_key(&l) {
+                res.push(vec![l, j, k]);
+            }
+        }
+    }
+
+    res
+}
+
 //417. 太平洋大西洋水流问题
 pub fn pacific_atlantic(heights: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
     //思路：求流向太平洋的，再求流向大西洋的， 两者共同的即返回的结果

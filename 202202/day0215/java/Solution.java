@@ -1,4 +1,26 @@
 class Solution {
+
+    //841. 钥匙和房间
+    public boolean canVisitAllRooms(List<List<Integer>> rooms) {
+        //思路：深度遍历
+        boolean[] enters = new boolean[rooms.size()];
+        Stack<Integer> stack = new Stack();
+        stack.push(0);
+        enters[0] = true;
+        while (stack.size() > 0){
+            int roomNum = stack.pop();
+            List<Integer> room = rooms.get(roomNum);
+            for(Integer i : room){
+                if (!enters[i]){
+                    stack.push(i);
+                    enters[i] = true;
+                }
+            }
+        }
+        boolean res = true;
+        for(boolean b : enters) res &= b;
+        return res;
+    }
     //797. 所有可能的路径
     public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
         //思路：深度优先递归遍历

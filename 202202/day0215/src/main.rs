@@ -2,6 +2,62 @@ fn main() {
     println!("Hello, world!");
 }
 
+//417. 太平洋大西洋水流问题
+pub fn pacific_atlantic(heights: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+    //思路：求流向太平洋的，再求流向大西洋的， 两者共同的即返回的结果
+    //如何求流向太平洋的=> 广度或深度优先遍历即可。
+    //思路：求流向太平洋的，再求流向大西洋的， 两者共同的即返回的结果
+    //如何求流向太平洋的=> 广度或深度优先遍历即可。
+    use std::collections::HashSet;
+    let mut pacific = HashSet::new();
+    let mut atlantic = HashSet::new();
+    let (m, n) = (heights.len(), heights[0].len());
+    let mut stack1 = vec![];
+    let mut stack2 = vec![];
+    for i in 0..m {
+        stack1.push((i, 0));
+        pacific.insert((i, 0));
+        stack2.push((i, n - 1));
+        atlantic.insert((i, n - 1));
+    }
+    for i in 0..n {
+        stack1.push((0, i));
+        pacific.insert((0, i));
+        stack2.push((m - 1, i));
+        atlantic.insert((m - 1, i));
+    }
+
+    let process = |pacific: &mut HashSet<(usize, usize)>, mut stack1: Vec<(usize, usize)>| {
+        while let Some((x, y)) = stack1.pop() {
+            let cur_height = heights[x][y];
+            if x > 0 && heights[x - 1][y] >= cur_height && !pacific.contains(&(x - 1, y)) {
+                stack1.push((x - 1, y));
+                pacific.insert((x - 1, y));
+            }
+            if x < m - 1 && heights[x + 1][y] >= cur_height && !pacific.contains(&(x + 1, y)) {
+                stack1.push((x + 1, y));
+                pacific.insert((x + 1, y));
+            }
+            if y > 0 && heights[x][y - 1] >= cur_height && !pacific.contains(&(x, y - 1)) {
+                stack1.push((x, y - 1));
+                pacific.insert((x, y - 1));
+            }
+            if y < n - 1 && heights[x][y + 1] >= cur_height && !pacific.contains(&(x, y + 1)) {
+                stack1.push((x, y + 1));
+                pacific.insert((x, y + 1));
+            }
+        }
+    };
+    //计算太平洋Pacific
+    process(&mut pacific, stack1);
+    process(&mut atlantic, stack2);
+    pacific
+        .into_iter()
+        .filter(|e| atlantic.contains(e))
+        .map(|(x, y)| vec![x as i32, y as i32])
+        .collect()
+}
+
 //130. 被围绕的区域
 pub fn solve(board: &mut Vec<Vec<char>>) {
     // 思路：广度或深度优先遍历，从边缘为o的地方遍历，最后统一将内部的o变成X，外部遍历的改回来即可。

@@ -1,5 +1,43 @@
 class Solution {
 
+    //1319. 连通网络的操作次数
+    public int makeConnected(int n, int[][] connections) {
+        if (n > connections.length + 1) return -1;
+        // 先处理connections，改成一个数组，数组里放的是 set，里面是它能进入的地方
+        HashSet<Integer>[] numSet = new HashSet[n];
+        for(int[] connection : connections){
+            if (numSet[connection[0]] == null) numSet[connection[0]] = new HashSet();
+            if (numSet[connection[1]] == null) numSet[connection[1]] = new HashSet();
+            numSet[connection[0]].add(connection[1]);
+            numSet[connection[1]].add(connection[0]);
+        }
+
+        boolean[] isRead = new boolean[n];
+        int netCount = 0;
+        //深度优先遍历
+        Stack<Integer> stack = new Stack();
+
+        for(int i = 0;i < numSet.length;i ++){
+            if (!isRead[i]){
+                netCount ++;
+                stack.push(i);
+                while (stack.size() > 0){
+                    int cur = stack.pop();
+                    isRead[cur] = true;
+                    if (numSet[cur] != null)for(Integer j :numSet[cur]){
+                        if (!isRead[j]){
+                            stack.push(j);
+                        }
+                    }
+                }
+            }
+        }
+        for(boolean b : isRead){
+            if (!b) netCount ++;
+        }
+        return netCount - 1;
+    }
+
     //78. 子集
     public List<List<Integer>> subsets(int[] nums) {
         // 思路：递归思路，对于每一个元素都有两种可能性，加、不加

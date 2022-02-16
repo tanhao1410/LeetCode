@@ -1,4 +1,22 @@
 class Solution {
+
+    //剑指 Offer II 004. 只出现一次的数字
+    public int singleNumber(int[] nums) {
+        //记录每一位的个数，每一位的个数 % 3 即为结果 该位的值
+        int res = 0;
+        for(int i = 0;i < 32;i ++){
+            int offset = 1<<i;
+            int count = 0;
+            for(int num : nums){
+                if ((num & offset) != 0){
+                    count ++;
+                }
+            }
+            res += (count % 3) << i;
+        }
+        return res;
+    }
+
     //169. 多数元素
     public int majorityElement(int[] nums) {
         int res = 0;

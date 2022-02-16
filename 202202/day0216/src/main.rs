@@ -9,6 +9,67 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //1926. 迷宫中离入口最近的出口
+    pub fn nearest_exit(mut maze: Vec<Vec<char>>, entrance: Vec<i32>) -> i32 {
+        //先遍历，找到出口。
+        use std::collections::{HashSet, VecDeque};
+        let mut outer = HashSet::new();
+        for i in 0..maze.len() {
+            if maze[i][0] == '.' {
+                outer.insert((i, 0));
+            }
+            if maze[i][maze[0].len() - 1] == '.' {
+                outer.insert((i, maze[0].len() - 1));
+            }
+        }
+        for i in 1..maze[0].len() - 1 {
+            if maze[0][i] == '.' {
+                outer.insert((0, i));
+            }
+            if maze[maze.len() - 1][i] == '.' {
+                outer.insert((maze.len() - 1, i));
+            }
+        }
+        outer.remove(&(entrance[0] as usize, entrance[1] as usize));
+        if outer.len() == 0 {
+            return -1;
+        }
+        //开始广度优先遍历
+        let mut queue = VecDeque::new();
+        queue.push_back((entrance[0] as usize, entrance[1] as usize));
+        maze[entrance[0] as usize][entrance[1] as usize] = '+';
+        let mut len = queue.len();
+        let mut distance = 0;
+        while len > 0 {
+            for _ in 0..len() {
+                let (x, y) = queue.pop_front().unwrap();
+                //上下左右移动
+                if outer.contains(&(x, y)) {
+                    return distance;
+                }
+                if x > 0 && maze[x - 1][y] == '.' {
+                    queue.push_back((x - 1, y));
+                    maze[x - 1][y] = '+';
+                }
+                if x < maze.len() - 1 && maze[x + 1][y] == '.' {
+                    queue.push_back((x + 1, y));
+                    maze[x + 1][y] = '+';
+                }
+                if y > 0 && maze[x][y - 1] == '.' {
+                    queue.push_back((x, y - 1));
+                    maze[x][y - 1] = '+';
+                }
+                if y < maze[0].len() - 1 && maze[x][y + 1] == '.' {
+                    queue.push_back((x, y + 1));
+                    maze[x][y + 1] = '+';
+                }
+            }
+            distance += 1;
+            len = queue.len();
+        }
+        -1
+    }
+
     //934. 最短的桥
     pub fn shortest_bridge(mut grid: Vec<Vec<i32>>) -> i32 {
         use std::collections::{HashSet, VecDeque};

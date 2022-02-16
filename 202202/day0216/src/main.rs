@@ -9,6 +9,27 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //75. 颜色分类
+    pub fn sort_colors(nums: &mut Vec<i32>) {
+        let (mut r, mut w, mut b) = (0, 0, 0);
+        for &num in nums.iter() {
+            match num {
+                0 => r += 1,
+                1 => w += 1,
+                _ => b += 1
+            }
+        }
+        for i in 0..nums.len() {
+            if i < r {
+                nums[i] = 0;
+            } else if i < r + w {
+                nums[i] = 1;
+            } else {
+                nums[i] = 2;
+            }
+        }
+    }
+
     //1926. 迷宫中离入口最近的出口
     pub fn nearest_exit(mut maze: Vec<Vec<char>>, entrance: Vec<i32>) -> i32 {
         //先遍历，找到出口。

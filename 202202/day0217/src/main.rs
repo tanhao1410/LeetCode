@@ -3,6 +3,38 @@ fn main() {
 }
 
 impl Solution {
+    //1376 通知所有员工所需的时间
+    pub fn num_of_minutes(n: i32, head_id: i32, manager: Vec<i32>, inform_time: Vec<i32>) -> i32 {
+        //广度优先遍历，而应该用深度优先算法，计算最长路径
+        // 先把manager数组变成一个vec[vec] v为该员工的下属
+        let mut subs = vec![vec![]; n as usize];
+        for i in 0..n as usize {
+            //找到它的上级
+            if manager[i] != -1 {
+                subs[manager[i] as usize].push(i);
+            }
+        }
+        //需要记录通知到某个员工的时间
+        let mut reach_time = vec![0; n as usize];
+        reach_time[head_id as usize] = inform_time[head_id as usize];
+        let mut stack = vec![];
+        stack.push(head_id as usize);
+        //需要多少时间来通知它的下属
+        while let Some(n) = stack.pop() {
+            //如果没有下属了，代表这条线路走到了终点。
+            //它的下属们进栈
+            for sub in &subs[n] {
+                stack.push(*sub);
+                //上一级的时间 + 本机的通知时间
+                reach_time[*sub] = reach_time[n] + inform_time[*sub];
+            }
+        }
+        reach_time
+            .into_iter()
+            .max()
+            .unwrap()
+    }
+
     //47. 全排列 II
     pub fn permute_unique(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
         nums.sort_unstable();

@@ -3,6 +3,43 @@ fn main() {
 }
 
 impl Solution {
+
+    //40. 组合总和 II
+    pub fn combination_sum2(mut candidates: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
+        //采用递归来做
+        //怎么表示数字已经被使用了呢？用一个数组来记录
+        candidates.sort_unstable();
+        Self::combination_sum(&candidates,target,&mut vec![false;candidates.len()],0)
+    }
+
+    fn combination_sum(candidates:&[i32],target:i32,already:&mut Vec<bool>,pre:i32) ->Vec<Vec<i32>>{
+        let mut res = vec![];
+        if target == 0{
+            let mut item = vec![];
+            for i in 0..already.len(){
+                if already[i]{
+                    item.push(candidates[i]);
+                }
+            }
+            res.push(item);
+        }else{
+            let mut pre_num = 0;
+            //从剩下的元素中选择一个元素
+            for i in 0..candidates.len(){
+                //过滤掉已经选择过的元素
+                if !already[i]{
+                    if candidates[i] != pre_num && candidates[i] <= target && candidates[i] >= pre{
+                        already[i] = true;
+                        res.append(&mut Self::combination_sum(candidates,target - candidates[i],already,candidates[i]));
+                        already[i] = false;
+                    }
+                    pre_num = candidates[i];
+                }
+            }
+        }
+        res
+    }
+
     //1376 通知所有员工所需的时间
     pub fn num_of_minutes(n: i32, head_id: i32, manager: Vec<i32>, inform_time: Vec<i32>) -> i32 {
         //广度优先遍历，而应该用深度优先算法，计算最长路径

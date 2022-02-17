@@ -2,35 +2,94 @@ fn main() {
     println!("Hello, world!");
 }
 
-impl Solution {
+struct Solution;
 
+impl Solution {
+    //688. 骑士在棋盘上的概率
+    pub fn knight_probability(n: i32, k: i32, row: i32, column: i32) -> f64 {
+        let mut dp = vec![vec![vec![0.0; n as usize]; n as usize]; k as usize + 1];
+        for i in 0..n as usize {
+            for j in 0..n as usize {
+                dp[0][i][j] = 1.0;
+            }
+        }
+        let direct = vec![-2i32, -1, 1, 2];
+        for i in 1..=k as usize {
+            for x in 0..n as usize {
+                for y in 0..n as usize {
+                    for &u in &direct {
+                        for &v in &direct {
+                            if u.abs() + v.abs() == 3
+                                && x as i32 + u >= 0 && x as i32 + u < n && y as i32 + v >= 0 && y as i32 + v < n {
+                                dp[i][x][y] += dp[i - 1][(x as i32 + u) as usize][(y as i32 + v) as usize];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        let mut gross = 1.0;
+        for _ in 0..k {
+            gross *= 8.0;
+        }
+        dp[k as usize][row as usize][column as usize] / gross
+    }
+
+    pub fn knight_probability2(n: i32, k: i32, row: i32, column: i32) -> f64 {
+        //递归算法超时：用动态规划算法呢？用java来实现
+        //dp[k][x][y],k代表步数。dp[0].. = 1;
+        // dp[1][x][y] = 从x,y 能到达哪
+        //总个数.最大可能达到8^100
+        let mut gross = 1.0;
+        for _ in 0..k {
+            gross *= 8.0;
+        }
+        Self::knight_gross(n, k, row, column) / gross
+    }
+
+    fn knight_gross(n: i32, k: i32, row: i32, column: i32) -> f64 {
+        let mut gross = 0.0;
+        if k == 0 {
+            return 1.0;
+        }
+        for i in vec![-1i32, -2, 1, 2] {
+            for j in vec![-1i32, -2, 1, 2] {
+                if i.abs() + j.abs() == 3 {
+                    if row + i >= 0 && row + i < n && column + j >= 0 && column + j < n {
+                        gross += Self::knight_gross(n, k - 1, row + i, column + j);
+                    }
+                }
+            }
+        }
+        gross
+    }
     //40. 组合总和 II
     pub fn combination_sum2(mut candidates: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
         //采用递归来做
         //怎么表示数字已经被使用了呢？用一个数组来记录
         candidates.sort_unstable();
-        Self::combination_sum(&candidates,target,&mut vec![false;candidates.len()],0)
+        Self::combination_sum(&candidates, target, &mut vec![false; candidates.len()], 0)
     }
 
-    fn combination_sum(candidates:&[i32],target:i32,already:&mut Vec<bool>,pre:i32) ->Vec<Vec<i32>>{
+    fn combination_sum(candidates: &[i32], target: i32, already: &mut Vec<bool>, pre: i32) -> Vec<Vec<i32>> {
         let mut res = vec![];
-        if target == 0{
+        if target == 0 {
             let mut item = vec![];
-            for i in 0..already.len(){
-                if already[i]{
+            for i in 0..already.len() {
+                if already[i] {
                     item.push(candidates[i]);
                 }
             }
             res.push(item);
-        }else{
+        } else {
             let mut pre_num = 0;
             //从剩下的元素中选择一个元素
-            for i in 0..candidates.len(){
+            for i in 0..candidates.len() {
                 //过滤掉已经选择过的元素
-                if !already[i]{
-                    if candidates[i] != pre_num && candidates[i] <= target && candidates[i] >= pre{
+                if !already[i] {
+                    if candidates[i] != pre_num && candidates[i] <= target && candidates[i] >= pre {
                         already[i] = true;
-                        res.append(&mut Self::combination_sum(candidates,target - candidates[i],already,candidates[i]));
+                        res.append(&mut Self::combination_sum(candidates, target - candidates[i], already, candidates[i]));
                         already[i] = false;
                     }
                     pre_num = candidates[i];

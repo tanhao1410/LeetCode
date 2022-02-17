@@ -1,5 +1,40 @@
 class Solution {
 
+    //688. 骑士在棋盘上的概率
+    public double knightProbability(int n, int k, int row, int column) {
+        //动态规划算法呢？
+        //dp[k][x][y],k代表步数。dp[0].. = 1;
+        // dp[1][x][y] = 从x,y 能到达哪?
+        //最终返回dp[k][row][column]
+        double[][][] dp = new double[k + 1][n][n];
+        //在棋盘内的一步都不走，个数是1
+        for(int i = 0;i <= n-1 ;i ++){
+            for (int j =  0;j <= n- 1;j ++){
+                dp[0][i][j] = 1.0;
+            }
+        }
+        int[] vector = new int[]{-2,-1,1,2};
+        for(int i = 1;i <= k;i ++){
+            for(int x = 0;x < n ; x ++){
+                for (int y = 0; y < n ;y ++){
+                    //看(x,y)能走到哪,8个方向
+                    for(int u:vector){
+                        for(int v:vector){
+                            if( (Math.abs(u) + Math.abs(v) == 3)
+                                && (x + u >= 0 && x + u < n && y + v >= 0 && y + v < n)
+                            ){
+                                dp[i][x][y] += dp[i - 1][x + u][y + v];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        double gross = 1.0;
+        for(int i = 0;i < k;i ++) gross *= 8.0;
+        return dp[k][row][column]/gross;
+    }
     //39. 组合总和
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
         Arrays.sort(candidates);

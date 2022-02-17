@@ -1,5 +1,24 @@
 class Solution {
 
+    //剑指 Offer II 006. 排序数组中两个数字之和
+    public int[] twoSum(int[] numbers, int target) {
+        int[] res = new int[2];
+        int i = 0;
+        int j = numbers.length - 1;
+        while(j > i){
+            if (numbers[i] + numbers[j] == target){
+                res[0] = i;
+                res[1] = j;
+                return res;
+            }else if (numbers[i] + numbers[j] > target){
+                j --;
+            }else{
+                i ++;
+            }
+        }
+        return res;
+    }
+
     //688. 骑士在棋盘上的概率
     public double knightProbability(int n, int k, int row, int column) {
         //动态规划算法呢？

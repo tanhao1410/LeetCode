@@ -5,6 +5,34 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //1466. 重新规划路线
+    pub fn min_reorder(n: i32, connections: Vec<Vec<i32>>) -> i32 {
+        //广度优先遍历或深度优先遍历都可。从0开始
+        //先将数组变成可到达的地方。先不管方向
+        let mut map = vec![vec![]; n as usize];
+        let mut already = vec![false; n as usize];
+        for i in 0..connections.len() {
+            let src = connections[i][0];
+            let dst = connections[i][1];
+            map[src as usize].push((dst, 1));
+            map[dst as usize].push((src, 0));
+        }
+        //从0开始深度优先遍历。怎么确定路线是否需要更改呢？在map中所存路线中用一个bool来记录,为true的是需要更改的。
+        let mut stack = vec![0];
+        already[0] = true;
+        let mut res = 0;
+        while let Some(n) = stack.pop() {
+            //得到它能访问的城市
+            for (next, is_change) in &map[n] {
+                if !already[*next as usize] {
+                    already[*next as usize] = true;
+                    stack.push(*next as usize);
+                    res += is_change;
+                }
+            }
+        }
+        res
+    }
     //688. 骑士在棋盘上的概率
     pub fn knight_probability(n: i32, k: i32, row: i32, column: i32) -> f64 {
         let mut dp = vec![vec![vec![0.0; n as usize]; n as usize]; k as usize + 1];

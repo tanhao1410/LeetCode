@@ -2,6 +2,67 @@ fn main() {
     println!("Hello, world!");
 }
 
+//706. 设计哈希映射
+struct MyHashMap {
+    nums: Vec<Vec<(i32, i32)>>,
+    len: usize,
+}
+
+impl MyHashMap {
+    fn new() -> Self {
+        Self { nums: vec![vec![]; 1], len: 0 }
+    }
+
+    fn resize(&mut self) {
+        if self.len > self.nums.len() * 4 {
+            let mut new_datas = vec![vec![]; self.nums.len() * 2];
+            let mut new_len = 0;
+            for v in &self.nums {
+                for &(k, v) in v {
+                    if v != -1 {
+                        new_datas[k as usize % (self.nums.len() * 2)].push((k, v));
+                        new_len += 1;
+                    }
+                }
+            }
+            self.nums = new_datas;
+            self.len = new_len;
+        }
+    }
+
+    fn get_hash(&self, key: i32) -> usize {
+        key as usize % self.nums.len()
+    }
+
+    fn put(&mut self, key: i32, value: i32) {
+        self.resize();
+        //先看有没有,如果有，则直接更新
+        let index = self.get_hash(key);
+        for e in &mut self.nums[index] {
+            if (*e).0 == key {
+                (*e).1 = value;
+                return;
+            }
+        }
+        //没有则创建
+        self.nums[self.get_hash(key)].push((key, value));
+        self.len += 1;
+    }
+
+    fn get(&self, key: i32) -> i32 {
+        for &e in &self.nums[self.get_hash(key)] {
+            if e.0 == key {
+                return e.1;
+            }
+        }
+        -1
+    }
+
+    fn remove(&mut self, key: i32) {
+        self.put(key, -1)
+    }
+}
+
 struct Solution;
 
 impl Solution {

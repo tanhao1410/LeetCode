@@ -1,4 +1,34 @@
 class Solution {
+    //剑指 Offer II 003. 前 n 个数字二进制中 1 的个数
+    public int[] countBits(int n) {
+        // int[] res = new int[n+1];
+        // for (int i = 0;i <= n ;i ++){
+        //     int count = 0;
+        //     for(int j = 0;j < 32;j ++)count += (1<<j & i)>0?1:0;
+        //     res[i] = count;
+        // }
+        // return res;
+        //0
+        //1
+        //1 2
+        //1 2 2 3
+        //1 2 2 3 2 3 3 4
+        //1 2 2 3 2 3 3 4 2 3 3 4 3 4 4 5
+        //规律来了，每一次重复一半。后面一半是前面的+1
+        int[] res = new int[n + 1];
+        if (n == 0) return res;
+        res[1] = 1;
+        int rank = 2;
+        for(int i = 2;i <= n;i ++){
+            if (i <= rank){
+                res[i] = res[(i + 1)/2];
+            }else{
+                res[i] = res[i - rank] + 1;
+            }
+            if((i + 1)/2 == rank) rank *= 2;
+        }
+        return res;
+    }
 
     //剑指 Offer II 006. 排序数组中两个数字之和
     public int[] twoSum(int[] numbers, int target) {

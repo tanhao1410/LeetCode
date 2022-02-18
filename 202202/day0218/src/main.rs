@@ -5,6 +5,29 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //22. 括号生成
+    pub fn generate_parenthesis(n: i32) -> Vec<String> {
+        Self::generate_parenthesis2(n, n, String::new())
+    }
+
+    fn generate_parenthesis2(left: i32, right: i32, mut pre: String) -> Vec<String> {
+        if left == 0 {
+            for _ in 0..right {
+                pre.push(')');
+            }
+            return vec![pre];
+        }
+        let mut res = vec![];
+        if left < right {
+            let mut new_pre = pre.clone();
+            new_pre.push(')');
+            res.append(&mut Self::generate_parenthesis2(left, right - 1, new_pre));
+        }
+        pre.push('(');
+        res.append(&mut Self::generate_parenthesis2(left - 1, right, pre));
+        res
+    }
+
     //17. 电话号码的字母组合
     pub fn letter_combinations(digits: String) -> Vec<String> {
         // 2-9

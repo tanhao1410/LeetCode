@@ -1,4 +1,26 @@
 class Solution {
+    //22. 括号生成
+    public List<String> generateParenthesis(int n) {
+        //思路：每一次可以选择(或)。有时只可以选一种。递归的思路解决吧
+        return generateParenthesis(n,n,new StringBuilder());
+    }
+
+    private List<String> generateParenthesis(int left,int right,StringBuilder pre){
+        List<String> res = new ArrayList();
+        if (left == 0 || right == 0){
+            for(int i = 0;i < right;i ++) pre.append(")");
+            res.add(pre.toString());
+            return res;
+        }
+        //可以选择left,或right
+        if (left < right){
+            //可以都进行选择
+            StringBuilder pre2 = new StringBuilder(pre);
+            res.addAll(generateParenthesis(left ,right - 1,pre2.append(")")));
+        }
+        res.addAll(generateParenthesis(left - 1,right,pre.append("(")));
+        return res;
+    }
     //1306. 跳跃游戏 III
     public boolean canReach(int[] arr, int start) {
         //广度优先策论。访问到有0的即可

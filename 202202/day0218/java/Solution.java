@@ -1,4 +1,29 @@
 class Solution {
+    //1306. 跳跃游戏 III
+    public boolean canReach(int[] arr, int start) {
+        //广度优先策论。访问到有0的即可
+        boolean[] readed = new boolean[arr.length];
+        List<Integer> queue = new ArrayList();
+        queue.add(start);
+        readed[start] = true;
+        while(queue.size() > 0){
+            int len = queue.size();
+            for(int i = 0;i < len;i ++){
+                int cur = queue.remove(0);
+                if (arr[cur] == 0) return true;
+                //可以往前走，也可以往后走
+                int[] dirs = new int[]{cur + arr[cur],cur - arr[cur]};
+                for(int dir : dirs){
+                    if (dir >= 0 && dir < arr.length && !readed[dir]) {
+                        queue.add(dir);
+                        readed[dir] = true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     //1791. 找出星型图的中心节点
     public int findCenter(int[][] edges) {
         //广度优先策略。从最外层开始遍历

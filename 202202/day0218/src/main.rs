@@ -5,6 +5,28 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //1306. 跳跃游戏 III
+    pub fn can_reach(arr: Vec<i32>, start: i32) -> bool {
+        //深度优先策略
+        let mut read = vec![false; arr.len()];
+        let mut stack = vec![start as usize];
+        read[start as usize] = true;
+        while let Some(i) = stack.pop() {
+            if arr[i] == 0 {
+                return true;
+            }
+            //两边走
+            let dirs = vec![i as i32 + arr[i], i as i32 - arr[i]];
+            for dir in dirs {
+                if dir >= 0 && dir < arr.len() as i32 && !read[dir as usize] {
+                    stack.push(dir as usize);
+                    read[dir as usize] = true;
+                }
+            }
+        }
+        false
+    }
+
     //802. 找到最终的安全状态
     pub fn eventual_safe_nodes(graph: Vec<Vec<i32>>) -> Vec<i32> {
         //只能通往安全节点的节点是安全节点。

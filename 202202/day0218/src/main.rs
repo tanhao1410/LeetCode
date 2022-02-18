@@ -5,6 +5,28 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //56. 合并区间
+    pub fn merge(mut intervals: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        intervals.sort_by_key(|e| e[0]);
+        let mut res = vec![];
+        let mut pre_interval = (intervals[0][0], intervals[0][1]);
+        for i in 1..intervals.len() {
+            let cur_interval = (intervals[i][0], intervals[i][1]);
+            //合并当前区间与前一个区间
+            if cur_interval.0 > pre_interval.1 {
+                //两个区间不相交
+                res.push(vec![pre_interval.0, pre_interval.1]);
+                pre_interval = cur_interval;
+            } else if cur_interval.1 > pre_interval.1 {
+                //合并
+                pre_interval = (pre_interval.0, cur_interval.1)
+            }
+        }
+        //合并最后的区间
+        res.push(vec![pre_interval.0,pre_interval.1]);
+        res
+    }
+
     //22. 括号生成
     pub fn generate_parenthesis(n: i32) -> Vec<String> {
         Self::generate_parenthesis2(n, n, String::new())

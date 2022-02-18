@@ -1,4 +1,24 @@
 class Solution {
+    //56. 合并区间
+    public int[][] merge(int[][] intervals) {
+        List<int[]> res = new ArrayList();
+        Arrays.sort(intervals,(e1,e2)->{
+            return e1[0] - e2[0];
+        });
+        int[] pre_interval = new int[]{intervals[0][0],intervals[0][1]};
+        for (int i = 1;i < intervals.length;i ++){
+            int[] cur_interval = new int[]{intervals[i][0],intervals[i][1]};
+            if(cur_interval[0] > pre_interval[1]){
+                //无重叠
+                res.add(pre_interval);
+                pre_interval = cur_interval;
+            }else if (cur_interval[1] > pre_interval[1]){
+                pre_interval[1] = cur_interval[1];
+            }
+        }
+        res.add(pre_interval);
+        return res.toArray(new int[res.size()][2]);
+    }
     //22. 括号生成
     public List<String> generateParenthesis(int n) {
         //思路：每一次可以选择(或)。有时只可以选一种。递归的思路解决吧

@@ -5,6 +5,35 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //17. 电话号码的字母组合
+    pub fn letter_combinations(digits: String) -> Vec<String> {
+        // 2-9
+        if digits.len() == 0 {
+            return vec![];
+        }
+        let mut map = vec!["abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"];
+        let mut res = vec!["".to_string()];
+        for digit in digits.chars() {
+            let bytes = map[(digit as u8 - b'2') as usize].as_bytes();
+            //扩大chars.len()倍数
+            let count = res.len();
+            for i in 0..bytes.len() {
+                if i == 0 {
+                    for j in 0..count {
+                        res[j].push(bytes[i] as char);
+                    }
+                } else {
+                    for j in 0..count {
+                        let mut new_str = res[j][..res[j].len() - 1].to_string();
+                        //此时clone出现了问题，因为前面已经被更改过了。
+                        new_str.push(bytes[i] as char);
+                        res.push(new_str);
+                    }
+                }
+            }
+        }
+        res
+    }
     //365. 水壶问题
     pub fn can_measure_water(jug1_capacity: i32, jug2_capacity: i32, target_capacity: i32) -> bool {
         //广度优先策略

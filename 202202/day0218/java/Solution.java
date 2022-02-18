@@ -1,4 +1,20 @@
 class Solution {
+    //240. 搜索二维矩阵 II
+    public boolean searchMatrix(int[][] matrix, int target) {
+        //从右上角开始，往左下角开始走，走不动了，返回false
+        int x = 0;
+        int y = matrix[0].length - 1;
+        while(x < matrix.length && y >= 0){
+            if (matrix[x][y] == target) return true;
+            if (matrix[x][y] > target){
+                y --;
+            }else{
+                x ++;
+            }
+        }
+        return false;
+    }
+
     //59. 螺旋矩阵 II
     public int[][] generateMatrix(int n) {
         int[][] res = new int[n][n];

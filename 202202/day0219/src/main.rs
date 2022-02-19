@@ -5,6 +5,44 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //433. 最小基因变化
+    pub fn min_mutation(start: String, end: String, bank: Vec<String>) -> i32 {
+        //广度优先策略？每一次改变一次。遍历过的不再遍历了
+        use std::collections::{HashSet, VecDeque};
+        let mut map = HashSet::new();
+        let is_one_change = |one: &String, two: &String| {
+            one
+                .as_bytes()
+                .iter()
+                .zip(two.as_bytes().iter())
+                .filter(|(i, j)| **i != **j)
+                .count()
+                == 1
+        };
+        map.insert(&start);
+        let mut queue = VecDeque::new();
+        queue.push_back(&start);
+        let mut layer = 0;
+        while !queue.is_empty() {
+            //突变产生了end
+            if map.contains(&end) {
+                return layer;
+            }
+            let mut len = queue.len();
+            for _ in 0..len {
+                let cur = queue.pop_front().unwrap();
+                //测试cur能突变成哪一个
+                for s in &bank {
+                    if !map.contains(s) && is_one_change(s, cur) {
+                        queue.push_back(s);
+                        map.insert(s);
+                    }
+                }
+            }
+            layer += 1;
+        }
+        -1
+    }
     //969. 煎饼排序
     pub fn pancake_sort(mut arr: Vec<i32>) -> Vec<i32> {
         let mut res = vec![];

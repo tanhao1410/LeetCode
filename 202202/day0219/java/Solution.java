@@ -1,4 +1,40 @@
 class Solution {
+    //433. 最小基因变化
+    public int minMutation(String start, String end, String[] bank) {
+        LinkedList<String> queue = new LinkedList();
+        boolean[] readed = new boolean[bank.length];
+        for(int i = 0;i < bank.length;i ++){
+            if (bank[i].equals(start)) readed[i] = true;
+        }
+        queue.add(start);
+        int layer = 1;
+        while (queue.size() > 0){
+            int len = queue.size();
+            for (int i = 0;i < len;i ++){
+                String s = queue.remove(0);
+                //测试s突变成什么
+                for(int j = 0;j < bank.length;j ++){
+                    if(!readed[j] && one_change(s,bank[j])){
+                        if(bank[j].equals(end)){
+                            return layer;
+                        }
+                        queue.add(bank[j]);
+                        readed[j] = true;
+                    }
+                }
+            }
+            layer ++;
+        }
+        return -1;
+    }
+
+    private boolean one_change(String s1,String s2){
+        int res = 0;
+        for (int i = 0;i < 8;i ++){
+            if(s1.charAt(i) != s2.charAt(i)) res ++;
+        }
+        return res == 1;
+    }
     //969. 煎饼排序
     public List<Integer> pancakeSort(int[] arr) {
         //思路：每一次通过两次翻转，把最大的数放入到合适的位置

@@ -1,10 +1,57 @@
 fn main() {
     println!("Hello, world!");
+    println!("答案：{}", Solution::open_lock(vec!["0201".to_string(),"0101".to_string(),"0102".to_string(),"1212".to_string(),"2002".to_string()], "0202".to_string()));
 }
 
 struct Solution;
 
 impl Solution {
+    //752. 打开转盘锁
+    pub fn open_lock(deadends: Vec<String>, target: String) -> i32 {
+        use std::collections::{HashSet, VecDeque};
+        //广度优先算法，每次共有8种走法。0000 用数字来表示 ，走法变成 +-1 +-10 不带进位的加减法 (00 + 100 - 10)%100
+        let set = deadends.into_iter().map(|s| s.parse::<i32>().unwrap()).collect::<HashSet<i32>>();
+        let mut used = HashSet::new();
+        if set.contains(&0) {
+            return -1;
+        }
+        let mut queue = VecDeque::new();
+        let mut step = 0;
+        queue.push_back(0);
+        used.insert(0);
+        while !queue.is_empty() {
+            if used.contains(&target.parse().unwrap()) {
+                return step;
+            }
+            let len = queue.len();
+            for _ in 0..len {
+                let cur = queue.pop_front().unwrap();
+                print!("{},",cur);
+                // 8种走法
+                for i in 0..4 {
+                    // 9 + 10 + 1
+                    for j in vec![1, -1] {
+                        // 1200 + 10 + 1  1201
+                        let k = 10i32.pow(i);
+                        // 1201 =>1202
+                        //得到中间的某位，得到
+                        let num = (cur / k) % 10;
+                        let next_num = (num + 10 + j) % 10;
+                        //需要将原来的数的该位替换成它
+                        let next = cur - num * k + next_num * k;
+                        if !set.contains(&next) && !used.contains(&next){
+                            queue.push_back(next);
+                            used.insert(next);
+                        }
+                    }
+                }
+            }
+            println!();
+            step += 1;
+        }
+        -1
+    }
+
     //1654. 到家的最少跳跃次数
     pub fn minimum_jumps(forbidden: Vec<i32>, a: i32, b: i32, x: i32) -> i32 {
         use std::collections::{HashSet, VecDeque};

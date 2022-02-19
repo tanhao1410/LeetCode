@@ -1,4 +1,16 @@
 class Solution {
+    //55. 跳跃游戏
+    public boolean canJump(int[] nums) {
+        //if (nums.length == 1) return true;
+        //i能走到的位置有
+        int maxDistance = nums[0];
+        for(int j = 1;j <= maxDistance && j < nums.length ;j ++){
+            maxDistance = Math.max(maxDistance,nums[j] + j);
+            if (maxDistance >= nums.length - 1) return true;
+        }
+        return maxDistance >= nums.length - 1;
+    }
+
     //213. 打家劫舍 II
     public int rob(int[] nums) {
         if (nums.length < 2) return nums[0];

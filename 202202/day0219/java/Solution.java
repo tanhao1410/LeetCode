@@ -1,4 +1,29 @@
 class Solution {
+    //560. 和为 K 的子数组
+    public int subarraySum(int[] nums, int k) {
+        //o(n^2解法)
+        /**
+        int res = 0;
+        for(int i = 0;i < nums.length;i ++){
+            int sum = 0;
+            for(int j = i;j >= 0;j --){
+                sum += nums[j];
+                if (sum == k) res ++;
+            }
+        }
+        return res;
+        */
+        int res = 0;
+        Map<Integer,Integer> map = new HashMap();
+        map.put(0,1);
+        int sum = 0;
+        for(int i = 0;i < nums.length;i ++){
+            sum += nums[i];
+            res += map.getOrDefault(sum - k,0);
+            map.put(sum,map.getOrDefault(sum,0) + 1);
+        }
+        return res;
+    }
     //1654. 到家的最少跳跃次数
     public int minimumJumps(int[] forbidden, int a, int b, int x) {
         //广度优先遍历法

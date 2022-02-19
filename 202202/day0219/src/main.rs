@@ -5,6 +5,42 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //1654. 到家的最少跳跃次数
+    pub fn minimum_jumps(forbidden: Vec<i32>, a: i32, b: i32, x: i32) -> i32 {
+        use std::collections::{HashSet, VecDeque};
+        //解答：最远禁止点
+        let max_distance = *forbidden.iter().max().unwrap() + a + b;
+        let max_distance = max_distance.max(x + b);
+        //(index,是前进过来的吗)
+        let mut forbidden_set = forbidden.into_iter().collect::<HashSet<i32>>();
+        let mut used = HashSet::new();
+        let mut queue = VecDeque::new();
+        queue.push_back((0, true));
+        used.insert((0, true));
+        let mut step = 0;
+        while !queue.is_empty() {
+            if used.contains(&(x, true)) || used.contains(&(x, false)) {
+                return step;
+            }
+            step += 1;
+            let len = queue.len();
+            for _ in 0..len {
+                let (cur, flag) = queue.pop_front().unwrap();
+                //往前走
+                if cur <= max_distance && !forbidden_set.contains(&(cur + a)) && !used.contains(&(cur + a, true)) {
+                    used.insert((cur + a, true));
+                    queue.push_back((cur + a, true));
+                }
+                //往后走
+                if flag && cur - b > 0 && !forbidden_set.contains(&(cur - b)) && !used.contains(&(cur - b, false)) {
+                    used.insert((cur - b, false));
+                    queue.push_back((cur - b, false));
+                }
+            }
+        }
+        -1
+    }
+
     //433. 最小基因变化
     pub fn min_mutation(start: String, end: String, bank: Vec<String>) -> i32 {
         //广度优先策略？每一次改变一次。遍历过的不再遍历了

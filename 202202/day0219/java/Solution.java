@@ -1,4 +1,50 @@
 class Solution {
+    //1654. 到家的最少跳跃次数
+    public int minimumJumps(int[] forbidden, int a, int b, int x) {
+        //广度优先遍历法
+        //不能跳的地方，与跳过的地方不再进行跳跃，用一个set来存储
+        //有些位置是禁止走的。
+        int maxDistance = x + b;
+        Set<Integer> set = new HashSet();
+        Set<Integer> backSet = new HashSet();
+        Set<Integer> forbidderSet = new HashSet();
+        for(int i : forbidden) {
+            forbidderSet.add(i);
+            maxDistance = Math.max(maxDistance,i + a +b);
+        }
+        LinkedList<Integer> queue = new LinkedList();
+        set.add(0);
+        queue.add(0);
+        int step = 0;
+        while (queue.size() > 0){
+            if (set.contains(x) || backSet.contains(x)) return step;
+            int size = queue.size();
+            for (int i = 0;i < size;i ++){
+                int cur = queue.remove(0);
+                //System.out.print(cur);
+                //System.out.print("   ");
+                //不能往后连跳两次。如果上次是往后，那么这次不能接着往后了，所以需要记录上次是怎么跳到这的。
+                //问题：如果是倒退到了某个位置，在这个位置不能继续往后退。但如果是正常走到这个位置，是可以后退的。还是有区分的。
+
+                //往前走,不能无休止的往前走，走的最大位置不能超过 x + b
+                //走到很远，一下子退回到x位置呢？
+                if (!set.contains(cur + a) && cur <= maxDistance && !forbidderSet.contains(cur + a)){
+                    queue.add(cur + a);
+                    set.add(cur + a);
+                }
+                //往后走到某位置，当前位置没被反向走过。或者当前位置可以正向走到
+                //这里不对！后退走到该位置，不代表不能在该位置继续后退。
+                if (cur - b > 0 && !forbidderSet.contains(cur - b)  && (!backSet.contains(cur) || set.contains(cur))){
+                    queue.add(cur - b);
+                    backSet.add(cur - b);
+                }
+
+            }
+            //System.out.println();
+            step ++;
+        }
+        return -1;
+    }
     //433. 最小基因变化
     public int minMutation(String start, String end, String[] bank) {
         LinkedList<String> queue = new LinkedList();

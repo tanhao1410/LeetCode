@@ -1,4 +1,37 @@
 class Solution {
+    //415. 字符串相加
+    public String addStrings(String num1, String num2) {
+        //进位标志
+        int flag = 0;
+        StringBuilder res = new StringBuilder();
+        //注意需要从低位开始加
+        int index1 = num1.length() - 1;
+        int index2 = num2.length() - 1;
+        while(index1 >= 0 && index2 >= 0){
+            int bitRes = num1.charAt(index1) - '0' + num2.charAt(index2) - '0' + flag;
+            flag = bitRes/10;
+            bitRes %= 10;
+            res.append(bitRes);
+            index2 --;
+            index1 --;
+        }
+        while (index1 >= 0){
+            int bitRes = num1.charAt(index1) - '0' + flag;
+            flag = bitRes/10;
+            bitRes %= 10;
+            res.append(bitRes);
+            index1 --;
+        }
+        while (index2 >= 0){
+            int bitRes = num2.charAt(index2) - '0' + flag;
+            flag = bitRes/10;
+            bitRes %= 10;
+            res.append(bitRes);
+            index2--;
+        }
+        if (flag == 1) res.append(1);
+        return res.reverse().toString();
+    }
     //62. 不同路径
     public int uniquePaths(int m, int n) {
         int[][] dp = new int[m][n];

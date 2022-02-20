@@ -1,4 +1,20 @@
 class Solution {
+    //45. 跳跃游戏 II
+    public int jump(int[] nums) {
+        //动态规划，广度优先策略
+        int[] dp = new int[nums.length];
+        for(int i = 0;i < dp.length - 1;i ++){
+            for(int j = 1;j <= nums[i];j ++){
+                if (i + j == nums.length - 1) return dp[i] + 1;
+                if (dp[i + j] == 0){
+                    dp[i +j] = dp[i] + 1;
+                }else{
+                    dp[i + j] = Math.min(dp[i + j],dp[i] + 1);
+                }
+            }
+        }
+        return dp[dp.length - 1];
+    }
     //1557. 可以到达所有点的最少点数目
     public List<Integer> findSmallestSetOfVertices(int n, List<List<Integer>> edges) {
         //思路：查看哪些节点可以从其他地方访问到，去掉这些就是结果

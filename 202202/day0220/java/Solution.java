@@ -1,4 +1,17 @@
 class Solution {
+    //1557. 可以到达所有点的最少点数目
+    public List<Integer> findSmallestSetOfVertices(int n, List<List<Integer>> edges) {
+        //思路：查看哪些节点可以从其他地方访问到，去掉这些就是结果
+        boolean[] canReach = new boolean[n];
+        for(List<Integer> edge:edges){
+            canReach[edge.get(1)] = true;
+        }
+        List<Integer> res = new ArrayList();
+        for(int i = 0;i < n;i ++){
+            if (!canReach[i]) res.add(i);
+        }
+        return res;
+    }
     //997. 找到小镇的法官
     public int findJudge(int n, int[][] trust) {
         //用一个数组来表示自己信任的人的数量，用一个数组来表示信任自己的人的数量

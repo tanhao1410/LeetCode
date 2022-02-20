@@ -6,6 +6,47 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //1129. 颜色交替的最短路径
+    pub fn shortest_alternating_paths(n: i32, red_edges: Vec<Vec<i32>>, blue_edges: Vec<Vec<i32>>) -> Vec<i32> {
+        //广度优先策略；
+        //走法，本次走了红边，下次就只能走绿边
+        use std::collections::{VecDeque,HashSet};
+        let mut used = HashSet::new();
+        let mut queue = VecDeque::new();
+        let mut res = vec![-1; n as usize];
+        let mut step = 0;
+        let mut red_set = vec![vec![]; n as usize];
+        let mut blue_set = vec![vec![]; n as usize];
+        for edge in red_edges {
+            red_set[edge[0] as usize].push(edge[1] as usize);
+        }
+        for edge in blue_edges {
+            blue_set[edge[0] as usize].push(edge[1] as usize);
+        }
+        queue.push_back((0, true));
+        used.insert((0, true));
+        used.insert((0, false));
+        queue.push_back((0, false));
+        while !queue.is_empty() {
+            let len = queue.len();
+            for _ in 0..len {
+                let (cur, is_red) = queue.pop_front().unwrap();
+                if res[cur as usize] == -1 {
+                    res[cur as usize] = step;
+                }
+                //只能走绿色或红色
+                for &next in if is_red { &blue_set[cur as usize] } else { &red_set[cur as usize] } {
+                    if !used.contains(&(next, !is_red)) {
+                        queue.push_back((next, !is_red));
+                        used.insert((next, !is_red));
+                    }
+                }
+            }
+            step += 1;
+        }
+        res
+    }
+
     //127. 单词接龙
     pub fn ladder_length(begin_word: String, end_word: String, word_list: Vec<String>) -> i32 {
         use std::collections::{HashMap, VecDeque};

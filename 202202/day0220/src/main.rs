@@ -6,6 +6,39 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //127. 单词接龙
+    pub fn ladder_length(begin_word: String, end_word: String, word_list: Vec<String>) -> i32 {
+        use std::collections::{HashMap, VecDeque};
+        let mut word_map = word_list
+            .iter()
+            .map(|e| (e, false))
+            .collect::<HashMap<&String, bool>>();
+        let mut queue = VecDeque::new();
+        let change_one = |s1: &String, s2: &String| {
+            s1.as_bytes().iter().zip(s2.as_bytes().iter()).filter(|&e| e.0 != e.1).count() == 1
+        };
+        queue.push_back(&begin_word);
+        word_map.insert(&begin_word, true);
+        let mut step = 1;
+        while !queue.is_empty() {
+            let len = queue.len();
+            if *word_map.get(&end_word).unwrap_or(&false) {
+                return step;
+            }
+            for _ in 0..len {
+                let cur = queue.pop_front().unwrap();
+                for word in &word_list {
+                    //没有被使用过，且差别只有一个字母
+                    if !*word_map.get(word).unwrap() && change_one(word, cur) {
+                        queue.push_back(word);
+                        word_map.insert(word, true);
+                    }
+                }
+            }
+            step += 1;
+        }
+        0
+    }
     //415. 字符串相加
     pub fn add_strings(num1: String, num2: String) -> String {
         let mut res = vec![];

@@ -1,4 +1,36 @@
 class Solution {
+    //127. 单词接龙
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        Map<String,Boolean> map = new HashMap();
+        for(String word:wordList) map.put(word,false);
+        LinkedList<String> queue = new LinkedList();
+        queue.add(beginWord);
+        map.put(beginWord,true);
+        int step = 1;
+        while (queue.size() > 0){
+            if(map.getOrDefault(endWord,false)) return step;
+            int size = queue.size();
+            for(int i = 0;i < size;i ++){
+                String cur = queue.remove(0);
+                for(String word:wordList){
+                    if (!map.get(word) && isOneDiff(word,cur) ){
+                        queue.add(word);
+                        map.put(word,true);
+                    }
+                }
+            }
+            step ++;
+        }
+        return 0;
+    }
+
+    private boolean isOneDiff(String s1,String s2){
+        int res = 0;
+        for (int i = 0;i < s1.length();i ++){
+            if (s1.charAt(i) != s2.charAt(i)) res ++;
+        }
+        return res == 1;
+    }
     //415. 字符串相加
     public String addStrings(String num1, String num2) {
         //进位标志

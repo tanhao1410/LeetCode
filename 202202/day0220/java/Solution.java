@@ -1,4 +1,17 @@
 class Solution {
+    //167. 两数之和 II - 输入有序数组
+    public int[] twoSum(int[] numbers, int target) {
+        int i = 0;
+        int j = numbers.length - 1;
+        while (true){
+            if (numbers[i] + numbers[j] == target) return new int[]{i + 1,j + 1};
+            if (numbers[i] + numbers[j] > target){
+                j --;
+            }else{
+                i ++;
+            }
+        }
+    }
     //1. 两数之和
     public int[] twoSum(int[] nums, int target) {
         //采用set的方式

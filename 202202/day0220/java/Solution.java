@@ -1,4 +1,41 @@
 class Solution {
+    //847. 访问所有节点的最短路径
+    public int shortestPathLength(int[][] graph) {
+        //用java怎么表示被访问过呢，用一个二维数组来表示,第一维表示编号，第二维表示整个图的访问情况（即一个int(元素最多12个，因此最大为)）
+        int n = graph.length;
+        boolean[][] used = new boolean[n][1<<(n + 1)];
+        LinkedList<int[]> queue = new LinkedList();
+        for(int i = 0;i < n;i ++){
+            queue.add(new int[]{i,1<<i,0});
+            used[i][1<<i] = true;
+        }
+        while(true){
+            int size = queue.size();
+            for(int i = 0;i < size;i ++){
+                int[] cur = queue.remove(0);
+                //访问了所有了
+                if (countOne(cur[1]) == n){
+                    return cur[2];
+                }
+                // 能访问到的数
+                for(int next : graph[cur[0]]){
+                    if(!used[next][cur[1] | (1 << next) ]){
+                        used[next][cur[1] | (1 <<next)] = true;
+                        queue.add(new int[]{next,cur[1] | (1 << next),cur[2] + 1});
+                    }
+                }
+            }
+        }
+    }
+
+    private int countOne(int num){
+        int res = 0;
+        while(num != 0){
+            res += num & 1;
+            num >>= 1;
+        }
+        return res;
+    }
     //409. 最长回文串
     public int longestPalindrome(String s) {
         int res = 0;

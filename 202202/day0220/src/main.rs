@@ -6,11 +6,41 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //847. 访问所有节点的最短路径
+    pub fn shortest_path_length(graph: Vec<Vec<i32>>) -> i32 {
+        //广度优先遍历，用一个三元组来表示每次遍历的情况。访问到哪个元素了，哪些元素被访问了，路径长度
+        // 用一个数字中每一位来表示是否被访问了。元素最大就12位，用一个u16足够了
+        // 广度优先，最先完成的返回
+        use std::collections::{HashSet, VecDeque};
+        let mut used = HashSet::new();
+        let mut queue = VecDeque::new();
+        for i in 0..graph.len() {
+            queue.push_back((i, 1u16 << i, 0));
+            used.insert((i, 1u16 << i));
+        }
+        loop {
+            let len = queue.len();
+            for _ in 0..len {
+                let (cur, mask, path) = queue.pop_front().unwrap();
+                //判断是否走完了，
+                if mask.count_ones() == graph.len() as u32 {
+                    return path;
+                }
+                //从当前位置能走到哪？
+                for &next in &graph[cur] {
+                    if !used.contains(&(next as usize, mask | (1 << next))) {
+                        used.insert((next as usize, mask | (1 << next)));
+                        queue.push_back((next as usize, mask | (1 << next), path + 1));
+                    }
+                }
+            }
+        }
+    }
     //1129. 颜色交替的最短路径
     pub fn shortest_alternating_paths(n: i32, red_edges: Vec<Vec<i32>>, blue_edges: Vec<Vec<i32>>) -> Vec<i32> {
         //广度优先策略；
         //走法，本次走了红边，下次就只能走绿边
-        use std::collections::{VecDeque,HashSet};
+        use std::collections::{VecDeque, HashSet};
         let mut used = HashSet::new();
         let mut queue = VecDeque::new();
         let mut res = vec![-1; n as usize];

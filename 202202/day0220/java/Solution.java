@@ -1,4 +1,15 @@
 class Solution {
+    //1. 两数之和
+    public int[] twoSum(int[] nums, int target) {
+        //采用set的方式
+        Map<Integer,Integer> map = new HashMap();
+        for(int i = 0;;i ++){
+            if (map.containsKey(target - nums[i])){
+                return new int[]{map.get(target - nums[i]),i};
+            }
+            map.put(nums[i],i);
+        }
+    }
     //847. 访问所有节点的最短路径
     public int shortestPathLength(int[][] graph) {
         //用java怎么表示被访问过呢，用一个二维数组来表示,第一维表示编号，第二维表示整个图的访问情况（即一个int(元素最多12个，因此最大为)）

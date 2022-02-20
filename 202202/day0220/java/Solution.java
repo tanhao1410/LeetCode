@@ -1,4 +1,22 @@
 class Solution {
+    //409. 最长回文串
+    public int longestPalindrome(String s) {
+        int res = 0;
+        int[] table = new int[128];
+        for(int i = 0;i < s.length();i ++){
+            table[s.charAt(i)] ++;
+        }
+        int flag = 0;
+        for(int t :table){
+            if (t % 2 == 0) {
+                res += t;
+            }else{
+                res += t - 1;
+                flag = 1;
+            }
+        }
+        return res + flag;
+    }
     //127. 单词接龙
     public int ladderLength(String beginWord, String endWord, List<String> wordList) {
         Map<String,Boolean> map = new HashMap();

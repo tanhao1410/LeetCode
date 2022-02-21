@@ -6,6 +6,43 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //785. 判断二分图
+    pub fn is_bipartite(graph: Vec<Vec<i32>>) -> bool {
+        use std::collections::HashSet;
+        let mut used = vec![false; graph.len()];
+        let mut stack1 = vec![];
+        let mut stack2 = vec![];
+        let mut set1 = HashSet::new();
+        let mut set2 = HashSet::new();
+        for i in 0..graph.len() {
+            if !used[i] {
+                stack1.push(i);
+                set1.insert(i);
+                while !stack1.is_empty() || !stack2.is_empty() {
+                    while let Some(cur) = stack1.pop() {
+                        for &next in &graph[cur] {
+                            if !set2.contains(&(next as usize)) {
+                                set2.insert(next as usize);
+                                stack2.push(next as usize);
+                                used[next as usize] = true;
+                            }
+                        }
+                    }
+                    while let Some(cur) = stack2.pop() {
+                        for &next in &graph[cur] {
+                            if !set1.contains(&(next as usize)) {
+                                set1.insert(next as usize);
+                                stack1.push(next as usize);
+                                used[next as usize] = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        set1.len() + set2.len() == graph.len()
+    }
+
     //886. 可能的二分法
     pub fn possible_bipartition(n: i32, dislikes: Vec<Vec<i32>>) -> bool {
         //思路:1.用两个集合来分别遍历

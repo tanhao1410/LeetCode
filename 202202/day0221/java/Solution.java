@@ -1,4 +1,44 @@
 class Solution {
+    //785. 判断二分图
+    public boolean isBipartite(int[][] graph) {
+        //用两个集合来存储
+        Set<Integer> set1 = new HashSet();
+        Set<Integer> set2 = new HashSet();
+        boolean[] used = new boolean[graph.length];
+        Stack<Integer> stack1 = new Stack();
+        Stack<Integer> stack2 = new Stack();
+        for(int i = 0;i < used.length;i ++){
+            if (!used[i]){
+                //放入到set1中
+                set1.add(i);
+                stack1.push(i);
+                while(stack1.size() > 0 || stack2.size() > 0){
+                    while(stack1.size() > 0){
+                        int cur = stack1.pop();
+                        for(int next : graph[cur]){
+                            if (!set2.contains(next)){
+                                stack2.push(next);
+                                set2.add(next);
+                                used[next] = true;
+                            }
+                        }
+                    }
+
+                    while (stack2.size() > 0){
+                        int cur = stack2.pop();
+                        for(int next : graph[cur]){
+                            if (!set1.contains(next)){
+                                stack1.push(next);
+                                set1.add(next);
+                                used[next] = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return set1.size() + set2.size() == graph.length;
+    }
     //763. 划分字母区间
     public List<Integer> partitionLabels(String s) {
         List<Integer> res = new ArrayList();

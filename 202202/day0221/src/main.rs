@@ -6,6 +6,50 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //18. 四数之和
+    pub fn four_sum(nums: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
+        // 四数之和，可以转变成二数之和来解决
+        let mut nums = nums;
+        nums.sort_unstable();
+        //存储数最后所在的位置，
+        use std::collections::HashMap;
+        let mut last_index = HashMap::new();
+        for i in 0..nums.len() {
+            last_index.insert(nums[i], i);
+        }
+        let mut res = vec![];
+        if nums.len() < 4 {
+            return res;
+        }
+        for i in 0..nums.len() - 3 {
+            if i > 0 && nums[i] == nums[i - 1] {
+                continue;
+            }
+            for j in i + 1..nums.len() - 2 {
+                if j > i + 1 && nums[j] == nums[j - 1] {
+                    continue;
+                }
+                for k in j + 1..nums.len() - 1 {
+                    if j > j + 1 && nums[k] == nums[k - 1] {
+                        continue;
+                    }
+                    //看后面是否存在剩下的数
+                    if *last_index.get(&(target - nums[i] - nums[j] - nums[k])).unwrap_or(&0) > k {
+                        //不能与上一个完全相等
+                        if res.len() == 0 {
+                            res.push(vec![nums[i], nums[j], nums[k], target - nums[i] - nums[j] - nums[k]]);
+                        } else {
+                            let last = &res[res.len() - 1];
+                            if last[0] != nums[i] || last[1] != nums[j] || last[2] != nums[k] {
+                                res.push(vec![nums[i], nums[j], nums[k], target - nums[i] - nums[j] - nums[k]]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        res
+    }
     //785. 判断二分图
     pub fn is_bipartite(graph: Vec<Vec<i32>>) -> bool {
         use std::collections::HashSet;

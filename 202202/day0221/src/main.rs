@@ -5,6 +5,25 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //763. 划分字母区间
+    pub fn partition_labels(s: String) -> Vec<i32> {
+        let mut last_indexs = vec![0; 26];
+        let mut res = vec![];
+        let bytes = s.as_bytes();
+        for i in 0..bytes.len() {
+            last_indexs[(bytes[i] - b'a') as usize] = i;
+        }
+        let mut last_index = 0;
+        let mut pre_index = -1;
+        for i in 0..bytes.len() {
+            last_index = last_index.max(last_indexs[(bytes[i] - b'a') as usize]);
+            if last_index == i {
+                res.push(i as i32 - pre_index);
+                pre_index = i as i32;
+            }
+        }
+        res
+    }
     //838. 推多米诺
     pub fn push_dominoes(dominoes: String) -> String {
         let mut bytes = dominoes.into_bytes();

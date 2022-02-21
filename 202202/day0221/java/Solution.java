@@ -1,4 +1,25 @@
 class Solution {
+    //763. 划分字母区间
+    public List<Integer> partitionLabels(String s) {
+        List<Integer> res = new ArrayList();
+        //思路：后面没有出现前面的字母时，就从此处断开。
+        //记录每一个字母最后出现的位置。
+        int[] lastIndexs = new int[26];
+        for(int i = 0;i < s.length();i ++){
+            lastIndexs[s.charAt(i) - 'a'] = i;
+        }
+        //记录前面的字母最后出现的位置
+        int preIndex = -1;
+        int lastIndex = 0;
+        for(int i = 0;i < s.length();i ++){
+            lastIndex = Math.max(lastIndex,lastIndexs[s.charAt(i) - 'a']);
+            if (lastIndex == i){
+                res.add(lastIndex - preIndex);
+                preIndex = lastIndex;
+            }
+        }
+        return res;
+    }
     //290. 单词规律
     public boolean wordPattern(String pattern, String s) {
         HashMap<Character,String> map = new HashMap();

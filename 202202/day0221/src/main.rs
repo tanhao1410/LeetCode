@@ -1,10 +1,63 @@
 fn main() {
     println!("Hello, world!");
+    println!("{}", Solution::possible_bipartition(4, vec![vec![1, 2], vec![1, 3], vec![2, 4]]));
 }
 
 struct Solution;
 
 impl Solution {
+    //886. 可能的二分法
+    pub fn possible_bipartition(n: i32, dislikes: Vec<Vec<i32>>) -> bool {
+        //思路:1.用两个集合来分别遍历
+        // 2.访问节点 i 时，将所有i不喜欢的放入到对方集合中
+        // 3.同理，对方遍历时，将自己不喜欢的 放入到对方集合中
+        // 4.最后，看两个集合是否有交集。如果有交集，返回false
+        use std::collections::HashSet;
+        let mut used = vec![false; n as usize];
+        let mut map = vec![HashSet::new(); n as usize];
+        for dislike in &dislikes {
+            map[dislike[0] as usize - 1].insert(dislike[1] as usize - 1);
+            map[dislike[1] as usize - 1].insert(dislike[0] as usize - 1);
+        }
+        //分成两个集合。
+        let mut set1 = HashSet::new();
+        let mut set2 = HashSet::new();
+
+        //所有与set1内部有连接的都放入到set2中
+        let mut queue1 = vec![];//里面放的都是应该放置到set2中的元素
+        let mut queue2 = vec![];//里面放的都是应该放置到set1中的元素
+        for i in 0..n as usize {
+            if !used[i] {
+                queue1.push(i as i32);
+                used[i] = true;
+                set1.insert(i as i32);
+                while !queue2.is_empty() || !queue1.is_empty() {
+                    while let Some(cur) = queue1.pop() {
+                        for &next in &map[cur as usize] {
+                            if !set2.contains(&(next as i32)) {
+                                set2.insert(next as i32);
+                                used[next] = true;
+                                queue2.push(next as i32);
+                            }
+                        }
+                    }
+                    while let Some(cur) = queue2.pop() {
+                        for &next in &map[cur as usize] {
+                            if !set1.contains(&(next as i32)) {
+                                set1.insert(next as i32);
+                                used[next] = true;
+                                queue1.push(next as i32);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        //println!("{:?}",set1);
+        //println!("{:?}",set2);
+        set1.len() + set2.len() == n as usize
+    }
+
     //763. 划分字母区间
     pub fn partition_labels(s: String) -> Vec<i32> {
         let mut last_indexs = vec![0; 26];

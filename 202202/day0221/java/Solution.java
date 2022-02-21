@@ -1,4 +1,37 @@
 class Solution {
+    //838. 推多米诺
+    public String pushDominoes(String dominoes) {
+        byte[] bytes = dominoes.getBytes();
+        int start = 0;
+        while (start < bytes.length){
+            boolean isR = bytes[start] == 'R';
+            int end = start + 1;
+            while (end < bytes.length && bytes[end] == '.') end ++;
+            if (end == bytes.length){
+                if (isR){
+                    for(int i = start + 1;i < end;i ++) bytes[i] = 'R';
+                }
+                break;
+            }
+
+            if(isR){
+                if(bytes[end] == 'R'){
+                    for(int i = start + 1;i < end;i ++) bytes[i] = 'R';
+                }else{
+                    for(int i = 1;i <= (end - start - 1)/2;i ++){
+                        bytes[start + i] = 'R';
+                        bytes[end - i] = 'L';
+                    }
+                }
+            }else{
+                if (bytes[end] == 'L'){
+                    for(int i = start;i < end;i ++) bytes[i] = 'L';
+                }
+            }
+            start = end;
+        }
+        return new String(bytes);
+    }
     //1615. 最大网络秩
     public int maximalNetworkRank(int n, int[][] roads) {
         //将路径图改为每一个点连接的所有点 的图

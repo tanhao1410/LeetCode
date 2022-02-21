@@ -5,6 +5,59 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //838. 推多米诺
+    pub fn push_dominoes(dominoes: String) -> String {
+        let mut bytes = dominoes.into_bytes();
+        //从开始处往后找，直到找到一个L或R ，如果是L，则从开始处到L都要变成L否则，
+        //从当前R处开始往后找，直到 找到一个L或R ，如果是L ，则开始与结束之间的要改变。如果是R ，则从开始到结束变成R
+        let mut start = 0;
+        while start < bytes.len() {
+            let status = bytes[start] != b'R';
+            let mut end = start + 1;
+            while end < bytes.len() && bytes[end] == b'.' {
+                end += 1;
+            }
+            if end == bytes.len() {
+                //走到了终点
+                if !status {
+                    for i in start + 1..end {
+                        bytes[i] = b'R';
+                    }
+                }
+                break;
+            }
+            match bytes[end] {
+                b'L' => {
+                    if status {
+                        //从开始到结束之间的都变成L
+                        for i in start..end {
+                            bytes[i] = b'L';
+                        }
+                    } else {
+                        //L...R
+                        for i in 1..=(end - start - 1) / 2 {
+                            bytes[i + start] = b'L';
+                            bytes[end - i] = b'R';
+                        }
+                    }
+                }
+                _ => {
+                    if status {
+                        for i in 1..=(end - start - 1) / 2 {
+                            bytes[i + start] = b'R';
+                            bytes[end - i] = b'L';
+                        }
+                    } else {
+                        for i in start..end {
+                            bytes[i] = b'R';
+                        }
+                    }
+                }
+            }
+            start = end + 1;
+        }
+        String::from_utf8(bytes).unwrap()
+    }
     //1615. 最大网络秩
     pub fn maximal_network_rank(n: i32, roads: Vec<Vec<i32>>) -> i32 {
         //改善方法，不一定要两层循环。按每一个点能连接的数量进行排序，返回的结果中肯定是最大的两个点进行组合。

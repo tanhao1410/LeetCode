@@ -36,25 +36,20 @@ impl Solution {
                     } else {
                         //L...R
                         for i in 1..=(end - start - 1) / 2 {
-                            bytes[i + start] = b'L';
-                            bytes[end - i] = b'R';
+                            bytes[i + start] = b'R';
+                            bytes[end - i] = b'L';
                         }
                     }
                 }
                 _ => {
-                    if status {
-                        for i in 1..=(end - start - 1) / 2 {
-                            bytes[i + start] = b'R';
-                            bytes[end - i] = b'L';
-                        }
-                    } else {
+                    if !status {
                         for i in start..end {
                             bytes[i] = b'R';
                         }
                     }
                 }
             }
-            start = end + 1;
+            start = end;
         }
         String::from_utf8(bytes).unwrap()
     }

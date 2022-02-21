@@ -1,4 +1,26 @@
 class Solution {
+    //413. 等差数列划分
+    public int numberOfArithmeticSlices(int[] nums) {
+        //思路：先找最长等差数列。然后，从最长等差数列中 最后一个，重新开始找。
+        // 数量=1 + 2 + .. （长度 - 2）
+        int res = 0;
+        int start = 0;
+        //从start开始后面要至少有两个数存在
+        while (start + 2 < nums.length){
+            int diff = nums[start + 1] - nums[start];
+            int end = start + 2;
+            while (end < nums.length && nums[end] - nums[end - 1] == diff) end ++;
+            res += childNum(end - start);
+            start = end - 1;
+        }
+        return res;
+    }
+
+    private int childNum(int length){
+        int res = 0;
+        for(int i = 1;i <= length - 2;i ++) res += i;
+        return res;
+    }
     //5. 最长回文子串
     public String longestPalindrome(String s) {
         //思路：dp[i][j] s[i][j] 是否是回文。dp[i][i] = 1;

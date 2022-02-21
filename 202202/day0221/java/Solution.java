@@ -1,4 +1,26 @@
 class Solution {
+    //290. 单词规律
+    public boolean wordPattern(String pattern, String s) {
+        HashMap<Character,String> map = new HashMap();
+        //字母数与单词数也要对应
+        HashSet<String> set = new HashSet();
+        String[] ss = s.split(" ");
+        for(String word : ss){
+            set.add(word);
+        }
+        if (pattern.length() != ss.length) return false;
+        for(int i = 0;i < ss.length;i ++){
+            char cur = pattern.charAt(i);
+            if(map.containsKey(cur)){
+                if (!map.get(cur).equals(ss[i])){
+                    return false;
+                }
+            }else{
+                map.put(cur,ss[i]);
+            }
+        }
+        return set.size() == map.size();
+    }
     //413. 等差数列划分
     public int numberOfArithmeticSlices(int[] nums) {
         //思路：先找最长等差数列。然后，从最长等差数列中 最后一个，重新开始找。

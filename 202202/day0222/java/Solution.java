@@ -1,4 +1,14 @@
 class Solution {
+    //70. 爬楼梯
+    public int climbStairs(int n) {
+        int pre = 1;
+        int prePre = 0;
+        for(int i = 1;i <= n;i ++){
+            pre += prePre;
+            prePre = pre - prePre;
+        }
+        return pre;
+    }
     //509. 斐波那契数
     public int fib(int n) {
         if (n < 2) return n;

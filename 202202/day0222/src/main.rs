@@ -5,6 +5,17 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //70. 爬楼梯
+    pub fn climb_stairs(n: i32) -> i32 {
+        //f(i) = f(i - 1) + f(i - 2)
+        let mut pre = 1;
+        let mut pre_pre = 0;
+        for _ in 1..=n {
+            pre += pre_pre;
+            pre_pre = pre - pre_pre;
+        }
+        pre
+    }
     //509. 斐波那契数
     pub fn fib(n: i32) -> i32 {
         if n < 2 {

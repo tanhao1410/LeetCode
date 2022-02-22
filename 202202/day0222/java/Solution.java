@@ -1,4 +1,48 @@
 class Solution {
+    //15. 三数之和
+    public List<List<Integer>> threeSum(int[] nums) {
+        //三个相同的数，两个相同的数，全都不相同
+        Map<Integer,Integer> numCount = new HashMap();
+        for(int num : nums){
+            int count = numCount.getOrDefault(num,0);
+            numCount.put(num,count + 1);
+        }
+        List<List<Integer>> res = new ArrayList();
+        //三个数
+        if(numCount.getOrDefault(0,0) >= 3) res.add(createList(0,0,0));
+
+        //两个数的情况
+        for(Map.Entry<Integer,Integer> entry:numCount.entrySet() ){
+            int curNum = entry.getKey();
+            if (curNum != 0 && entry.getValue() > 1){
+                //多于1个情况下才可以
+                if(numCount.containsKey(-curNum * 2)){
+                    res.add(createList(curNum,curNum,-curNum * 2));
+                }
+            }
+        }
+        //三个不同的数
+        for(Map.Entry<Integer,Integer> entry1 :numCount.entrySet()){
+            int curNum1 = entry1.getKey();
+            for(Map.Entry<Integer,Integer> entry2 : numCount.entrySet()){
+                int curNum2 = entry2.getKey();
+                if (curNum1 < curNum2 && (-curNum2 - curNum1) > curNum2){//保证大小顺序，放置重复
+                    if (numCount.containsKey(-curNum2 - curNum1)){
+                        res.add(createList(curNum1,curNum2,-curNum2 - curNum1));
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+    private List<Integer> createList(int a,int b,int c){
+        List<Integer> list = new ArrayList();
+        list.add(a);
+        list.add(b);
+        list.add(c);
+        return list;
+    }
     //剑指 Offer II 008. 和大于等于 target 的最短子数组
     public int minSubArrayLen(int target, int[] nums) {
         //用两个指针，一个前一个后，前后指针所夹的就是符合条件的子数组

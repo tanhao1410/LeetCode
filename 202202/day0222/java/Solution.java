@@ -1,4 +1,30 @@
 class Solution {
+    //剑指 Offer II 008. 和大于等于 target 的最短子数组
+    public int minSubArrayLen(int target, int[] nums) {
+        //用两个指针，一个前一个后，前后指针所夹的就是符合条件的子数组
+        //如果和小于target，则end ++,
+        //如果和大于target，则start++，直到和小于target
+        int start = 0;
+        int end = 0;
+        int res = Integer.MAX_VALUE;
+        int sum = nums[0];
+        while (end < nums.length){
+            if (res == 1) return res;
+            //end一直往前走，直到和大于target
+            while (end < nums.length && sum < target){
+                end ++;
+                if (end == nums.length) break;
+                sum += nums[end];
+            }
+            if (sum >= target) res = Math.min(res,end - start + 1);
+            while (start <= end && sum >= target){
+                sum -= nums[start];
+                start ++;
+                if (sum >= target) res = Math.min(res,end - start + 1);
+            }
+        }
+        return res == Integer.MAX_VALUE ? 0 : res;
+    }
     //剑指 Offer II 007. 数组中和为 0 的三个数
     public List<List<Integer>> threeSum(int[] nums) {
         List<List<Integer>> res = new ArrayList();

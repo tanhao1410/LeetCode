@@ -5,6 +5,34 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //剑指 Offer II 008. 和大于等于 target 的最短子数组
+    pub fn min_sub_array_len(target: i32, nums: Vec<i32>) -> i32 {
+        let mut res = i32::MAX;
+        let mut start = 0;
+        let mut end = 0;
+        let mut sum = nums[start];
+        while end < nums.len() {
+            //end往前走
+            while end < nums.len() && sum < target {
+                end += 1;
+                if end < nums.len() {
+                    sum += nums[end];
+                }
+            }
+            if sum >= target {
+                res = res.min((end - start) as i32 + 1);
+            }
+            //start 往前走
+            while start <= end && sum >= target {
+                sum -= nums[start];
+                start += 1;
+                if sum >= target {
+                    res = res.min((end - start) as i32 + 1);
+                }
+            }
+        }
+        if res == i32::MAX { 0 } else { res }
+    }
     //剑指 Offer II 007. 数组中和为 0 的三个数
     pub fn three_sum(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
         let mut res = vec![];

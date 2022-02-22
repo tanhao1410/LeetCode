@@ -1,4 +1,27 @@
 class Solution {
+    //139. 单词拆分
+    public boolean wordBreak(String s, List<String> wordDict) {
+        //dp[i] 是否可以拆分出来。s[..=i] = true;
+        // if s[..i] { 则dp[0..j]  = s[i+1..j] 是否在set中，}
+        Set<String> set = new HashSet();
+        for(String word:wordDict) set.add(word);
+        boolean[] dp = new boolean[s.length()];
+        for(int i = 0; i < s.length();i ++){
+            //直接包含的话。
+            if(set.contains(s.substring(0,i + 1))){
+                dp[i] = true;
+            }else{
+                for(int j = 0;j < i;j ++){
+                    //遍历dp，从dp为true的地方截断看是否包含
+                    if (dp[j] && set.contains(s.substring(j + 1,i + 1))){
+                        dp[i] = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return dp[dp.length - 1];
+    }
     //91. 解码方法
     public int numDecodings(String s) {
         //一个数字，有三种情况，单独作为一个编码，作为前面字母的后面编码，与后面一个合在一起做编码

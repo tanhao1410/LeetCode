@@ -5,6 +5,19 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //509. 斐波那契数
+    pub fn fib(n: i32) -> i32 {
+        if n < 2 {
+            return n;
+        }
+        let mut pre = 1;
+        let mut pre_pre = 0;
+        for i in 2..=n {
+            pre += pre_pre;
+            pre_pre = pre - pre_pre;
+        }
+        pre
+    }
     //49. 字母异位词分组
     pub fn group_anagrams(mut strs: Vec<String>) -> Vec<Vec<String>> {
         use std::collections::HashMap;

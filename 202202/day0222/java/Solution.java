@@ -1,4 +1,12 @@
 class Solution {
+    //509. 斐波那契数
+    public int fib(int n) {
+        if (n < 2) return n;
+        int[] dp = new int[n+1];
+        dp[1] = 1;
+        for(int i = 2;i <= n;i ++) dp[i] = dp[i - 1] + dp[i - 2];
+        return dp[n];
+    }
     //49. 字母异位词分组
     public List<List<String>> groupAnagrams(String[] strs) {
         //思路：String =》 求它的按字母序版本，insert一下即可。

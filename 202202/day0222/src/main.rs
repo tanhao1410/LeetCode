@@ -5,6 +5,38 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //剑指 Offer II 007. 数组中和为 0 的三个数
+    pub fn three_sum(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut res = vec![];
+        if nums.len() < 3 {
+            return res;
+        }
+        nums.sort_unstable();
+        for i in 0..nums.len() - 2 {
+            //双指针法，从剩下的区间中找到目标 -nums[i]
+            if i > 0 && nums[i] == nums[i - 1] {
+                continue;
+            }
+            let mut start = i + 1;
+            let mut end = nums.len() - 1;
+            while end > start {
+                if nums[end] + nums[start] == -nums[i] {
+                    res.push(vec![nums[i], nums[start], nums[end]]);
+                    let mut next_start = start + 1;
+                    while next_start < end && nums[next_start] == nums[start] {
+                        next_start += 1;
+                    }
+                    start = next_start;
+                    end -= 1;
+                } else if nums[end] + nums[start] > -nums[i] {
+                    end -= 1;
+                } else {
+                    start += 1;
+                }
+            }
+        }
+        res
+    }
     //70. 爬楼梯
     pub fn climb_stairs(n: i32) -> i32 {
         //f(i) = f(i - 1) + f(i - 2)

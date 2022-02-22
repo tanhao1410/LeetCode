@@ -1,4 +1,32 @@
 class Solution {
+    //49. 字母异位词分组
+    public List<List<String>> groupAnagrams(String[] strs) {
+        //思路：String =》 求它的按字母序版本，insert一下即可。
+        HashMap<String,List<String>> map = new HashMap();
+        for(String s:strs){
+            String newS = getLetterSeqStr(s);
+            if (map.containsKey(newS)){
+                map.get(newS).add(s);
+            }else{
+                List<String> item = new ArrayList();
+                item.add(s);
+                map.put(newS,item);
+            }
+        }
+        List<List<String>> res = new ArrayList();
+        for(Map.Entry<String,List<String>> entry : map.entrySet()) res.add(entry.getValue());
+        return res;
+    }
+
+    private String getLetterSeqStr(String s){
+        int[] chars = new int[26];
+        for(int i = 0;i < s.length();i ++) chars[s.charAt(i) - 'a'] ++;
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0;i < 26;i ++){
+            for(int j = 0;j < chars[i];j ++) sb.append((char)(i + 'a'));
+        }
+        return sb.toString();
+    }
     //139. 单词拆分
     public boolean wordBreak(String s, List<String> wordDict) {
         //dp[i] 是否可以拆分出来。s[..=i] = true;

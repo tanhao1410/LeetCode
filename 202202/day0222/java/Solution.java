@@ -1,4 +1,84 @@
 class Solution {
+
+    //1994. 好子集的数目
+    private int mod = 1000000007;
+    public int numberOfGoodSubsets(int[] nums) {
+        int[] oddNums = new int[]{2,3,5,7,11,13,17,19,23,29};
+        //记录数字出现的次数
+        int[] count = new int[31];
+        for(int num : nums){
+            count[num]++;
+        }
+
+        //先算仅质数存在的情况下数量
+        long res = getOddCount(oddNums,count,1);
+
+        //再算两个质数相乘得到的数出现的情况。如 6 10 14 。。。
+        long count6 = getOddCount(oddNums,count,6);
+        res += count6 * count[6] + count[6];
+        res %= mod;
+
+        long count10 = getOddCount(oddNums,count,10);//2 * 5 ,可以和 3 * 7 共存
+        res += count10 * count[10] + count[10];
+        //还可以和21 共同存在。
+        long count10And21 = getOddCount(oddNums,count,10 * 21);
+        res += (count10And21+1) * count[10] * count[21] ;
+        res %= mod;
+
+        long count14 = getOddCount(oddNums,count,14);// 2 * 7 可以和 3 * 5 共存
+        res += (count14 + 1) * count[14];
+        long count14And15 = getOddCount(oddNums,count,14 * 15);
+        res += (count14And15 + 1) * count[14]*count[15];
+        res %= mod;
+
+        long count22 = getOddCount(oddNums,count,22);// 2 * 11 可以和 3 * 7 或3 * 5 共存
+        res += (count22 + 1) * count[22];
+        long count22And21 = getOddCount(oddNums,count,22 * 21);
+        res += (count22And21 + 1) * count[22] * count[21];
+        long count22And15 = getOddCount(oddNums,count,22 * 15);
+        res += (count22And15 + 1) * count[22] * count[15];
+        res %= mod;
+
+        long count26 = getOddCount(oddNums,count,26);// 2 * 13
+        res += (count26 + 1) * count[26];
+        long count26And21 = getOddCount(oddNums,count,26 * 21);
+        res += (count26And21 + 1) * count[26] * count[21];
+        long count26And15 = getOddCount(oddNums,count,26 * 15);
+        res += (count26And15 + 1) * count[26] * count[15];
+        res %= mod;
+
+        long count15 = getOddCount(oddNums,count,15);
+        res += (count15 + 1) * count[15];
+        res %= mod;
+
+        long count21 = getOddCount(oddNums,count,21);
+        res += (count21 + 1) * count[21];
+        res %= mod;
+
+        //还有个特殊存在 30
+        long count30 = getOddCount(oddNums,count,30);
+        res += (count30 + 1) * count[30];
+        res %= mod;
+
+        //最后算含1的情况
+        for(int i = 0;i < count[1];i ++) {
+            res *= 2;
+            res %= mod;
+        }
+        return (int)res;
+    }
+
+    private long getOddCount(int[] oddNums,int[] counts ,int excludeNum){
+        long res = 0l;
+        for(int oddNum : oddNums){
+            int n = counts[oddNum];
+            if (n > 0 && excludeNum % oddNum != 0){
+                res = res * (n + 1) + n;
+                res %= mod;
+            }
+        }
+        return res % mod;
+    }
     //70. 爬楼梯
     public int climbStairs(int n) {
         int pre = 1;

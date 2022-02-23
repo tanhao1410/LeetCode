@@ -1,4 +1,28 @@
 class Solution {
+    //917. 仅仅反转字母
+    public String reverseOnlyLetters(String s) {
+        byte[] bytes = s.getBytes();
+        //
+        int start = 0;
+        int end = bytes.length - 1;
+        while (end > start){
+            //start往前走，
+            while(start < end && !isLetter(bytes[start])) start++;
+            while(end > start && !isLetter(bytes[end])) end --;
+            if(end > start) {
+                byte temp = bytes[start];
+                bytes[start] = bytes[end];
+                bytes[end] = temp;
+                start ++;
+                end --;
+            }
+        }
+        return new String(bytes);
+    }
+
+    private boolean isLetter(byte b){
+        return (b >= 'a' && b <= 'z') || (b >= 'A' && b <= 'Z');
+    }
 
     //43. 字符串相乘
     public String multiply(String num1, String num2) {

@@ -6,6 +6,31 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //917. 仅仅反转字母
+    pub fn reverse_only_letters(s: String) -> String {
+        let mut bytes = s.clone().into_bytes();
+        let mut start = 0;
+        let mut end = bytes.len() - 1;
+        let is_letter = |b: u8| {
+            (b <= b'z' && b >= b'a') || (b >= b'A' && b <= b'Z')
+        };
+        while end > start {
+            while start < end && !is_letter(bytes[start]) {
+                start += 1;
+            }
+            while end > start && !is_letter(bytes[end]) {
+                end -= 1;
+            }
+            if end > start {
+                let temp = bytes[start];
+                bytes[start] = bytes[end];
+                bytes[end] = temp;
+                end -= 1;
+                start += 1;
+            }
+        }
+        String::from_utf8(bytes).unwrap()
+    }
     //43. 字符串相乘
     pub fn multiply(num1: String, num2: String) -> String {
         let multiply = |num1: &String, num2: i32, zero: usize| {

@@ -1,4 +1,20 @@
 class Solution {
+    //53. 最大子数组和
+    public int maxSubArray(int[] nums) {
+        //dp[i] ,以nums[i] 结尾的最大子数组，若前面是负的，不加，前面是正的，加上
+        int[] dp = new int[nums.length];
+        dp[0] = nums[0];
+        int res = dp[0];
+        for(int i = 1;i < nums.length;i ++){
+            if (dp[i - 1] > 0){
+                dp[i] = nums[i] + dp[i - 1];
+            }else{
+                dp[i] = nums[i];
+            }
+            res = Math.max(res,dp[i]);
+        }
+        return res;
+    }
     //673. 最长递增子序列的个数
     public int findNumberOfLIS(int[] nums) {
         int[] dp = new int[nums.length];

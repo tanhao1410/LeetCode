@@ -1,4 +1,37 @@
 class Solution {
+
+    //剑指 Offer II 021. 删除链表的倒数第 n 个结点
+    class ListNode {
+        int val;
+        ListNode next;
+        ListNode() {}
+        ListNode(int val) { this.val = val; }
+        ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+    }
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        //两个指针，一个先走n步，然后再走一步，第二个指针接着走，若第一个指针为最后一个元素了，则第二个指针的下一个元素即要删除的元素
+        if (head.next == null) return null;
+
+        //fast走一步
+        ListNode fast = head;
+        //fast再走n-1步
+        while (n > 1){
+            fast = fast.next;
+            n --;
+        }
+        //删除第一个元素
+        if (fast.next == null) return head.next;
+        //快的再走一步
+        fast = fast.next;
+        //慢的走一步
+        ListNode slow = head;
+        while (fast.next != null){
+            fast = fast.next;
+            slow = slow.next;
+        }
+        slow.next = slow.next.next;
+        return head;
+    }
     //53. 最大子数组和
     public int maxSubArray(int[] nums) {
         //dp[i] ,以nums[i] 结尾的最大子数组，若前面是负的，不加，前面是正的，加上

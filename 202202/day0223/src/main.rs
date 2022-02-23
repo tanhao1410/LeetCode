@@ -6,6 +6,39 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //剑指 Offer II 021. 删除链表的倒数第 n 个结点
+    pub fn remove_nth_from_end(head: Option<Box<ListNode>>, n: i32) -> Option<Box<ListNode>> {
+        ////两个指针，一个先走n步，然后再走一步，第二个指针接着走，若第一个指针为最后一个元素了，则第二个指针的下一个元素即要删除的元素
+        //只有一个元素的时候
+        if head.as_ref().unwrap().next.is_none() {
+            return None;
+        }
+        //先走一步
+        let mut fast = head.as_ref().unwrap();
+        //再走N - 1步
+        for _ in 1..n {
+            fast = fast.next.as_ref().unwrap();
+        }
+        //再走1步，走不动的情况下，说明移除的是第一个元素
+        if fast.next.is_none() {
+            return head.unwrap().next;
+        }
+        fast = fast.next.as_ref().unwrap();
+        //慢的走一步
+        let mut slow = head.as_ref().unwrap();
+        while fast.next.is_some() {
+            fast = fast.next.as_ref().unwrap();
+            slow = slow.next.as_ref().unwrap();
+        }
+        //slow指针指向的即是要删除的，slow.next = slow.next.next
+        //slow是不可变指针
+        let mut slow = slow.as_ref() as *const ListNode as *mut ListNode;
+        unsafe {
+            let remove_node = (*slow).next.take();
+            (*slow).next = remove_node.unwrap().next.take();
+        }
+        head
+    }
     //673. 最长递增子序列的个数
     pub fn find_number_of_lis(nums: Vec<i32>) -> i32 {
         //最长子数组长度，形成这样的子数组的个数
@@ -33,30 +66,28 @@ impl Solution {
     }
     //5. 最长回文子串
     pub fn longest_palindrome(s: String) -> String {
-        pub fn longest_palindrome(s: String) -> String {
-            let mut dp = vec![vec![false; s.len()]; s.len()];
-            //dp[i][j]
-            let bytes = s.as_bytes();
-            for i in 0..s.len() - 1 {
-                dp[i][i] = true;
-            }
-            let mut locaion = (0, 0);
-            for i in (0..s.len() - 1).rev() {
-                for j in (i + 1..s.len()) {
-                    if bytes[i] == bytes[j] {
-                        if i + 1 == j {
-                            dp[i][j] = true;
-                        } else if dp[i + 1][j - 1] {
-                            dp[i][j] = true;
-                        }
-                    }
-                    if dp[i][j] && j - i > locaion.1 - locaion.0 {
-                        locaion = (i, j);
+        let mut dp = vec![vec![false; s.len()]; s.len()];
+        //dp[i][j]
+        let bytes = s.as_bytes();
+        for i in 0..s.len() - 1 {
+            dp[i][i] = true;
+        }
+        let mut locaion = (0, 0);
+        for i in (0..s.len() - 1).rev() {
+            for j in (i + 1..s.len()) {
+                if bytes[i] == bytes[j] {
+                    if i + 1 == j {
+                        dp[i][j] = true;
+                    } else if dp[i + 1][j - 1] {
+                        dp[i][j] = true;
                     }
                 }
+                if dp[i][j] && j - i > locaion.1 - locaion.0 {
+                    locaion = (i, j);
+                }
             }
-            String::from_utf8_lossy(&bytes[locaion.0..locaion.1 + 1]).to_string()
         }
+        String::from_utf8_lossy(&bytes[locaion.0..locaion.1 + 1]).to_string()
     }
 
     //917. 仅仅反转字母
@@ -147,5 +178,21 @@ impl Solution {
             println!("{} * {} = {}", cur_num, num1, mutiply_num);
         }
         res
+    }
+}
+
+#[derive(PartialEq, Eq, Clone, Debug)]
+pub struct ListNode {
+    pub val: i32,
+    pub next: Option<Box<ListNode>>,
+}
+
+impl ListNode {
+    #[inline]
+    fn new(val: i32) -> Self {
+        ListNode {
+            next: None,
+            val,
+        }
     }
 }

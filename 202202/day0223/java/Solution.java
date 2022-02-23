@@ -1,4 +1,32 @@
 class Solution {
+    //剑指 Offer II 022. 链表中环的入口节点
+    public ListNode detectCycle(ListNode head) {
+        //快慢指针，先找到环，一个一次走两步，一个一次走一步
+        //在两个指针走到重合后，一个从头开始走，一个就在原地开始走，下一次重合的位置即环开始的地方
+        if (head == null || head.next == null) return null;
+        ListNode fast = head.next;//fast走两步
+        ListNode slow = head;//slow走一步
+        while(fast != null){
+            //fast 走两步
+            fast = fast.next;
+            if (fast == null) return null;
+            fast = fast.next;
+            //slow走一步
+            slow = slow.next;
+            //两者碰面了，说明环存在了
+            if (fast == slow){
+                //此时，fast从开头开始走，slow在原位值开始走
+                fast = head;
+                slow = slow.next;
+                while (fast != slow){
+                    slow = slow.next;
+                    fast = fast.next;
+                }
+                return fast;
+            }
+        }
+        return null;
+    }
 
     //剑指 Offer II 021. 删除链表的倒数第 n 个结点
     class ListNode {

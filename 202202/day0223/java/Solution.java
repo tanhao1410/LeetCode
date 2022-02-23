@@ -1,4 +1,44 @@
 class Solution {
+    //322. 零钱兑换
+    public int coinChange(int[] coins, int amount) {
+        // dp[i][j] 只用前i种硬币，凑j元钱的最少次数
+        // 凑不出来是-1
+        int[][] dp = new int[coins.length][amount + 1];
+        for(int i = 0;i < dp.length;i ++){
+            for(int j = 1;j < amount + 1;j ++){
+                if (coins[i] == j){
+                    dp[i][j] = 1;
+                }else{
+                    dp[i][j] = -1;
+                }
+            }
+        }
+        for(int i = 0;i < dp.length;i ++){
+            for(int j = 0;j < amount + 1;j ++){
+                //不能用本次的硬币
+                if (j < coins[i]){
+                    if (i > 0){
+                        dp[i][j] = dp[i-1][j];
+                    }
+                    continue;
+                }
+                //用一个当前货币
+                if (dp[i][j - coins[i]] >= 0){
+                    dp[i][j] = dp[i][j - coins[i]] + 1;
+                }
+
+                if (i > 0 && dp[i - 1][j] >= 0){
+                    if (dp[i][j] == -1){
+                        dp[i][j] = dp[i - 1][j];
+                    }else{
+                        // 不用当前硬币的情况
+                        dp[i][j] = Math.min(dp[i - 1][j],dp[i][j]);
+                    }
+                }
+            }
+        }
+        return dp[coins.length - 1][amount];
+    }
     //剑指 Offer II 022. 链表中环的入口节点
     public ListNode detectCycle(ListNode head) {
         //快慢指针，先找到环，一个一次走两步，一个一次走一步

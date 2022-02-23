@@ -1,4 +1,29 @@
 class Solution {
+    //416. 分割等和子集
+    public boolean canPartition(int[] nums) {
+        //用一个hashset
+        int sum = 0;
+        for(int i :nums) sum += i;
+        if (sum % 2== 1) return false;
+        int target = sum / 2;
+        HashSet<Integer> set = new HashSet();
+        set.add(nums[0]);
+        for(int i = 1;i <nums.length;i ++){
+            if (nums[i] < target){
+                HashSet<Integer> newSet = new HashSet();
+                for(Integer num : set){
+                    if (num + nums[i] == target){
+                        return true;
+                    }else if (num + nums[i] < target){
+                        newSet.add(num + nums[i]);
+                    }
+                }
+                set.addAll(newSet);
+            }
+        }
+        return set.contains(target);
+    }
+
     //322. 零钱兑换
     public int coinChange(int[] coins, int amount) {
         // dp[i][j] 只用前i种硬币，凑j元钱的最少次数

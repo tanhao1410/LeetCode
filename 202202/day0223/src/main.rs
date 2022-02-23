@@ -6,6 +6,34 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //5. 最长回文子串
+    pub fn longest_palindrome(s: String) -> String {
+        pub fn longest_palindrome(s: String) -> String {
+            let mut dp = vec![vec![false; s.len()]; s.len()];
+            //dp[i][j]
+            let bytes = s.as_bytes();
+            for i in 0..s.len() - 1 {
+                dp[i][i] = true;
+            }
+            let mut locaion = (0, 0);
+            for i in (0..s.len() - 1).rev() {
+                for j in (i + 1..s.len()) {
+                    if bytes[i] == bytes[j] {
+                        if i + 1 == j {
+                            dp[i][j] = true;
+                        } else if dp[i + 1][j - 1] {
+                            dp[i][j] = true;
+                        }
+                    }
+                    if dp[i][j] && j - i > locaion.1 - locaion.0 {
+                        locaion = (i, j);
+                    }
+                }
+            }
+            String::from_utf8_lossy(&bytes[locaion.0..locaion.1 + 1]).to_string()
+        }
+    }
+
     //917. 仅仅反转字母
     pub fn reverse_only_letters(s: String) -> String {
         let mut bytes = s.clone().into_bytes();

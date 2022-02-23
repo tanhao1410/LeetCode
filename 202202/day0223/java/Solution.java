@@ -1,4 +1,38 @@
 class Solution {
+    //187. 重复的DNA序列
+    public List<String> findRepeatedDnaSequences(String s) {
+        //思路：hashmap，存储每一次10个长度，共2^11 2048种。
+        //优化：将字符串变为数字，每一次后移，其实就是移动两位，加上新的数而已。看数字是否出现过即可。
+        // acgt => 0 1 2 3
+        Map<Character,Integer> map = new HashMap();
+        Map<Integer,Integer> map2 = new HashMap();
+        map.put('A',0);
+        map.put('C',1);
+        map.put('G',2);
+        map.put('T',3);
+        List<String> res = new ArrayList();
+        if (s.length() < 10) return res;
+        //先求前十位
+        int window = 0;
+        for(int i = 0;i < 10;i ++){
+            window <<= 2;
+            window += map.get(s.charAt(i));
+        }
+        map2.put(window,1);
+        for(int i = 10;i < s.length();i ++){
+            //求移动后新的数
+            window <<= 2;
+            //只保留前二十位
+            window &= 0x000fffff;
+            window += map.get(s.charAt(i));
+            int count = map2.getOrDefault(window,0);
+            if (count == 1){
+                res.add(s.substring(i - 9,i + 1));
+            }
+            map2.put(window,count + 1);
+        }
+        return res;
+    }
     //917. 仅仅反转字母
     public String reverseOnlyLetters(String s) {
         byte[] bytes = s.getBytes();

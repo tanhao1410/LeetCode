@@ -6,6 +6,18 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //剑指 Offer II 024. 反转链表
+    pub fn reverse_list(mut head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        //空链表或只有一个元素的链表，直接返回即可
+        let mut res = None;
+        while let Some(mut node) = head {
+            head = node.next.take();
+            node.next = res;
+            res = Some(node);
+        }
+        res
+    }
+
     //剑指 Offer II 021. 删除链表的倒数第 n 个结点
     pub fn remove_nth_from_end(head: Option<Box<ListNode>>, n: i32) -> Option<Box<ListNode>> {
         ////两个指针，一个先走n步，然后再走一步，第二个指针接着走，若第一个指针为最后一个元素了，则第二个指针的下一个元素即要删除的元素

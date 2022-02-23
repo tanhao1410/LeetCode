@@ -6,6 +6,17 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //48. 旋转图像
+    pub fn rotate(matrix: &mut Vec<Vec<i32>>) {
+        let temp = matrix.clone();
+        let n = temp.len();
+        for i in 0..matrix.len() {
+            //旋转某一行
+            for j in 0..matrix.len() {
+                matrix[j][n - 1 - i] = temp[i][j];
+            }
+        }
+    }
     //剑指 Offer II 024. 反转链表
     pub fn reverse_list(mut head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
         //空链表或只有一个元素的链表，直接返回即可

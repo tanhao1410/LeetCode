@@ -8,6 +8,16 @@ struct Solution;
 
 impl Solution {
     //2149. 按符号重排数组
+    pub fn rearrange_array2(nums: Vec<i32>) -> Vec<i32> {
+        //[*chain(*zip((x for x in nums if x > 0), (x for x in nums if x < 0)))]
+        nums
+            .iter()
+            .filter(|&&i| i > 0)
+            .zip(nums.iter().filter(|&&i| i < 0))
+            .flat_map(|(p, q)| vec![*p, *q].into_iter())
+            .collect()
+    }
+    //2149. 按符号重排数组
     pub fn rearrange_array(nums: Vec<i32>) -> Vec<i32> {
         let mut res = vec![0; nums.len()];
         let (mut i, mut j, mut k) = (0, 0, 0);

@@ -7,6 +7,29 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //2149. 按符号重排数组
+    pub fn rearrange_array(nums: Vec<i32>) -> Vec<i32> {
+        let mut res = vec![0; nums.len()];
+        let (mut i, mut j, mut k) = (0, 0, 0);
+        while k < nums.len() {
+            while i < nums.len() && nums[i] < 0 {
+                i += 1;
+            }
+            while j < nums.len() && nums[j] > 0 {
+                j += 1;
+            }
+            if k & 1 == 0 {
+                res[k] = nums[i];
+                k += 1;
+                i += 1;
+            } else {
+                res[k] = nums[j];
+                j += 1;
+                k += 1;
+            }
+        }
+        res
+    }
     //79. 单词搜索
     pub fn exist(board: Vec<Vec<char>>, word: String) -> bool {
         let mut visit = vec![vec![false; board[0].len()]; board.len()];

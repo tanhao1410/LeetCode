@@ -1,4 +1,21 @@
 class Solution {
+    //2149. 按符号重排数组
+    public int[] rearrangeArray(int[] nums) {
+        int[] res = new int[nums.length];
+        int i = 0;
+        int j = 0;
+        int k = 0;
+        while (k < nums.length){
+            while(i < nums.length && nums[i] < 0) i ++;
+            while(j < nums.length && nums[j] > 0) j ++;
+            if (k % 2 == 0){
+                res[k++] = nums[i++];
+            }else{
+                res[k++] = nums[j++];
+            }
+        }
+        return res;
+    }
     //79. 单词搜索
     public boolean exist(char[][] board, String word) {
         boolean[][] used = new boolean[board.length][board[0].length];

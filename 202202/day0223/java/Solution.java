@@ -1,4 +1,38 @@
 class Solution {
+    //79. 单词搜索
+    public boolean exist(char[][] board, String word) {
+        boolean[][] used = new boolean[board.length][board[0].length];
+        for(int i = 0;i < board.length;i ++){
+            for (int j = 0;j <board[0].length;j ++){
+                used[i][j] = true;
+                if (check(board,used,i,j,word)){
+                    return true;
+                }
+                used[i][j] = false;
+            }
+        }
+        return false;
+    }
+
+    private boolean check(char[][] board,boolean[][] used,int x,int y,String word){
+        if (word.length() == 1){
+            return word.charAt(0) == board[x][y];
+        }
+        if (word.charAt(0) != board[x][y]) return false;
+        int[][] dirctions = new int[][]{{1,0},{-1,0},{0,1},{0,-1}};
+        for(int[] dirct : dirctions){
+            if (x + dirct[0] >= 0 && x + dirct[0] < board.length && y + dirct[1] >= 0 && y + dirct[1] < board[0].length){
+                if (!used[x + dirct[0]][y + dirct[1]]){
+                    used[x + dirct[0]][y+dirct[1]] =  true;
+                    if (check(board,used,x + dirct[0],y + dirct[1],word.substring(1,word.length()))){
+                        return true;
+                    }
+                    used[x + dirct[0]][y + dirct[1]] = false;
+                }
+            }
+        }
+        return false;
+    }
     //416. 分割等和子集
     public boolean canPartition(int[] nums) {
         //用一个hashset

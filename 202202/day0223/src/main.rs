@@ -1,11 +1,50 @@
 fn main() {
     println!("Hello, world!");
     println!("{}", Solution::multiply("9".to_string(), "9".to_string()));
+    println!("{}", Solution::exist(vec![vec!['A', 'B'], vec!['C', 'D']], "ABAB".to_string()));
 }
 
 struct Solution;
 
 impl Solution {
+    //79. 单词搜索
+    pub fn exist(board: Vec<Vec<char>>, word: String) -> bool {
+        let mut visit = vec![vec![false; board[0].len()]; board.len()];
+        let bytes = word.as_bytes();
+        for i in 0..board.len() {
+            for j in 0..board[0].len() {
+                visit[i][j] = true;
+                if Self::check(&board, &mut visit, (i, j), &bytes) {
+                    return true;
+                }
+                visit[i][j] = false;
+            }
+        }
+        false
+    }
+    //从index位置开始查看，在剩下的区间里是否存在word
+    fn check(board: &Vec<Vec<char>>, visit: &mut Vec<Vec<bool>>, index: (usize, usize), word: &[u8]) -> bool {
+        if word.len() == 1 {
+            return board[index.0][index.1] as u8 == word[0];
+        }
+        if word[0] != board[index.0][index.1] as u8 {
+            return false;
+        }
+        //四个方向移动
+        let directions = vec![(1, 0), (0, 1), (-1, 0), (0, -1)];
+        for (x, y) in directions {
+            if index.0 as i32 + x >= 0 && index.0 as i32 + x < board.len() as i32
+                && index.1 as i32 + y >= 0 && index.1 as i32 + y < board[0].len() as i32
+                && !visit[(index.0 as i32 + x) as usize][(index.1 as i32 + y) as usize] {
+                visit[(index.0 as i32 + x) as usize][(index.1 as i32 + y) as usize] = true;
+                if Self::check(board, visit, ((index.0 as i32 + x) as usize, (index.1 as i32 + y) as usize), &word[1..]) {
+                    return true;
+                }
+                visit[(index.0 as i32 + x) as usize][(index.1 as i32 + y) as usize] = false;
+            }
+        }
+        false
+    }
     //48. 旋转图像
     pub fn rotate(matrix: &mut Vec<Vec<i32>>) {
         let temp = matrix.clone();

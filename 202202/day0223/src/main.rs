@@ -6,6 +6,31 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //673. 最长递增子序列的个数
+    pub fn find_number_of_lis(nums: Vec<i32>) -> i32 {
+        //最长子数组长度，形成这样的子数组的个数
+        let mut dp = vec![(1, 1); nums.len()];
+        let mut max = 1;
+        for i in 1..nums.len() {
+            let mut item = (0, 0);
+            for j in 0..i {
+                if nums[i] > nums[j] {
+                    if dp[j].0 > item.0 {
+                        item = dp[j];
+                    } else if dp[j].0 == item.0 {
+                        item.1 += dp[j].1;
+                    }
+                }
+            }
+            dp[i] = (item.0 + 1, item.1);
+            max = max.max(dp[i].0);
+        }
+        dp
+            .into_iter()
+            .filter(|&e| e.0 == max)
+            .map(|e| e.1)
+            .sum()
+    }
     //5. 最长回文子串
     pub fn longest_palindrome(s: String) -> String {
         pub fn longest_palindrome(s: String) -> String {

@@ -1,4 +1,34 @@
 class Solution {
+    //673. 最长递增子序列的个数
+    public int findNumberOfLIS(int[] nums) {
+        int[] dp = new int[nums.length];
+        int[] dpCount = new int[nums.length];
+        int dpMax = 1;
+        dp[0] = 1;
+        dpCount[0] = 1;
+        for(int i = 1;i < nums.length;i ++){
+            int max = 0;
+            int maxCount = 0;
+            //需要记录有几个可以产生最大子序列情况。
+            for(int j = 0;j < i;j ++){
+                if (nums[i] > nums[j] && dp[j] > max){
+                    max = dp[j];
+                    maxCount = 0;
+                }
+                if (max == dp[j]) maxCount += dpCount[j];
+            }
+            maxCount = Math.max(1,maxCount);
+            dp[i] = max + 1;
+            dpCount[i] = maxCount;
+            dpMax = Math.max(dpMax,dp[i]);
+        }
+        //找到最大的值
+        int res = 0;
+        for(int i = 0;i < nums.length;i ++) {
+            if (dp[i] == dpMax) res += dpCount[i];
+        }
+        return res;
+    }
     //300. 最长递增子序列
     public int lengthOfLIS(int[] nums) {
         //dp[i] 代表以nums[i]结尾的最长子序列长度

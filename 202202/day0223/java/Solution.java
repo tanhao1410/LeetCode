@@ -1,4 +1,20 @@
 class Solution {
+    //300. 最长递增子序列
+    public int lengthOfLIS(int[] nums) {
+        //dp[i] 代表以nums[i]结尾的最长子序列长度
+        int[] dp = new int[nums.length];
+        int res = 1;
+        dp[0] = 1;
+        for(int i = 1;i < nums.length;i ++){
+            int item = 0;
+            for(int j = 0;j < i;j ++){
+                if(nums[i] > nums[j] && dp[j] > item) item = dp[j];
+            }
+            dp[i] = item + 1;
+            res = Math.max(dp[i],res);
+        }
+        return res;
+    }
     //187. 重复的DNA序列
     public List<String> findRepeatedDnaSequences(String s) {
         //思路：hashmap，存储每一次10个长度，共2^11 2048种。

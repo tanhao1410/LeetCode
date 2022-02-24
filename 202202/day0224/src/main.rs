@@ -3,6 +3,23 @@ fn main() {
 }
 
 impl Solution {
+    //583. 两个字符串的删除操作
+    pub fn min_distance(word1: String, word2: String) -> i32 {
+        //求最长公共子序列
+        let mut dp = vec![vec![0; word2.len() + 1]; word1.len() + 1];
+        let bytes1 = word1.as_bytes();
+        let bytes2 = word2.as_bytes();
+        for i in 0..word1.len() {
+            for j in 0..word2.len() {
+                if bytes1[i] == bytes2[j] {
+                    dp[i + 1][j + 1] = dp[i][j] + 1;
+                } else {
+                    dp[i + 1][j + 1] = dp[i][j + 1].max(dp[i + 1][j]);
+                }
+            }
+        }
+        word1.len() as i32 + word2.len() as i32 - 2 * dp[word1.len()][word2.len()]
+    }
     //1143. 最长公共子序列
     pub fn longest_common_subsequence(text1: String, text2: String) -> i32 {
         //dp[i][j] if text1[i] == text2[j] dp[i][j] = dp[i-1][j-1] + 1。
@@ -10,12 +27,12 @@ impl Solution {
             let mut dp = vec![vec![0; text2.len() + 1]; text1.len() + 1];
             let bytes1 = text1.as_bytes();
             let bytes2 = text2.as_bytes();
-            for i in 0..text1.len(){
+            for i in 0..text1.len() {
                 for j in 0..text2.len() {
                     if bytes1[i] == bytes2[j] {
-                        dp[i + 1][j+1] = dp[i][j] + 1;
-                    }else{
-                        dp[i+1][j+1] = dp[i+1][j].max(dp[i][j+1]);
+                        dp[i + 1][j + 1] = dp[i][j] + 1;
+                    } else {
+                        dp[i + 1][j + 1] = dp[i + 1][j].max(dp[i][j + 1]);
                     }
                 }
             }

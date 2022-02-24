@@ -3,6 +3,32 @@ fn main() {
 }
 
 impl Solution {
+    //435. 无重叠区间
+    pub fn erase_overlap_intervals(mut intervals: Vec<Vec<i32>>) -> i32 {
+        // 动态规划，选择尽量多的不重叠的区间,以区间 i 为最后一个区间，可以选出的区间数量的最大值
+        // intervals.sort_unstable_by_key(|e| e[0]);
+        // let mut dp = vec![1; intervals.len()];
+        // for i in 1..dp.len() {
+        //     for j in 0..i {
+        //         if intervals[i][0] >= intervals[j][1] {
+        //             dp[i] = dp[i].max(dp[j] + 1);
+        //         }
+        //     }
+        // }
+        // intervals.len() as i32 - dp.into_iter().max().unwrap()
+        //贪心算法，按照右边进行排序，然后，依次判断是否可以加入进来，如果能加入进来，则+1，不能加入进来 ，继续下一个。
+        intervals.sort_unstable_by_key(|e| e[1]);
+        let mut right = intervals[0][1];
+        let mut count = 1;
+        for i in 1..intervals.len() {
+            //大于最右边，说明可以加入进来
+            if intervals[i][0] >= right {
+                count += 1;
+                right = intervals[i][1];
+            }
+        }
+        intervals.len() as i32 - count
+    }
     //496. 下一个更大元素 I
     pub fn next_greater_element(nums1: Vec<i32>, mut nums2: Vec<i32>) -> Vec<i32> {
         use std::collections::HashMap;

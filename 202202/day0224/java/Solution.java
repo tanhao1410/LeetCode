@@ -1,4 +1,15 @@
 class Solution {
+    //896. 单调数列
+    public boolean isMonotonic(int[] nums) {
+        boolean down = false;
+        boolean up  = false;
+        for(int i = 1;i < nums.length;i ++){
+            if (nums[i]>nums[i - 1]) up = true;
+            if (nums[i] < nums[i - 1]) down = true;
+            if (up && down) return false;
+        }
+        return true;
+    }
     //583. 两个字符串的删除操作
     public int minDistance(String word1, String word2) {
         int[][] dp = new int[word1.length()+1][word2.length() + 1];

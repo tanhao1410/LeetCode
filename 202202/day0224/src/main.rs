@@ -3,6 +3,17 @@ fn main() {
 }
 
 impl Solution {
+    //896. 单调数列
+    pub fn is_monotonic(nums: Vec<i32>) -> bool {
+        nums
+            .iter()
+            .zip(nums.iter().skip(1))
+            .all(|(&i, &j)| j >= i)
+            || nums
+            .iter()
+            .zip(nums.iter().skip(1))
+            .all(|(&i, &j)| j <= i)
+    }
     //583. 两个字符串的删除操作
     pub fn min_distance(word1: String, word2: String) -> i32 {
         //求最长公共子序列

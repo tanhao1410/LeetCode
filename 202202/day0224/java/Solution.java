@@ -1,4 +1,29 @@
 class Solution {
+    //142. 环形链表 II
+    public ListNode detectCycle(ListNode head) {
+        if (head == null || head.next == null) return null;
+        //快慢指针先找=判断是否有换，
+        ListNode fast = head.next;
+        ListNode slow = head;
+        while(fast != null && slow != null){
+            fast = fast.next;
+            if (fast == null) return null;
+            fast = fast.next;
+            slow = slow.next;
+            if (fast == slow){
+                //成环了
+                //此时，fast指针跳到head，一步一步走即可
+                fast = head;
+                slow = slow.next;
+                while(fast != slow){
+                    slow = slow.next;
+                    fast = fast.next;
+                }
+                return fast;
+            }
+        }
+        return null;
+    }
     //2. 两数相加
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         //用l1返回结果

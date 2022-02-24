@@ -1,4 +1,52 @@
 class Solution {
+    //1706. 球会落何处
+    public int[] findBall(int[][] grid) {
+        //思路：对于每一个格子来说，它上面的球会往哪个方向走呢？
+        // 如果是 1 ，则球往下一个，否则往左边走
+        // 什么情况下，球下不去了呢？往右边走时，它右边的格子是-1，往左边走时，它左边的格子是+1
+        //一层一层往下掉，
+        boolean[] balls = new boolean[grid[0].length];
+        int[] ballsRes  = new int[balls.length];
+        for(int i = 0;i < balls.length;i ++){
+            balls[i] = true;
+            ballsRes[i] = i;
+        }
+        return findBall(grid,0,balls,ballsRes);
+
+    }
+    //balls :每一个格是否有球，ballsRes：每一格球的最开始来源
+    private int[] findBall(int[][] grid,int layer,boolean[] balls,int[] ballsRes){
+        if (layer == grid.length){
+            int[] res = new int[grid[0].length];
+            for(int i = 0;i < res.length;i ++) res[i] = -1;
+            for(int i = 0;i < res.length;i ++){
+                if (balls[i]){
+                    res[ballsRes[i]] = i;
+                }
+            }
+            return res;
+        }
+        boolean[] nextLayerBalls = new boolean[balls.length];
+        int[] nextLayerBallsRes = new int[balls.length];
+        for(int i = 0;i < ballsRes.length;i ++){
+            //判断是否有球
+            if(balls[i]){
+                if (grid[layer][i] == 1){//往右边走
+                    if (i != balls.length - 1 && grid[layer][i + 1] != -1){
+                        //可以往下落
+                        nextLayerBalls[i + 1] = true;
+                        nextLayerBallsRes[i + 1] = ballsRes[i];
+                    }
+                }else{
+                    if (i != 0 && grid[layer][i - 1] != 1){
+                        nextLayerBalls[i - 1] = true;
+                        nextLayerBallsRes[i - 1] = ballsRes[i];
+                    }
+                }
+            }
+        }
+        return findBall(grid,layer + 1,nextLayerBalls,nextLayerBallsRes);
+    }
     //142. 环形链表 II
     public ListNode detectCycle(ListNode head) {
         if (head == null || head.next == null) return null;

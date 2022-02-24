@@ -3,6 +3,47 @@ fn main() {
 }
 
 impl Solution {
+    //1706. 球会落何处
+    pub fn find_ball(grid: Vec<Vec<i32>>) -> Vec<i32> {
+        //球 怎么表示哪一个格子没了呢
+        let mut balls = vec![(false, 0); grid[0].len()];
+        for i in 0..balls.len() {
+            balls[i] = (true, i);
+        }
+        Self::find_ball2(&grid, balls)
+    }
+    fn find_ball2(grid: &[Vec<i32>], balls: Vec<(bool, usize)>) -> Vec<i32> {
+        //说明走到最后一层了，返回结果
+        if grid.len() == 0 {
+            let mut res = vec![-1; balls.len()];
+            for i in 0..balls.len() {
+                //有球，谁的球
+                if balls[i].0 {
+                    res[balls[i].1] = i as i32;
+                }
+            }
+            return res;
+        }
+        //球的情况
+        let mut new_balls = vec![(false, 0); balls.len()];
+        //往下一层开始滚动
+        for i in 0..grid[0].len() {
+            //先判断有没有球
+            if balls[i].0 {
+                //往哪流呢
+                if grid[0][i] == 1 {//右边
+                    if i != balls.len() - 1 && grid[0][i + 1] != -1 {
+                        new_balls[i + 1] = (true, balls[i].1);
+                    }
+                } else {
+                    if i != 0 && grid[0][i - 1] != 1 {
+                        new_balls[i - 1] = (true, balls[i].1);
+                    }
+                }
+            }
+        }
+        Self::find_ball2(&grid[1..], new_balls)
+    }
     //2. 两数相加
     pub fn add_two_numbers(mut l1: Option<Box<ListNode>>, mut l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
         //每一次创建一个

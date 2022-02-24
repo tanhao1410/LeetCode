@@ -3,6 +3,25 @@ fn main() {
 }
 
 impl Solution {
+    //28. 实现 strStr()
+    pub fn str_str(haystack: String, needle: String) -> i32 {
+        if needle.len() == 0 {
+            return 0;
+        }
+        if needle.len() > haystack.len() {
+            return -1;
+        }
+        let haystack = haystack.as_bytes();
+        let needle = needle.as_bytes();
+        for i in 0..haystack.len() - needle.len() + 1 {
+            if haystack[i] == needle[0] {
+                if haystack.iter().skip(i).zip(needle.iter()).all(|(&e, &q)| e == q) {
+                    return i as i32;
+                }
+            }
+        }
+        -1
+    }
     //896. 单调数列
     pub fn is_monotonic(nums: Vec<i32>) -> bool {
         nums

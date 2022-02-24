@@ -1,4 +1,22 @@
 class Solution {
+    //28. 实现 strStr()
+    public int strStr(String haystack, String needle) {
+        if(needle.length() == 0) return 0;
+        for(int i = 0;i < haystack.length() - needle.length() + 1;i ++){
+            if (haystack.charAt(i) == needle.charAt(0)){
+                //看后面是否相同。
+                boolean flag = true;
+                for(int j = i + 1;j < i + needle.length();j ++){
+                    if (haystack.charAt(j) != needle.charAt(j - i)) {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag) return i;
+            }
+        }
+        return -1;
+    }
     //896. 单调数列
     public boolean isMonotonic(int[] nums) {
         boolean down = false;

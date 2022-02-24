@@ -3,6 +3,25 @@ fn main() {
 }
 
 impl Solution {
+    //1143. 最长公共子序列
+    pub fn longest_common_subsequence(text1: String, text2: String) -> i32 {
+        //dp[i][j] if text1[i] == text2[j] dp[i][j] = dp[i-1][j-1] + 1。
+        pub fn longest_common_subsequence(text1: String, text2: String) -> i32 {
+            let mut dp = vec![vec![0; text2.len() + 1]; text1.len() + 1];
+            let bytes1 = text1.as_bytes();
+            let bytes2 = text2.as_bytes();
+            for i in 0..text1.len(){
+                for j in 0..text2.len() {
+                    if bytes1[i] == bytes2[j] {
+                        dp[i + 1][j+1] = dp[i][j] + 1;
+                    }else{
+                        dp[i+1][j+1] = dp[i+1][j].max(dp[i][j+1]);
+                    }
+                }
+            }
+            dp[text1.len()][text2.len()]
+        }
+    }
     //435. 无重叠区间
     pub fn erase_overlap_intervals(mut intervals: Vec<Vec<i32>>) -> i32 {
         // 动态规划，选择尽量多的不重叠的区间,以区间 i 为最后一个区间，可以选出的区间数量的最大值

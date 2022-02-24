@@ -3,6 +3,29 @@ fn main() {
 }
 
 impl Solution {
+    //496. 下一个更大元素 I
+    pub fn next_greater_element(nums1: Vec<i32>, mut nums2: Vec<i32>) -> Vec<i32> {
+        use std::collections::HashMap;
+        let mut map = HashMap::new();
+        let mut stack = vec![];
+        for i in (0..nums2.len()).rev() {
+            let cur = nums2[i];
+            map.insert(cur, i);
+            while !stack.is_empty() && *stack.last().unwrap() < cur {
+                stack.pop();
+            }
+            if let Some(top) = stack.last() {
+                nums2[i] = *top;
+            } else {
+                nums2[i] = -1;
+            }
+            stack.push(cur);
+        }
+        nums1
+            .into_iter()
+            .map(|v| nums2[*map.get(&v).unwrap()])
+            .collect()
+    }
     //1706. 球会落何处
     pub fn find_ball(grid: Vec<Vec<i32>>) -> Vec<i32> {
         //球 怎么表示哪一个格子没了呢

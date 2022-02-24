@@ -1,4 +1,40 @@
 class Solution {
+    //496. 下一个更大元素 I
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        //元素的位置可以用一个map来快读获得。下一个比自己大的元素怎么获取呢？
+        int[] next = new int[nums2.length];
+        Map<Integer,Integer> map = new HashMap();
+        Stack<Integer> stack = new Stack();
+        for(int i = nums2.length - 1;i >= 0;i --){
+            int cur = nums2[i];
+            map.put(cur,i);
+            if (stack.size() == 0){
+                stack.push(cur);
+                next[i] = -1;
+            }else{
+                //看stack顶部的数是否大于自己，如果大于自己
+                int top = stack.peek();
+                if (top > cur){
+                    stack.push(cur);
+                    next[i] = top;
+                }else{
+                    while(stack.size() > 0 && stack.peek() < cur) stack.pop();
+                    if (stack.size() == 0){
+                        stack.push(cur);
+                        next[i] = -1;
+                    }else{
+                        next[i] = stack.peek();
+                        stack.push(cur);
+                    }
+                }
+            }
+        }
+        int[] res = new int[nums1.length];
+        for(int i = 0;i < res.length;i ++){
+            res[i] = next[map.get(nums1[i])];
+        }
+        return res;
+    }
     //1706. 球会落何处
     public int[] findBall(int[][] grid) {
         //思路：对于每一个格子来说，它上面的球会往哪个方向走呢？

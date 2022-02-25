@@ -1,4 +1,23 @@
 class Solution {
+    //343. 整数拆分
+    public int integerBreak(int n) {
+        //每一个数都可以拆分成2 3 4 。。。
+        // dp[i] 代表i 能拆分出来后，所形成的的最大数
+        int[] dp = new int[n + 1];
+        if(n < 4){
+            return n - 1;
+        }
+        dp[2] = 1;
+        dp[3] = 2;
+        for(int i = 4;i <= n;i ++){
+            int max = i;
+            for(int j = 2;j < i ;j ++){
+                max = Math.max(max,j * Math.max(dp[i - j],i - j));
+            }
+            dp[i] = max;
+        }
+        return dp[n];
+    }
     //322. 零钱兑换
     public int coinChange(int[] coins, int amount) {
         // dp[i][j] 前i种硬币，能凑出j元的最少硬币数

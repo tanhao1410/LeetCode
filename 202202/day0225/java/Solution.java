@@ -1,4 +1,26 @@
 class Solution {
+    //160. 相交链表
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        //双指针
+        ListNode p1 = headA;
+        ListNode p2 = headB;
+        boolean flag1 = true;
+        boolean flag2 = true;
+        while(p1 != null && p2 != null){
+            if (p1 == p2) return p1;
+            p1 = p1.next;
+            p2 = p2.next;
+            if (p1 == null && flag1) {
+                p1 = headB;
+                flag1 = false;
+            }
+            if (p2 == null && flag2) {
+                p2 = headA;
+                flag2 = false;
+            }
+        }
+        return null;
+    }
     //279. 完全平方数
     public int numSquares(int n) {
         int[] nums = new int[100];

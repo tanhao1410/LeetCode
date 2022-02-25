@@ -3,6 +3,49 @@ fn main() {
 }
 
 impl Solution {
+    //剑指 Offer II 027. 回文链表
+    pub fn is_palindrome(mut head: Option<Box<ListNode>>) -> bool {
+        //空间0(1)，不能用数组来存了！思路：先求长度，走到一半后，在后面逆转链表，再比较是否相同。
+        let reverse = |mut head: Option<Box<ListNode>>| {
+            let mut pre = None;
+            while let Some(mut node) = head {
+                head = node.next.take();
+                node.next = pre;
+                pre = Some(node);
+            }
+            pre
+        };
+        let length = |mut head: &Option<Box<ListNode>>| {
+            let mut res = 0;
+            while let Some(node) = head {
+                res += 1;
+                head = &node.next;
+            }
+            res
+        };
+
+        let equal = |mut head1: &Option<Box<ListNode>>, mut head2: &Option<Box<ListNode>>| {
+            while head1.is_some() && head2.is_some() {
+                if head1.as_ref().unwrap().val != head2.as_ref().unwrap().val {
+                    return false;
+                }
+                head1 = &head1.as_ref().unwrap().next;
+                head2 = &head2.as_ref().unwrap().next;
+            }
+            true
+        };
+        let len = length(&head);
+        if len < 2 {
+            return true;
+        }
+        //需要后半部分
+        let mut p = head.as_mut().unwrap();
+        for _ in 0..(len + 1) / 2 - 1 {
+            p = p.next.as_mut().unwrap();
+        }
+        equal(&reverse(p.next.take()), &head)
+    }
+
     //82. 删除排序链表中的重复元素 II
     pub fn delete_duplicates(mut head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
         //如果有重复的，则都要删除，采用弹出，加入方法

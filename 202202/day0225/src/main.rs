@@ -3,6 +3,25 @@ fn main() {
 }
 
 impl Solution {
+    //110. 平衡二叉树
+    pub fn is_balanced(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        if let Some(node) = root {
+            if (Self::tree_height(&node.borrow().left) - Self::tree_height(&node.borrow().right)).abs() > 1 {
+                return false;
+            }
+            let mut ref_mut = node.borrow_mut();
+            return Self::is_balanced(ref_mut.left.take())
+                && Self::is_balanced(ref_mut.right.take());
+        }
+        true
+    }
+    fn tree_height(root: &Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        if let Some(node) = root {
+            return 1 + Self::tree_height(&node.borrow().left)
+                .max(Self::tree_height(&node.borrow().right));
+        }
+        0
+    }
     //剑指 Offer II 027. 回文链表
     pub fn is_palindrome(mut head: Option<Box<ListNode>>) -> bool {
         //空间0(1)，不能用数组来存了！思路：先求长度，走到一半后，在后面逆转链表，再比较是否相同。
@@ -118,6 +137,27 @@ impl ListNode {
         ListNode {
             next: None,
             val,
+        }
+    }
+}
+
+use std::rc::Rc;
+use std::cell::RefCell;
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct TreeNode {
+    pub val: i32,
+    pub left: Option<Rc<RefCell<TreeNode>>>,
+    pub right: Option<Rc<RefCell<TreeNode>>>,
+}
+
+impl TreeNode {
+    #[inline]
+    pub fn new(val: i32) -> Self {
+        TreeNode {
+            val,
+            left: None,
+            right: None,
         }
     }
 }

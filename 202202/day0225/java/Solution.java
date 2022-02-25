@@ -1,4 +1,16 @@
 class Solution {
+    //119. 杨辉三角 II
+    public List<Integer> getRow(int rowIndex) {
+        Integer[] res = new Integer[]{1};
+        for(int i = 1;i <= rowIndex;i ++){
+            Integer[] next = new Integer[res.length + 1];
+            next[0] = 1;
+            next[res.length] = 1;
+            for(int j = 1;j < res.length;j ++) next[j] = res[j] + res[j - 1];
+            res = next;
+        }
+        return Arrays.asList(res);
+    }
     //343. 整数拆分
     public int integerBreak(int n) {
         //每一个数都可以拆分成2 3 4 。。。

@@ -1,4 +1,28 @@
 class Solution {
+    //279. 完全平方数
+    public int numSquares(int n) {
+        int[] nums = new int[100];
+        for(int i = 1;i <=100;i ++) nums[i - 1] = i * i;
+        //变成了零钱兑换问题
+        int[][] dp = new int[100][n+1];
+        for(int i = 0;i < 100;i ++){
+            for(int j = 1;j <= n;j ++){
+                //用nums[i],不用nums[i]
+                if(j >= nums[i]){
+                    dp[i][j] = dp[i][j - nums[i]] + 1;
+                    if(i > 0 && dp[i - 1][j] < dp[i][j]){
+                        dp[i][j] = dp[i - 1][j];
+                    }
+                }else {
+                    //不能用这一个
+                    if (i > 0){
+                        dp[i][j] = dp[i - 1][j];
+                    }
+                }
+            }
+        }
+        return dp[99][n];
+    }
     //119. 杨辉三角 II
     public List<Integer> getRow(int rowIndex) {
         Integer[] res = new Integer[]{1};

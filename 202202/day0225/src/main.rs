@@ -3,6 +3,48 @@ fn main() {
 }
 
 impl Solution {
+    //剑指 Offer II 026. 重排链表
+    pub fn reorder_list(mut head: &mut Option<Box<ListNode>>) {
+        //空间0(1)，不能用数组来存了！思路：先求长度，走到一半后，在后面逆转链表，再比较是否相同。
+        let reverse = |mut head: Option<Box<ListNode>>| {
+            let mut pre = None;
+            while let Some(mut node) = head {
+                head = node.next.take();
+                node.next = pre;
+                pre = Some(node);
+            }
+            pre
+        };
+        let length = |mut head: &Option<Box<ListNode>>| {
+            let mut res = 0;
+            while let Some(node) = head {
+                res += 1;
+                head = &node.next;
+            }
+            res
+        };
+        let len = length(head);
+        if len < 3 {
+            return;
+        }
+        //需要后半部分
+        let mut p = head.as_mut().unwrap();
+        for _ in 0..(len + 1) / 2 - 1 {
+            p = p.next.as_mut().unwrap();
+        }
+        let mut list2 = reverse(p.next.take());
+        while let Some(node) = head {
+            let mut temp = node.next.take();
+            if list2.is_none() {
+                return;
+            }
+            let temp2 = list2.as_mut().unwrap().next.take();
+            list2.as_mut().unwrap().next = temp;
+            node.next = list2;
+            list2 = temp2;
+            head = &mut node.next.as_ref().unwrap().next;
+        }
+    }
     //110. 平衡二叉树
     pub fn is_balanced(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
         if let Some(node) = root {

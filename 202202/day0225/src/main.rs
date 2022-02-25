@@ -3,6 +3,27 @@ fn main() {
 }
 
 impl Solution {
+    //82. 删除排序链表中的重复元素 II
+    pub fn delete_duplicates(mut head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        //如果有重复的，则都要删除，采用弹出，加入方法
+        // 每一次必须知道本次的情况下，才能加入上一个。
+        let mut res = Some(Box::new(ListNode::new(0)));
+        let mut p = res.as_mut().unwrap();
+        let mut pre = 101;
+        while let Some(mut node) = head {
+            head = node.next.take();
+            //如果当前访问的值与下一个值相等或与上一个值相等，则当前值不加进去。
+            if (head.is_some() && head.as_ref().unwrap().val == node.val)
+                || node.val == pre {
+                pre = node.val;
+            } else {
+                pre = node.val;
+                p.next = Some(node);
+                p = p.next.as_mut().unwrap();
+            }
+        }
+        res.as_mut().unwrap().next.take()
+    }
     //322. 零钱兑换
     pub fn coin_change(coins: Vec<i32>, amount: i32) -> i32 {
         let mut dp = vec![vec![-1; amount as usize + 1]; coins.len()];
@@ -41,3 +62,19 @@ impl Solution {
 }
 
 struct Solution;
+
+#[derive(PartialEq, Eq, Clone, Debug)]
+pub struct ListNode {
+    pub val: i32,
+    pub next: Option<Box<ListNode>>,
+}
+
+impl ListNode {
+    #[inline]
+    fn new(val: i32) -> Self {
+        ListNode {
+            next: None,
+            val,
+        }
+    }
+}

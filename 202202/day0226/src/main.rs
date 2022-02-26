@@ -3,6 +3,14 @@ fn main() {
 }
 
 impl Solution {
+    //201. 数字范围按位与
+    pub fn range_bitwise_and(m: i32, n: i32) -> i32 {
+        (0..32)
+            .map(|e| 1 << 31 - e)
+            .take_while(|&e| m & e == n & e)
+            .map(|e| m & e)
+            .sum()
+    }
     //24. 两两交换链表中的节点
     pub fn swap_pairs(mut head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
         if head.is_none() || head.as_ref().unwrap().next.is_none() {

@@ -4,6 +4,21 @@ fn main() {
 }
 
 impl Solution {
+    //剑指 Offer II 010. 和为 k 的子数组
+    pub fn subarray_sum(nums: Vec<i32>, k: i32) -> i32 {
+        use std::collections::HashMap;
+        let mut map = HashMap::new();
+        map.insert(0, 1);
+        let mut sum = 0;
+        let mut res = 0;
+        for i in 0..nums.len() {
+            sum += nums[i];
+            res += map.get(&(sum - k)).unwrap_or(&0);
+            *map.entry(sum).or_insert(0) += 1;
+        }
+        res
+    }
+
     //剑指 Offer II 025. 链表中的两数相加
     pub fn add_two_numbers(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
         let list_to_vec = |mut list: &Option<Box<ListNode>>| {

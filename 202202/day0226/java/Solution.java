@@ -1,4 +1,18 @@
 class Solution {
+    //剑指 Offer II 010. 和为 k 的子数组
+    public int subarraySum(int[] nums, int k) {
+        Map<Integer,Integer> map = new HashMap();
+        map.put(0,1);
+        int sum = 0;
+        int res = 0;
+        for(int i = 0;i < nums.length;i ++){
+            sum += nums[i];
+            //看原来的map中存有多少个sum - k,即
+            res += map.getOrDefault(sum - k,0);
+            map.put(sum,map.getOrDefault(sum,0) + 1);
+        }
+        return res;
+    }
     //209. 长度最小的子数组
     public int minSubArrayLen(int target, int[] nums) {
         int res = nums.length+ 1;

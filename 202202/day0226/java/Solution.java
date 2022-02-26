@@ -1,4 +1,16 @@
 class Solution {
+    //201. 数字范围按位与
+    public int rangeBitwiseAnd(int left, int right) {
+        //只看最高位的1到0位置
+        // 从后往前看，如果遇到
+        int res = 0;
+        for(int i = 0;i < 32;i ++){
+            int mask = 1 << 31 - i;
+            if ((left & mask) != 0 && (right & mask) != 0) res += mask;
+            if  ((left & mask) != (right & mask) ) break;
+        }
+        return res;
+    }
     //456. 132 模式
     public boolean find132pattern(int[] nums) {
         //

@@ -3,6 +3,37 @@ fn main() {
 }
 
 impl Solution {
+    //456. 132 模式
+    pub fn find132pattern(nums: Vec<i32>) -> bool {
+        if nums.len() < 3 {
+            return false;
+        }
+        //思路：单调栈-找后面比自己小的最大值，前面的最小值,不包括自己
+        let mut pre_min = vec![1000000001; nums.len()];
+        for i in 1..nums.len() {
+            pre_min[i] = pre_min[i - 1].min(nums[i - 1]);
+        }
+        //单调栈
+        let mut stack = vec![*nums.last().unwrap()];
+        for i in (1..nums.len() - 1).rev() {
+            let cur = nums[i];
+            if stack.is_empty() {
+                stack.push(cur);
+            } else {
+                //判断它后面最大数是多少
+                let min = pre_min[i];
+                let mut top = *stack.last().unwrap();
+                while !stack.is_empty() && *stack.last().unwrap() < cur {
+                    top = stack.pop().unwrap();
+                }
+                if top > min && cur > top {
+                    return true;
+                }
+                stack.push(cur);
+            }
+        }
+        false
+    }
     //66. 加一
     pub fn plus_one(mut digits: Vec<i32>) -> Vec<i32> {
         //主要是判断是有无进位

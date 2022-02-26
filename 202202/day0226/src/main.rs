@@ -3,6 +3,31 @@ fn main() {
 }
 
 impl Solution {
+    //230. 二叉搜索树中第K小的元素
+    pub fn kth_smallest(mut root: Option<Rc<RefCell<TreeNode>>>, k: i32) -> i32 {
+        if let Some(node) = root {
+            let left_length = Self::tree_length(&node.borrow().left);
+            if left_length == k - 1 {
+                node.borrow().val
+            } else if left_length > k - 1 {
+                Self::kth_smallest(node.borrow_mut().left.take(), k)
+            } else {
+                Self::kth_smallest(node.borrow_mut().right.take(), k - left_length - 1)
+            }
+        } else {
+            unreachable!()
+        }
+    }
+
+    fn tree_length(root: &Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut res = 0;
+        if let Some(node) = root {
+            res += 1;
+            res += Self::tree_length(&node.borrow().left);
+            res += Self::tree_length(&node.borrow().right);
+        }
+        res
+    }
     //112. 路径总和
     pub fn has_path_sum(mut root: Option<Rc<RefCell<TreeNode>>>, target_sum: i32) -> bool {
         if let Some(node) = root {

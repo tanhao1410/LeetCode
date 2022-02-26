@@ -3,6 +3,30 @@ fn main() {
 }
 
 impl Solution {
+    //24. 两两交换链表中的节点
+    pub fn swap_pairs(mut head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        if head.is_none() || head.as_ref().unwrap().next.is_none() {
+            return head;
+        }
+        let mut res = Some(Box::new(ListNode::new(0)));
+        let mut p = res.as_mut().unwrap();
+        //每一次弹出两个
+        while let Some(mut node) = head {
+            let swap_node = node.next.take();
+            if let Some(mut swap_node) = swap_node {
+                head = swap_node.next.take();
+                //本来是node -> swap_node =>断开了
+                swap_node.next = Some(node);
+                p.next = Some(swap_node);
+                p = p.next.as_mut().unwrap().next.as_mut().unwrap();
+            } else {
+                p.next = Some(node);
+                break;
+            }
+        }
+        res.as_mut().unwrap().next.take()
+    }
+
     //230. 二叉搜索树中第K小的元素
     pub fn kth_smallest(mut root: Option<Rc<RefCell<TreeNode>>>, k: i32) -> i32 {
         if let Some(node) = root {
@@ -128,3 +152,19 @@ impl TreeNode {
 
 use std::rc::Rc;
 use std::cell::RefCell;
+
+#[derive(PartialEq, Eq, Clone, Debug)]
+pub struct ListNode {
+    pub val: i32,
+    pub next: Option<Box<ListNode>>,
+}
+
+impl ListNode {
+    #[inline]
+    fn new(val: i32) -> Self {
+        ListNode {
+            next: None,
+            val,
+        }
+    }
+}

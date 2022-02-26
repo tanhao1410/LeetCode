@@ -3,6 +3,19 @@ fn main() {
 }
 
 impl Solution {
+    //112. 路径总和
+    pub fn has_path_sum(mut root: Option<Rc<RefCell<TreeNode>>>, target_sum: i32) -> bool {
+        if let Some(node) = root {
+            let cur_val = node.borrow().val;
+            if target_sum == cur_val && node.borrow().left.is_none() && node.borrow().right.is_none() {
+                return true;
+            }
+            let mut ref_mut = node.borrow_mut();
+            return Self::has_path_sum(ref_mut.right.take(), target_sum - cur_val)
+                || Self::has_path_sum(ref_mut.left.take(), target_sum - cur_val);
+        }
+        false
+    }
     //456. 132 模式
     pub fn find132pattern(nums: Vec<i32>) -> bool {
         if nums.len() < 3 {
@@ -69,3 +82,24 @@ impl Solution {
 }
 
 struct Solution;
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct TreeNode {
+    pub val: i32,
+    pub left: Option<Rc<RefCell<TreeNode>>>,
+    pub right: Option<Rc<RefCell<TreeNode>>>,
+}
+
+impl TreeNode {
+    #[inline]
+    pub fn new(val: i32) -> Self {
+        TreeNode {
+            val,
+            left: None,
+            right: None,
+        }
+    }
+}
+
+use std::rc::Rc;
+use std::cell::RefCell;

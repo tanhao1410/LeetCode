@@ -1,4 +1,29 @@
 class Solution {
+    //209. 长度最小的子数组
+    public int minSubArrayLen(int target, int[] nums) {
+        int res = nums.length+ 1;
+        int end = 0;
+        int start = 0;
+        int sum = nums[0];
+        while (end < nums.length){
+            //比sum大的情况
+            if(sum >= target){
+                //减小窗口
+                while(sum >= target){
+                    sum -= nums[start];
+                    start ++;
+                }
+                //新窗口大小
+                res = Math.min(end - start + 2,res);
+            }else{
+                //比sum小
+                end ++;
+                if (end == nums.length) break;
+                sum += nums[end];
+            }
+        }
+        return res == nums.length + 1?0:res;
+    }
     //201. 数字范围按位与
     public int rangeBitwiseAnd(int left, int right) {
         //只看最高位的1到0位置

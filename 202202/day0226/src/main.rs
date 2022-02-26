@@ -1,8 +1,30 @@
 fn main() {
     println!("Hello, world!");
+    println!("{}", Solution::min_sub_array_len(7, vec![2, 3, 1, 2, 4, 3]));
 }
 
 impl Solution {
+    //209. 长度最小的子数组
+    pub fn min_sub_array_len(target: i32, nums: Vec<i32>) -> i32 {
+        let mut start = 0;
+        let mut sum = nums[0];
+        let mut res = if sum < target { i32::MAX } else { 1 };
+        for end in 1..=nums.len() {
+            if sum >= target {
+                while sum >= target {
+                    sum -= nums[start];
+                    start += 1;
+                }
+                //因为此时窗口里面的值小于target了，因此是+2
+                res = res.min(end as i32 - start as i32 + 1);
+            }
+            if end < nums.len() {
+                //不够
+                sum += nums[end];
+            }
+        }
+        if res == i32::MAX { 0 } else { res }
+    }
     //201. 数字范围按位与
     pub fn range_bitwise_and(m: i32, n: i32) -> i32 {
         (0..32)

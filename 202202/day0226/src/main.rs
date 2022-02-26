@@ -4,6 +4,50 @@ fn main() {
 }
 
 impl Solution {
+    //剑指 Offer II 025. 链表中的两数相加
+    pub fn add_two_numbers(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let list_to_vec = |mut list: &Option<Box<ListNode>>| {
+            let mut v = vec![];
+            while let Some(node) = list {
+                v.push(node.val);
+                list = &node.next
+            }
+            v
+        };
+        let mut vec_to_list = |vec: &Vec<i32>| {
+            //从后往前
+            let mut res = Some(Box::new(ListNode::new(0)));
+            let mut p = res.as_mut().unwrap();
+            for &i in vec.into_iter().rev() {
+                let node = Some(Box::new(ListNode::new(i)));
+                p.next = node;
+                p = p.next.as_mut().unwrap();
+            }
+            res.unwrap().next.take()
+        };
+        let num1 = list_to_vec(&l1);
+        let num2 = list_to_vec(&l2);
+        let mut flag = 0;
+        let mut index = 0;
+        let mut res = vec![];
+        while index < num1.len() || index < num2.len() {
+            let mut v = 0;
+            if index < num1.len() && index < num2.len() {
+                v = num1[num1.len() - 1 - index] + num2[num2.len() - 1 - index] + flag;
+            } else if index < num1.len() {
+                v = num1[num1.len() - 1 - index] + flag;
+            } else {
+                v = num2[num2.len() - 1 - index] + flag;
+            }
+            res.push(v % 10);
+            flag = v / 10;
+            index += 1;
+        }
+        if flag == 1 {
+            res.push(1);
+        }
+        vec_to_list(&res)
+    }
     //209. 长度最小的子数组
     pub fn min_sub_array_len(target: i32, nums: Vec<i32>) -> i32 {
         let mut start = 0;

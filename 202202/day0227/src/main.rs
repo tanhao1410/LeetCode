@@ -3,6 +3,57 @@ fn main() {
 }
 
 impl Solution {
+    //553. 最优除法
+    pub fn optimal_division(nums: Vec<i32>) -> String {
+        //递归方式，求最大值，或最小值
+        Self::max_or_min(&nums[..], true).1
+    }
+
+    fn max_or_min(nums: &[i32], is_max: bool) -> (f64, String) {
+        //如果更新了最大值，还需要返回应有的计算方式。
+        let mut s = String::new();
+        if nums.len() == 1 {
+            return (nums[0] as f64, nums[0].to_string());
+        }
+        let mut res = 0.0f64;
+        for i in 1..nums.len() {
+            //前面的求最大值，后面求最小值
+            let cur = Self::max_or_min(&nums[..i], is_max).0 / Self::max_or_min(&nums[i..], !is_max).0;
+            if (is_max && cur > res) || (!is_max && cur < res) {
+                res = cur;
+                s = Self::create_express(&nums[..i], &nums[i..]);
+            }
+        }
+        (res, s)
+    }
+
+    fn create_express(pre: &[i32], pro: &[i32]) -> String {
+        let mut s = String::new();
+        if pre.len() > 1 {
+            s.push('(');
+            for &num in pre {
+                s.push_str(&num.to_string());
+                s.push('/');
+            }
+            s.remove(s.len() - 1);
+            s.push(')');
+        } else {
+            s.push_str(&pre[0].to_string());
+        }
+        s.push('/');
+        if pro.len() > 1 {
+            s.push('(');
+            for &num in pro {
+                s.push_str(&num.to_string());
+                s.push('/');
+            }
+            s.remove(s.len() - 1);
+            s.push(')');
+        } else {
+            s.push_str(&pro[0].to_string());
+        }
+        s
+    }
     //149. 直线上最多的点数
     pub fn max_points(points: Vec<Vec<i32>>) -> i32 {
         //选择一个点，再选择一个点，然后找到所有在这上面的点。

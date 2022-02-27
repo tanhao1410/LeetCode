@@ -3,6 +3,32 @@ fn main() {
 }
 
 impl Solution {
+    //剑指 Offer II 020. 回文子字符串的个数
+    pub fn count_substrings(s: String) -> i32 {
+        //dp[i][j] 表示是否是回文子串，
+        // dp[i][i] = 1; dp[i][j + 1]
+        let mut dp = vec![vec![false; s.len()]; s.len()];
+        let mut res = 0;
+        let bytes = s.as_bytes();
+        for i in (0..s.len()).rev() {
+            for j in i..s.len() {
+                if j > i {
+                    //两边相同
+                    if i + 1 == j && bytes[i] == bytes[j] {
+                        dp[i][j] = true;
+                    } else if j > i + 1 && bytes[i] == bytes[j] {
+                        dp[i][j] = dp[i + 1][j - 1];
+                    }
+                } else if i == j {
+                    dp[i][j] = true;
+                }
+                if dp[i][j] {
+                    res += 1;
+                }
+            }
+        }
+        res
+    }
     //553. 最优除法
     pub fn optimal_division(nums: Vec<i32>) -> String {
         //递归方式，求最大值，或最小值

@@ -1,4 +1,36 @@
 class Solution {
+    //720. 词典中最长的单词
+    public String longestWord(String[] words) {
+        //先找一个字母的，
+        ArrayList[] countWords = new ArrayList[31];
+        for(int i = 0;i < 31;i ++) countWords[i] = new ArrayList();
+        for(String word:words){
+            countWords[word.length() - 1].add(word);
+        }
+        for(int i = 1;i < 31;i ++){
+            ArrayList<String> strs = countWords[i];
+            //过滤掉一些
+            ArrayList<String> pre = countWords[i - 1];
+            var iter = strs.iterator();
+            while(iter.hasNext()){
+                boolean isPre = false;
+                String cur = iter.next();
+                for(String p :pre){
+                    if(cur.startsWith(p)){
+                        isPre = true;
+                        break;
+                    }
+                }
+                if(!isPre) iter.remove();
+            }
+            if(strs.size() == 0){
+                if(pre.size() == 0) return "";
+                Collections.sort(pre);
+                return pre.get(0);
+            }
+        }
+        return "";
+    }
     //72. 编辑距离
     public int minDistance(String word1, String word2) {
         //如果两个单词中有一个为长度0，则直接返回另一个长度即可。

@@ -3,6 +3,25 @@ fn main() {
 }
 
 impl Solution {
+    //3. 无重复字符的最长子串
+    pub fn length_of_longest_substring(s: String) -> i32 {
+        // 用一个map 记录每一个字母再前面的位置，-1代表无。
+        //子串最大为26，用一个滑动窗口，开始时是1，然后依次加入新的字母，看该字母在前面是否存在，如果存在，看是否在窗口中
+        //如果不在窗口里，则继续。否则，窗口开始位置定为它的下一个位置
+        let mut pre_index = vec![-1; 128];
+        let bytes = s.as_bytes();
+        let mut start = 0;
+        let mut res = 0;
+        for i in 0..s.len() {
+            //在窗口中
+            if pre_index[bytes[i] as usize] != -1 && pre_index[bytes[i] as usize] >= start as i32 {
+                start = pre_index[bytes[i] as usize] as usize + 1;
+            }
+            pre_index[bytes[i] as usize] = i as i32;
+            res = res.max(i - start + 1);
+        }
+        res as i32
+    }
     //1367. 二叉树中的列表
     pub fn is_sub_path(mut head: Option<Box<ListNode>>, root: Option<Rc<RefCell<TreeNode>>>) -> bool {
         if let Some(node) = head {

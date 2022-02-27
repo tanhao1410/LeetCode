@@ -3,6 +3,33 @@ fn main() {
 }
 
 impl Solution {
+    //149. 直线上最多的点数
+    pub fn max_points(points: Vec<Vec<i32>>) -> i32 {
+        //选择一个点，再选择一个点，然后找到所有在这上面的点。
+        let is_one_line = |p1: usize, p2: usize, p3: usize| {
+            let p1 = (points[p1][0], points[p1][1]);
+            let p2 = (points[p2][0], points[p2][1]);
+            let p3 = (points[p3][0], points[p3][1]);
+            //p2.x - p1.x / p2.y - p1.y = p3.x - p1.x /p3.y - p1.y
+            (p2.0 - p1.0) * (p3.1 - p1.1) == (p2.1 - p1.1) * (p3.0 - p1.0)
+        };
+        let mut res = 2;
+        if points.len() < 3 {
+            return points.len() as i32;
+        }
+        for i in 0..points.len() - 2 {
+            for j in i + 1..points.len() - 1 {
+                let mut item = 2;
+                for k in j + 1..points.len() {
+                    if is_one_line(i, j, k) {
+                        item += 1;
+                    }
+                }
+                res = res.max(item);
+            }
+        }
+        res
+    }
     //3. 无重复字符的最长子串
     pub fn length_of_longest_substring(s: String) -> i32 {
         // 用一个map 记录每一个字母再前面的位置，-1代表无。
@@ -75,7 +102,7 @@ impl ListNode {
         }
     }
 }
-Definition for a binary tree node.
+
 #[derive(Debug, PartialEq, Eq)]
 pub struct TreeNode {
     pub val: i32,

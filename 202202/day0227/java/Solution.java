@@ -1,4 +1,30 @@
 class Solution {
+
+    //384. 打乱数组
+    private int[] nums;
+    private int[] shuffle;
+
+    public Solution(int[] nums) {
+        this.nums = nums;
+        this.shuffle = new int[nums.length];
+        for(int i = 0;i < nums.length;i ++) this.shuffle[i] = nums[i];
+    }
+
+    public int[] reset() {
+        return this.nums;
+    }
+
+    public int[] shuffle() {
+        Random rand = new Random();
+        for(int i = 0;i < shuffle.length;i ++){
+            //从后面随机取一个值
+            int index = rand.nextInt(i,shuffle.length);
+            int temp = this.shuffle[i];
+            this.shuffle[i] = this.shuffle[index];
+            this.shuffle[index] = temp;
+        }
+        return this.shuffle;
+    }
     //720. 词典中最长的单词
     public String longestWord(String[] words) {
         //先找一个字母的，

@@ -3,6 +3,32 @@ fn main() {
 }
 
 impl Solution {
+    //1823. 找出游戏的获胜者
+    pub fn find_the_winner(n: i32, k: i32) -> i32 {
+        let mut fails = vec![false; n as usize];
+        let mut fail_count = 0;
+        let mut start = 0;
+        while fail_count < n - 1 {
+            //第一步是走在了start位置，所以，此处用k - 1
+            for _ in 0..k - 1 {
+                //往前走一步
+                start = (start + 1) % n;
+                //但此时有可能走在了已经淘汰过的位置上了,如果是，继续往前走，直到走到没有淘汰的地方
+                while fails[start as usize] {
+                    start = (start + 1) % n;
+                }
+            }
+            //此时，start即要被淘汰的地方
+            fails[start as usize] = true;
+            fail_count += 1;
+            //走到下一个开始位置
+            start = (start + 1) % n;
+            while fails[start as usize] {
+                start = (start + 1) % n;
+            }
+        }
+        start
+    }
     //67. 二进制求和
     pub fn add_binary(a: String, b: String) -> String {
         let bytes1 = a.as_bytes();

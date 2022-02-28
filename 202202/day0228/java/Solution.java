@@ -1,4 +1,26 @@
 class Solution {
+    //1823. 找出游戏的获胜者
+    public int findTheWinner(int n, int k) {
+        boolean[] failed = new boolean[n];
+        int failNum = 0;
+        int start = 0;
+        while(failNum < n - 1){
+            //需要淘汰一位
+            for(int i = 0;i < k - 1;i ++){
+                start = (start + 1) % n;
+                while(failed[start]) start = (start + 1) % n;
+            }
+            failed[start] = true;
+            //下一个开始的地方
+            start = (start + 1) % n;
+            while(failed[start]) start = (start + 1) % n;
+            failNum ++;
+        }
+        for(int i = 0;i < n;i ++){
+            if(!failed[i]) return i + 1;
+        }
+        return -1;
+    }
     //1249. 移除无效的括号
     public String minRemoveToMakeValid(String s) {
         //思路：用一个变量记录(的出现次数，

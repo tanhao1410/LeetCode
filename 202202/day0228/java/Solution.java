@@ -1,4 +1,44 @@
 class Solution {
+    //1249. 移除无效的括号
+    public String minRemoveToMakeValid(String s) {
+        //思路：用一个变量记录(的出现次数，
+        int count = 0;
+        StringBuilder sb = new StringBuilder();
+        Stack<Integer> stack = new Stack();
+        Set<Integer> set = new HashSet();
+        for(int i = 0;i < s.length();i ++){
+            //前面可能需要移除(
+            char cur = s.charAt(i);
+            if(cur == '('){
+                count ++;
+                //需要记住这个位置
+                stack.push(i);
+            }else if (cur == ')'){
+                if (count > 0){
+                    count --;
+                    set.add(i);
+                }
+            }
+        }
+        //说明前面还需要继续删除一些(
+        while ( count > 0) {
+            stack.pop();
+            count --;
+        }
+        while(stack.size() > 0) set.add(stack.pop());
+        for(int i = 0;i < s.length();i ++){
+            char cur = s.charAt(i);
+            if(cur == '(' || cur == ')'){
+                if (set.contains(i)){
+                    sb.append(cur);
+                }
+            }else{
+                sb.append(cur);
+            }
+        }
+
+        return sb.toString();
+    }
     //524. 通过删除字母匹配到字典里最长单词
     public String findLongestWord(String s, List<String> dictionary) {
         //先根据长度倒排序，在根据字母序排序，找到合适的，就返回

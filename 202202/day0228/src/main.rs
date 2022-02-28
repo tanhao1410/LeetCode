@@ -3,6 +3,30 @@ fn main() {
 }
 
 impl Solution {
+    //97. 交错字符串
+    pub fn is_interleave(s1: String, s2: String, s3: String) -> bool {
+        if s1.len() + s2.len() != s3.len() {
+            return false;
+        }
+        let (s1, s2, s3) = (s1.as_bytes(), s2.as_bytes(), s3.as_bytes());
+        //动态规划，两重循环是否可行呢？s1的前i个元素，与s2的前j 个元素
+        let mut dp = vec![vec![false; s2.len() + 1]; s1.len() + 1];
+        for i in 0..dp.len() {
+            for j in 0..dp[0].len() {
+                if i == 0 && j == 0 {
+                    dp[i][0] = true;
+                } else if i == 0 {
+                    dp[i][j] = dp[i][j - 1] && s2[j - 1] == s3[j - 1];
+                } else if j == 0 {
+                    dp[i][j] = dp[i - 1][j] && s1[i - 1] == s3[i - 1];
+                } else {
+                    dp[i][j] |= dp[i][j - 1] && s2[j - 1] == s3[j + i - 1];
+                    dp[i][j] |= dp[i - 1][j] && s1[i - 1] == s3[i + j - 1];
+                }
+            }
+        }
+        dp[s3.len()][s1.len()]
+    }
     //1823. 找出游戏的获胜者
     pub fn find_the_winner(n: i32, k: i32) -> i32 {
         let mut fails = vec![false; n as usize];

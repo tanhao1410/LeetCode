@@ -1,4 +1,45 @@
 class Solution {
+    //97. 交错字符串
+    public boolean isInterleave(String s1, String s2, String s3) {
+        //递归思路：很容易超时。
+        // if(s3.length() == 0) return true;
+        // boolean res = false;
+        // if(s1.length() > 0 && s3.charAt(0) == s1.charAt(0)){
+        //     res |= isInterleave(s1.substring(1,s1.length()),s2,s3.substring(1,s3.length()));
+        // }
+        // if( s2.length() > 0 && s3.charAt(0) == s2.charAt(0)){
+        //     res |= isInterleave(s1,s2.substring(1,s2.length()),s3.substring(1,s3.length()));
+        // }
+        // return res;
+
+        //问题是当一个开头，即可以用s1，又可以用s2，产生了分歧。
+        // dp[i][j][k] dp[0].. = true;
+        // dp[i][0][k]  看是否相等
+        // dp[i][k][0]  一样
+        // dp[i][j][k]  dp[i - 1] [j - 1][k] , dp[i-1][j][k-1],
+        boolean[][][] dp = new boolean[s3.length()+1][s1.length()+1][s2.length()+1];
+        for(int i = 0;i <= s3.length();i ++){
+            for(int j = 0;j <= s1.length();j ++){
+                for(int k = 0;k <= s2.length();k ++){
+                    if(i != j + k){
+                        dp[i][j][k] = false;
+                    }else if(i == 0){
+                        dp[i][j][k] = true;
+                    }else{
+                        if (j == 0){
+                            dp[i][0][k] = dp[i -1][0][k - 1] && s3.charAt(i - 1) == s2.charAt(k - 1);
+                        }else if (k == 0){
+                            dp[i][j][k] = dp[i - 1][j - 1][k] && s3.charAt(i - 1) == s1.charAt(j - 1);
+                        }else{
+                            dp[i][j][k] |= dp[i - 1][j - 1][k] && s3.charAt(i - 1) == s1.charAt(j - 1);
+                            dp[i][j][k] |= dp[i - 1][j][k-1] && s3.charAt(i - 1) == s2.charAt(k - 1);
+                        }
+                    }
+                }
+            }
+        }
+        return dp[s3.length()][s1.length()][s2.length()];
+    }
     //1823. 找出游戏的获胜者
     public int findTheWinner(int n, int k) {
         boolean[] failed = new boolean[n];

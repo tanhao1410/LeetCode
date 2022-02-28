@@ -91,3 +91,34 @@ class Solution {
         return res;
     }
 }
+//155. 最小栈
+class MinStack {
+    //采用单调栈。push 进来一个数的时候，与最小栈的栈顶比较，若小于等于则，push进来，若大于，什么都不做，
+    // 弹出数时，判断是否与最小栈顶部一样
+    private Stack<Integer> data;
+    private Stack<Integer> small;
+    public MinStack() {
+        this.data = new Stack();
+        this.small = new Stack();
+    }
+    public void push(int val) {
+        this.data.push(val);
+        if (small.size() == 0){
+            small.push(val);
+        }else if (small.peek() >= val){
+            small.push(val);
+        }
+    }
+    public void pop() {
+        int val = this.data.pop();
+        if (val == small.peek()){
+            small.pop();
+        }
+    }
+    public int top() {
+        return this.data.peek();
+    }
+    public int getMin() {
+        return this.small.peek();
+    }
+}

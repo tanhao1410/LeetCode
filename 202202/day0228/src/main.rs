@@ -1,5 +1,109 @@
 fn main() {
     println!("Hello, world!");
+    let mut list = MyLinkedList::new();
+    list.add_at_head(0);
+    list.add_at_index(1, 4);
+    list.add_at_tail(8);
+    list.add_at_head(5);
+    list.add_at_index(4, 3);
+    list.add_at_tail(0);
+    list.add_at_tail(5);
+    list.add_at_index(6, 3);
+    list.delete_at_index(7);
+    list.delete_at_index(5);
+    list.add_at_tail(4);
+}
+
+//707. 设计链表
+struct MyLinkedList {
+    head: Option<Box<ListNode>>,
+    tail: *mut ListNode,
+    size: i32,
+}
+
+impl MyLinkedList {
+    fn new() -> Self {
+        Self {
+            head: None,
+            tail: std::ptr::null_mut(),
+            size: 0,
+        }
+    }
+
+    fn get(&self, index: i32) -> i32 {
+        if index >= self.size || self.size == 0 {
+            return -1;
+        }
+        let mut p = &self.head;
+        for _ in 0..index {
+            p = &p.as_ref().unwrap().next;
+        }
+        p.as_ref().unwrap().val
+    }
+
+    fn add_at_head(&mut self, val: i32) {
+        let mut node = Some(Box::new(ListNode::new(val)));
+        node.as_mut().unwrap().next = self.head.take();
+        self.head = node;
+        if self.tail.is_null() {
+            self.tail = self.head.as_mut().unwrap().as_mut() as *mut _;
+        }
+        self.size += 1;
+    }
+
+    fn add_at_tail(&mut self, val: i32) {
+        if self.size == 0 {
+            self.add_at_head(val);
+        } else {
+            let mut node = Some(Box::new(ListNode::new(val)));
+            unsafe {
+                (*self.tail).next = node;
+                self.tail = (*self.tail).next.as_mut().unwrap().as_mut() as *mut _;
+            }
+            self.size += 1;
+        }
+    }
+
+    fn add_at_index(&mut self, index: i32, val: i32) {
+        if index == self.size {
+            self.add_at_tail(val);
+        } else if index == 0 {
+            self.add_at_head(val);
+        } else if index < self.size {
+            let mut p = self.head.as_mut().unwrap();
+            for _ in 0..index - 1 {
+                p = p.next.as_mut().unwrap();
+            }
+            let temp = p.next.take();
+            let mut node = Some(Box::new(ListNode::new(val)));
+            node.as_mut().unwrap().next = temp;
+            p.next = node;
+            self.size += 1;
+        }
+    }
+
+    fn delete_at_index(&mut self, index: i32) {
+        if index < self.size && self.size > 0 {
+            if index == 0 {
+                //删除头结点
+                self.head = self.head.as_mut().unwrap().next.take();
+            } else {
+                let mut p = self.head.as_mut().unwrap();
+                for _ in 0..index - 1 {
+                    p = p.next.as_mut().unwrap();
+                }
+                p.next = p.next.as_mut().unwrap().next.take();
+                //删除最后一个的时候需要处理下
+                if index == self.size - 1 {
+                    self.tail = p.as_mut() as *mut _;
+                }
+            }
+            self.size -= 1;
+            if self.size == 0 {
+                self.tail = std::ptr::null_mut();
+            }
+        }
+    }
 }
 
 impl Solution {

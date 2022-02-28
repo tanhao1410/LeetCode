@@ -3,6 +3,33 @@ fn main() {
 }
 
 impl Solution {
+    //67. 二进制求和
+    pub fn add_binary(a: String, b: String) -> String {
+        let bytes1 = a.as_bytes();
+        let bytes2 = b.as_bytes();
+        let mut res = vec![b'1'; a.len().max(b.len()) + 1];
+        let n = res.len();
+        let mut index = 0;
+        let mut flag = 0;
+        while index < a.len() || index < b.len() {
+            let mut item = 0;
+            if (index < a.len() && index < b.len()) {
+                item = bytes1[a.len() - 1 - index] - b'0' + bytes2[b.len() - 1 - index] - b'0' + flag;
+            } else if (index < a.len()) {
+                item = bytes1[a.len() - 1 - index] - b'0' + flag;
+            } else {
+                item = bytes2[b.len() - 1 - index] - b'0' + flag;
+            }
+            res[n - 1 - index] = item % 2 + b'0';
+            flag = item / 2;
+            index += 1;
+        }
+        if flag == 1 {
+            String::from_utf8(res).unwrap()
+        } else {
+            String::from_utf8_lossy(&res[1..]).to_string()
+        }
+    }
     //1601. 最多可达成的换楼请求数目
     pub fn maximum_requests(n: i32, requests: Vec<Vec<i32>>) -> i32 {
         //使用java用递归解决了，用栈来解决呢？深度优先遍历

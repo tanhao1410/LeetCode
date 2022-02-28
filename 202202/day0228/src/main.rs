@@ -3,6 +3,58 @@ fn main() {
 }
 
 impl Solution {
+    //25. K 个一组翻转链表
+    pub fn reverse_k_group(mut head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
+        //求长度
+        let list_len = |mut head: &Option<Box<ListNode>>| -> i32{
+            let mut res = 0;
+            while let Some(node) = head {
+                head = &node.next;
+                res += 1;
+            }
+            res
+        };
+        //翻转
+        let reverse_list = |mut head: Option<Box<ListNode>>| -> Option<Box<ListNode>>{
+            let mut res = None;
+            while let Some(mut node) = head {
+                head = node.next.take();
+                node.next = res;
+                res = Some(node);
+            }
+            res
+        };
+        let list_len = list_len(&head);
+        let mut res_head = Some(Box::new(ListNode::new(0)));
+        let mut res_tail = res_head.as_mut().unwrap();
+
+        //走k步，循环多少次呢?
+        for _ in 0..list_len / k {
+            let mut p = head.as_mut().unwrap();
+            //走k步
+            for _ in 0..k - 1 {
+                let next = p.next.as_mut().unwrap();
+                p = next;
+            }
+            //需要翻转的是
+            //先把后面的需要取出来
+            let tail = p.next.take();
+            let reversed = reverse_list(head);
+            res_tail = Self::append_list(res_tail, reversed);
+            head = tail;
+        }
+        //最后剩的没翻转的需要补充上去
+        res_tail.next = head;
+        res_head.unwrap().next.take()
+    }
+
+    fn append_list(mut tail: &mut Box<ListNode>, other: Option<Box<ListNode>>) -> &mut Box<ListNode> {
+        tail.next = other;
+        while tail.next.is_some() {
+            tail = tail.next.as_mut().unwrap();
+        }
+        tail
+    }
     //97. 交错字符串
     pub fn is_interleave(s1: String, s2: String, s3: String) -> bool {
         if s1.len() + s2.len() != s3.len() {
@@ -115,3 +167,19 @@ impl Solution {
 }
 
 struct Solution;
+
+#[derive(PartialEq, Eq, Clone, Debug)]
+pub struct ListNode {
+    pub val: i32,
+    pub next: Option<Box<ListNode>>,
+}
+
+impl ListNode {
+    #[inline]
+    fn new(val: i32) -> Self {
+        ListNode {
+            next: None,
+            val,
+        }
+    }
+}

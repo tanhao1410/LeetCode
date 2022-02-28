@@ -1,4 +1,33 @@
 class Solution {
+    //524. 通过删除字母匹配到字典里最长单词
+    public String findLongestWord(String s, List<String> dictionary) {
+        //先根据长度倒排序，在根据字母序排序，找到合适的，就返回
+        Collections.sort(dictionary,(e1,e2)->{
+            if (e1.length() != e2.length()) return e2.length() - e1.length();
+            return e1.compareTo(e2);
+        });
+        for(String word : dictionary){
+            if (isSubStr(s,word)){
+                return word;
+            }
+        }
+        return "";
+    }
+
+    private boolean isSubStr(String sup,String sub){
+        if(sup.length() < sub.length()) return false;
+        int supIndex = 0;
+        int subIndex = 0;
+        while(supIndex < sup.length() && subIndex < sub.length()){
+            if(sup.charAt(supIndex) == sub.charAt(subIndex)){
+                supIndex ++;
+                subIndex ++;
+            }else{
+                supIndex++;
+            }
+        }
+        return subIndex == sub.length();
+    }
     //989. 数组形式的整数加法
     public List<Integer> addToArrayForm(int[] num, int k) {
         //都转成数组吧

@@ -1,4 +1,35 @@
 class Solution {
+    //989. 数组形式的整数加法
+    public List<Integer> addToArrayForm(int[] num, int k) {
+        //都转成数组吧
+        List<Integer> num2List = new ArrayList();
+        while (k > 0){
+            num2List.add(k % 10);
+            k /= 10;
+        }
+        // int[] num2 = new int[num2List.size()];
+        // for(int i = 0;i < num2.length;i ++) num2[i] = num2List.get(num2.length - 1 - i);
+        int index = 0;
+        int flag = 0;
+        LinkedList<Integer> res = new LinkedList();
+        while(index < num2List.size() || index < num.length){
+            int cur = flag;
+            if (index < num2List.size() && index < num.length){
+                cur += num[num.length - 1 - index]  + num2List.get(index);
+            }else if (index < num2List.size()){
+                cur += num2List.get(index);
+            }else{
+                cur += num[num.length - 1 - index];
+            }
+            res.add(0,cur % 10);
+            flag = cur / 10;
+            index ++;
+        }
+        if (flag == 1){
+            res.add(0,1);
+        }
+        return res;
+    }
 
     //1601. 最多可达成的换楼请求数目
     public int maximumRequests(int n, int[][] requests) {

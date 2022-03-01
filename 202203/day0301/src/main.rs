@@ -3,6 +3,39 @@ fn main() {
 }
 
 impl Solution {
+    //103. 二叉树的锯齿形层序遍历
+    pub fn zigzag_level_order(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
+        //层序遍历
+        use std::collections::VecDeque;
+        let mut flag = true;
+        let mut res = vec![];
+        let mut queue = VecDeque::new();
+        if let Some(node) = &root {
+            queue.push_back(node.clone());
+        };
+        while !queue.is_empty() {
+            let mut len = queue.len();
+            let mut v = vec![];
+            for _ in 0..len {
+                let cur = queue.pop_front().unwrap();
+                let cur = cur.borrow();
+                if cur.left.is_some() {
+                    queue.push_back(cur.left.as_ref().unwrap().clone());
+                }
+                if cur.right.is_some() {
+                    queue.push_back(cur.right.as_ref().unwrap().clone());
+                }
+                v.push(cur.val);
+            }
+            if flag {
+                res.push(v);
+            } else {
+                res.push(v.into_iter().rev().collect());
+            }
+            flag = !flag;
+        }
+        res
+    }
     //105. 从前序与中序遍历序列构造二叉树
     pub fn build_tree(preorder: Vec<i32>, inorder: Vec<i32>) -> Option<Rc<RefCell<TreeNode>>> {
         Self::build_tree_by_slice(&preorder, &inorder)

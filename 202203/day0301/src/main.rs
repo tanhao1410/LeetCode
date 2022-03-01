@@ -3,6 +3,43 @@ fn main() {
 }
 
 impl Solution {
+    //787. K 站中转内最便宜的航班
+    pub fn find_cheapest_price(n: i32, flights: Vec<Vec<i32>>, src: i32, dst: i32, k: i32) -> i32 {
+        use std::collections::VecDeque;
+        let mut queue = VecDeque::new();
+        //最多k站，广度优先遍历
+        let mut used = vec![i32::MAX; n as usize];
+        //下标：出发城市，内容：能够到达的地方，价格
+        let mut flight_sets = vec![vec![]; n as usize];
+        for flight in &flights {
+            flight_sets[flight[0] as usize].push((flight[1] as usize, flight[2]));
+        }
+        let mut step = 0;
+        let mut res = -1;
+        queue.push_back((src as usize, 0));
+        used[src as usize] = 0;
+        while step <= k && !queue.is_empty() {
+            let len = queue.len();
+            for _ in 0..len {
+                let cur = queue.pop_front().unwrap();
+                //能都到哪呢？
+                for &reach in &flight_sets[cur.0] {
+                    //不对，如果走的一条路比原来的要近，是可以更新的
+                    //从当前路径到该点需要的费用
+                    let cur_money = reach.1 + cur.1;
+                    if cur_money < used[reach.0] {
+                        queue.push_back((reach.0, reach.1 + cur.1));
+                        used[reach.0] = cur_money;
+                    }
+                    if reach.0 == dst as usize {
+                        res = res.max(cur.1 + reach.1);
+                    }
+                }
+            }
+            step += 1;
+        }
+        res
+    }
     //108. 将有序数组转换为二叉搜索树
     pub fn sorted_array_to_bst(nums: Vec<i32>) -> Option<Rc<RefCell<TreeNode>>> {
         //思路：从中间切开。中间节点就是根节点。

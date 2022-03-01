@@ -3,6 +3,23 @@ fn main() {
 }
 
 impl Solution {
+    //108. 将有序数组转换为二叉搜索树
+    pub fn sorted_array_to_bst(nums: Vec<i32>) -> Option<Rc<RefCell<TreeNode>>> {
+        //思路：从中间切开。中间节点就是根节点。
+        Self::sorted_slice_to_bst(&nums)
+    }
+
+    fn sorted_slice_to_bst(nums: &[i32]) -> Option<Rc<RefCell<TreeNode>>> {
+        if nums.len() == 0 {
+            return None;
+        }
+        //找中间节点
+        let mid = nums.len() / 2;
+        let mut root = TreeNode::new(nums[mid]);
+        root.left = Self::sorted_slice_to_bst(&nums[..mid]);
+        root.right = Self::sorted_slice_to_bst(&nums[mid + 1..]);
+        Some(Rc::new(RefCell::new(root)))
+    }
     //103. 二叉树的锯齿形层序遍历
     pub fn zigzag_level_order(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
         //层序遍历

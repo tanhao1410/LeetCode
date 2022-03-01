@@ -3,6 +3,24 @@ fn main() {
 }
 
 impl Solution {
+    //739. 每日温度
+    pub fn daily_temperatures(temperatures: Vec<i32>) -> Vec<i32> {
+        let mut res = vec![0; temperatures.len()];
+        let mut stack: Vec<(i32, usize)> = vec![];
+        //单调栈,栈中存放后面比它大的数及坐标
+        for i in (0..temperatures.len()).rev() {
+            //如果栈顶元素比当前元素小或等于，则弹出元素。
+            while stack.len() > 0 && stack[stack.len() - 1].0 <= temperatures[i] {
+                stack.pop();
+            }
+            //如果栈不为空，则说明存在了一个比当前大的数，且是最近的
+            if stack.len() > 0 {
+                res[i] = stack[stack.len() - 1].1 as i32 - i as i32;
+            }
+            stack.push((temperatures[i], i));
+        }
+        res
+    }
     //6. Z 字形变换
     pub fn convert(s: String, num_rows: i32) -> String {
         if num_rows == 1 {

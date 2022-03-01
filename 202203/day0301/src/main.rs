@@ -3,6 +3,19 @@ fn main() {
 }
 
 impl Solution {
+    //58. 最后一个单词的长度
+    pub fn length_of_last_word(s: String) -> i32 {
+        let bytes = s.as_bytes();
+        let mut end = s.len() - 1;
+        while end >= 0 && bytes[end] == b' ' {
+            end -= 1;
+        }
+        let mut start = end;
+        while start >= 0 && bytes[start] != b' ' {
+            start -= 1;
+        }
+        (end - start) as i32
+    }
     //739. 每日温度
     pub fn daily_temperatures(temperatures: Vec<i32>) -> Vec<i32> {
         let mut res = vec![0; temperatures.len()];

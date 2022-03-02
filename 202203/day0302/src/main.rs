@@ -4,6 +4,37 @@ fn main() {
 
 
 impl Solution {
+    //329. 矩阵中的最长递增路径
+    pub fn longest_increasing_path(matrix: Vec<Vec<i32>>) -> i32 {
+        //深度优先遍历，把所有的位置都放进去，以弹出的点开始向四周走，如果能走动，则把心加入的放入栈中
+        //直到栈空。
+        //能走动的意思是，对方比自己大，且走动后，的对方的距离 增加了。
+        let mut stack = vec![];
+        let mut path_len = vec![vec![1; matrix[0].len()]; matrix.len()];
+        for i in 0..matrix.len() {
+            for j in 0..matrix[0].len() {
+                stack.push((i, j));
+            }
+        }
+        let dircts = vec![vec![0, 1], vec![1, 0], vec![0, -1], vec![-1, 0]];
+        while let Some((x, y)) = stack.pop() {
+            //冲个方向开始动
+            for dirct in &dircts {
+                if x as i32 + dirct[0] >= 0 && x as i32 + dirct[0] < matrix.len() as i32
+                    && y as i32 + dirct[1] >= 0 && y as i32 + dirct[1] < matrix[0].len() as i32
+                    && matrix[(x as i32 + dirct[0]) as usize][(y as i32 + dirct[1]) as usize] > matrix[x][y]
+                    && path_len[(x as i32 + dirct[0]) as usize][(y as i32 + dirct[1]) as usize] < path_len[x][y] + 1 {
+                    path_len[(x as i32 + dirct[0]) as usize][(y as i32 + dirct[1]) as usize] = path_len[x][y] + 1;
+                    stack.push(((x as i32 + dirct[0]) as usize, (y as i32 + dirct[1]) as usize));
+                }
+            }
+        }
+        path_len
+            .into_iter()
+            .flat_map(|v| v.into_iter())
+            .max()
+            .unwrap()
+    }
     //113. 路径总和 II
     pub fn path_sum(root: Option<Rc<RefCell<TreeNode>>>, target_sum: i32) -> Vec<Vec<i32>> {
         if root.is_none() {

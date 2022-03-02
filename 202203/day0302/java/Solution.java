@@ -1,4 +1,27 @@
 class Solution {
+    //450. 删除二叉搜索树中的节点
+    public TreeNode deleteNode(TreeNode root, int key) {
+        if(root == null) return null;
+        if(root.val > key){
+            root.left = deleteNode(root.left,key);
+            return root;
+        }else if (root.val < key){
+            root.right = deleteNode(root.right,key);
+            return root;
+        }else{
+            //删除当前节点。如果左子树为空，直接返回右子树即可。如果右子树为空，直接返回左子树即可。
+            if (root.left == null) return root.right;
+            if (root.right == null) return root.left;
+            //找到右子树的最左边节点。然后将左子树接在上面即可。
+            TreeNode node = root.right;
+            while (node.left != null){
+                node = node.left;
+            }
+            //此时node即为右子树的最左边节点。
+            node.left = root.left;
+            return root.right;
+        }
+    }
     //199. 二叉树的右视图
     public List<Integer> rightSideView(TreeNode root) {
         //层次遍历的最后一个。

@@ -4,6 +4,34 @@ fn main() {
 
 
 impl Solution {
+    //113. 路径总和 II
+    pub fn path_sum(root: Option<Rc<RefCell<TreeNode>>>, target_sum: i32) -> Vec<Vec<i32>> {
+        if root.is_none() {
+            return vec![];
+        }
+        Self::path_sum_re(&root, target_sum, vec![])
+    }
+    fn path_sum_re(root: &Option<Rc<RefCell<TreeNode>>>, target: i32, mut pre: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut res = vec![];
+        let root = root.as_ref().unwrap().borrow();
+        pre.push(root.val);
+
+        if root.left.is_none() && root.right.is_none() {
+            if target == root.val {
+                res.push(pre);
+            }
+        } else {
+            if root.left.is_some() {
+                let pre2 = pre.clone();
+                res.append(&mut Self::path_sum_re(&root.left, target - root.val, pre2));
+            }
+            if root.right.is_some() {
+                res.append(&mut Self::path_sum_re(&root.right, target - root.val, pre));
+            }
+        }
+        res
+    }
+
     //199. 二叉树的右视图
     pub fn right_side_view(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
         use std::collections::VecDeque;

@@ -6,6 +6,26 @@ fn main() {
 }
 
 impl Solution {
+    //剑指 Offer II 049. 从根节点到叶节点的路径数字之和
+    pub fn sum_numbers(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        //思路：遍历时增加一个层级。parent代表前面的数
+        let mut res = 0;
+        Self::sum_numbers_give_parent(root.as_ref().unwrap().clone(), 0, &mut res);
+        res
+    }
+    fn sum_numbers_give_parent(root: Rc<RefCell<TreeNode>>, parent: i32, res: &mut i32) {
+        let cur_val = parent * 10 + root.borrow().val;
+        if root.borrow().left.is_none() && root.borrow().right.is_none() {
+            *res += cur_val;
+        } else {
+            if root.borrow().left.is_some() {
+                Self::sum_numbers_give_parent(root.borrow().left.as_ref().unwrap().clone(), cur_val, res);
+            }
+            if root.borrow().right.is_some() {
+                Self::sum_numbers_give_parent(root.borrow().right.as_ref().unwrap().clone(), cur_val, res);
+            }
+        }
+    }
     //剑指 Offer II 047. 二叉树剪枝
     pub fn prune_tree(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
         //什么样的节点删除呢？值为0 ，所有子节点都是0.

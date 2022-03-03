@@ -1,4 +1,30 @@
 class Solution {
+    //230. 二叉搜索树中第K小的元素
+    public int kthSmallest(TreeNode root, int k) {
+        //中序遍历法
+        List<Integer> list = new ArrayList();
+        dfs(root,list);
+        return list.get(k - 1);
+    }
+    private void dfs(TreeNode root,List<Integer> list){
+        if(root != null){
+            dfs(root.left,list);
+            list.add(root.val);
+            dfs(root.right,list);
+        }
+    }
+    public class TreeNode {
+         int val;
+         TreeNode left;
+         TreeNode right;
+         TreeNode() {}
+         TreeNode(int val) { this.val = val; }
+         TreeNode(int val, TreeNode left, TreeNode right) {
+             this.val = val;
+             this.left = left;
+             this.right = right;
+         }
+    }
     //973. 最接近原点的 K 个点
     public int[][] kClosest(int[][] points, int k) {
         //排序

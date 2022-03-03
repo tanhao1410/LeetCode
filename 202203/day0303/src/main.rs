@@ -1,3 +1,6 @@
+use std::cell::RefCell;
+use std::rc::Rc;
+
 fn main() {
     println!("Hello, world!");
 }
@@ -54,6 +57,59 @@ impl Solution {
             return 9;
         }
         return num % 9;
+    }
+}
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct TreeNode {
+    pub val: i32,
+    pub left: Option<Rc<RefCell<TreeNode>>>,
+    pub right: Option<Rc<RefCell<TreeNode>>>,
+}
+
+impl TreeNode {
+    #[inline]
+    pub fn new(val: i32) -> Self {
+        TreeNode {
+            val,
+            left: None,
+            right: None,
+        }
+    }
+}
+
+//173. 二叉搜索树迭代器
+struct BSTIterator {
+    index: usize,
+    datas: Vec<i32>,
+}
+
+impl BSTIterator {
+    fn new(root: Option<Rc<RefCell<TreeNode>>>) -> Self {
+        let mut res = Self {
+            index: 0,
+            datas: vec![],
+        };
+        res.dfs(&root);
+        res
+    }
+
+    fn dfs(&mut self, root: &Option<Rc<RefCell<TreeNode>>>) {
+        if root.is_some() {
+            self.dfs(&root.as_ref().unwrap().borrow().left);
+            self.datas.push(root.as_ref().unwrap().borrow().val);
+            self.dfs(&root.as_ref().unwrap().borrow().right);
+        }
+    }
+
+
+    fn next(&mut self) -> i32 {
+        self.index += 1;
+        self.datas[self.index - 1]
+    }
+
+    fn has_next(&self) -> bool {
+        self.index < self.datas.len()
     }
 }
 

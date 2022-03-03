@@ -6,6 +6,29 @@ fn main() {
 }
 
 impl Solution {
+    //剑指 Offer II 045. 二叉树最底层最左边的值
+    pub fn find_bottom_left_value(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        use std::collections::VecDeque;
+        let mut queue = VecDeque::new();
+        queue.push_back(root.as_ref().unwrap().clone());
+        let mut res = 0;
+        while !queue.is_empty() {
+            let l = queue.len();
+            for i in 0..l {
+                let node = queue.pop_front().unwrap();
+                if i == 0 {
+                    res = node.borrow().val;
+                }
+                if node.borrow().left.is_some() {
+                    queue.push_back(node.borrow().left.as_ref().unwrap().clone());
+                }
+                if node.borrow().right.is_some() {
+                    queue.push_back(node.borrow().right.as_ref().unwrap().clone());
+                }
+            }
+        }
+        res
+    }
     //剑指 Offer II 051. 节点之和最大的路径
     pub fn max_path_sum(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
         //思路：递归。

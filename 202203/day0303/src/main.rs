@@ -6,6 +6,31 @@ fn main() {
 }
 
 impl Solution {
+    //剑指 Offer II 050. 向下的路径节点之和
+    pub fn path_sum(root: Option<Rc<RefCell<TreeNode>>>, target_sum: i32) -> i32 {
+        Self::path_sum_parent(&root, target_sum, vec![])
+    }
+
+    fn path_sum_parent(root: &Option<Rc<RefCell<TreeNode>>>, target: i32, mut parent: Vec<i32>) -> i32 {
+        if root.is_none() {
+            return 0;
+        }
+        let root = root.as_ref().unwrap();
+        let val = root.borrow().val;
+        let mut res = 0;
+        for p in &mut parent {
+            if val + *p == target {
+                res += 1;
+            }
+            *p += val;
+        }
+        parent.push(val);
+        if val == target {
+            res += 1;
+        }
+        res += Self::path_sum_parent(&root.borrow().left, target, parent.clone());
+        res + Self::path_sum_parent(&root.borrow().right, target, parent)
+    }
     //剑指 Offer II 049. 从根节点到叶节点的路径数字之和
     pub fn sum_numbers(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
         //思路：遍历时增加一个层级。parent代表前面的数

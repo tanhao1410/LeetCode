@@ -3,6 +3,17 @@ fn main() {
 }
 
 impl Solution {
+    //121. 买卖股票的最佳时机
+    pub fn max_profit(prices: Vec<i32>) -> i32 {
+        //写一个dp,表示后面的最大值
+        let mut dp = vec![0; prices.len()];
+        let mut res = 0;
+        for i in (0..prices.len() - 1).rev() {
+            dp[i] = dp[i + 1].max(prices[i + 1]);
+            res = res.max(dp[i] - prices[i]);
+        }
+        res
+    }
     //48. 旋转图像
     pub fn rotate(matrix: &mut Vec<Vec<i32>>) {
         let n = matrix.len();

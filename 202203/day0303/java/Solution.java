@@ -1,4 +1,18 @@
 class Solution {
+    //973. 最接近原点的 K 个点
+    public int[][] kClosest(int[][] points, int k) {
+        //排序
+        Arrays.sort(points,(e1,e2)->{
+            int e1Dis = e1[0] * e1[0] + e1[1] * e1[1];
+            int e2Dis = e2[0] * e2[0] + e2[1] * e2[1];
+            return e1Dis - e2Dis;
+        });
+        int[][] res = new int[k][2];
+        for(int i = 0;i < k;i ++){
+            res[i] = points[i];
+        }
+        return res;
+    }
     //122. 买卖股票的最佳时机 II
     public int maxProfit(int[] prices) {
         //思路：每天可以得到选择，买，卖，不动。

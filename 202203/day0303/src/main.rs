@@ -3,6 +3,14 @@ fn main() {
 }
 
 impl Solution {
+    //973. 最接近原点的 K 个点
+    pub fn k_closest(mut points: Vec<Vec<i32>>, k: i32) -> Vec<Vec<i32>> {
+        points.sort_unstable_by_key(|v| v[0] * v[0] + v[1] * v[1]);
+        points
+            .into_iter()
+            .take(k as usize)
+            .collect()
+    }
     //122. 买卖股票的最佳时机 II
     pub fn max_profit2(prices: Vec<i32>) -> i32 {
         let mut res = 0;

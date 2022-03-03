@@ -230,4 +230,59 @@ impl Codec {
     }
 }
 
+//剑指 Offer II 043. 往完全二叉树添加节点
+struct CBTInserter {
+    root: Rc<RefCell<TreeNode>>,
+    //下一个要插入的地方
+    pre_nodes: std::collections::VecDeque<Rc<RefCell<TreeNode>>>,
+}
+
+impl CBTInserter {
+    fn new(root: Option<Rc<RefCell<TreeNode>>>) -> Self {
+        let root = root.as_ref().unwrap().clone();
+        //倒数第二层的，只要最后一层。
+        let mut queue = std::collections::VecDeque::new();
+        queue.push_back(root.clone());
+        let mut pre_nodes = std::collections::VecDeque::new();
+        while !queue.is_empty() {
+            let len = queue.len();
+            for _ in 0..len {
+                let node = queue.pop_front().unwrap();
+                //如果node的左右节点有一个为空，则将node加入进pre
+                if node.borrow().left.is_none() || node.borrow().right.is_none() {
+                    pre_nodes.push_back(node.clone());
+                }
+                if node.borrow().left.is_some() {
+                    queue.push_back(node.borrow().left.as_ref().unwrap().clone());
+                }
+                if node.borrow().right.is_some() {
+                    queue.push_back(node.borrow().right.as_ref().unwrap().clone());
+                }
+            }
+        }
+        Self {
+            root,
+            pre_nodes,
+        }
+    }
+
+    fn insert(&mut self, v: i32) -> i32 {
+        let node = Rc::new(RefCell::new(TreeNode::new(v)));
+        self.pre_nodes.push_back(node.clone());
+        let top = self.pre_nodes[0].clone();
+        let mut res = top.borrow().val;
+        if top.borrow().left.is_none() {
+            top.borrow_mut().left = Some(node);
+        } else {
+            top.borrow_mut().right = Some(node);
+            self.pre_nodes.pop_front();
+        }
+        res
+    }
+
+    fn get_root(&self) -> Option<Rc<RefCell<TreeNode>>> {
+        Some(self.root.clone())
+    }
+}
+
 struct Solution;

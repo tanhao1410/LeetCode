@@ -1,4 +1,17 @@
 class Solution {
+    //剑指 Offer 68 - I. 二叉搜索树的最近公共祖先
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        //判断p,q，root是否大于p,q。如果都大于，如果都小于，则递归。
+        //如果有一个相等，则root
+        //如果一个大于，一个小于呢？root
+        if(root.val > p.val && root.val > q.val){
+            return lowestCommonAncestor(root.left,p,q);
+        }
+        if(root.val < p.val && root.val < q.val){
+            return lowestCommonAncestor(root.right,p,q);
+        }
+        return root;
+    }
     //230. 二叉搜索树中第K小的元素
     public int kthSmallest(TreeNode root, int k) {
         //中序遍历法

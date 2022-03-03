@@ -6,6 +6,32 @@ fn main() {
 }
 
 impl Solution {
+    //剑指 Offer II 051. 节点之和最大的路径
+    pub fn max_path_sum(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        //思路：递归。
+        //以根节点为起始的最大路径。
+        //以根节点为中心的最大路径。
+        if root.is_none() {
+            return 0;
+        }
+        //左 + 中 + 右，与起始的相比
+        let (start_max, mid_max) = Self::max_path_start_root(&root);
+        start_max.max(mid_max)
+    }
+    fn max_path_start_root(root: &Option<Rc<RefCell<TreeNode>>>) -> (i32, i32) {
+        if root.is_none() {
+            return (-1001, -1001);
+        }
+        let cur_val = root.as_ref().unwrap().borrow().val;
+        //看它左边的大，还是右边的大，
+        let left = Self::max_path_start_root(&root.as_ref().unwrap().borrow().left);
+        let right = Self::max_path_start_root(&root.as_ref().unwrap().borrow().right);
+        //以root为起点的最大值为，若左右两边为负，可以都不加
+        let start_max = 0.max(left.0.max(right.0)) + cur_val;
+        //结果的最大值为：
+        let mid_max = start_max.max(left.0 + right.0 + cur_val).max(left.1).max(right.1);
+        (start_max, mid_max)
+    }
     //剑指 Offer II 044. 二叉树每层的最大值
     pub fn largest_values(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
         let mut res = vec![];

@@ -113,4 +113,70 @@ impl BSTIterator {
     }
 }
 
+//剑指 Offer II 048. 序列化与反序列化二叉树
+struct Codec {}
+
+impl Codec {
+    fn new() -> Self {
+        Self {}
+    }
+
+    fn serialize(&self, root: Option<Rc<RefCell<TreeNode>>>) -> String {
+        //[1,null,1]
+        let mut res = String::new();
+        res.push('[');
+        //采用层级遍历
+        use std::collections::VecDeque;
+        let mut queue = VecDeque::new();
+        queue.push_back(root);
+        while !queue.is_empty() {
+            let len = queue.len();
+            for _ in 0..len {
+                let cur = queue.pop_front().unwrap();
+                if let Some(mut node) = cur {
+                    res.push_str(node.borrow().val.to_string().as_str());
+                    res.push(',');
+                    queue.push_back(node.borrow_mut().left.take());
+                    queue.push_back(node.borrow_mut().right.take());
+                } else {
+                    res.push_str("nil,");
+                }
+            }
+        }
+        res.remove(res.len() - 1);
+        res.push(']');
+        res
+    }
+
+    fn deserialize(&self, data: String) -> Option<Rc<RefCell<TreeNode>>> {
+        let data = data.replace('[', "");
+        let data = data.replace(']', "");
+        let data = data.split(',').collect::<Vec<_>>();
+        if data[0].eq("nil") {
+            return None;
+        }
+        let mut root = Some(Rc::new(RefCell::new(TreeNode::new(data[0].parse().unwrap()))));
+        use std::collections::VecDeque;
+        let mut queue = VecDeque::new();
+        queue.push_back(root.as_ref().unwrap().clone());
+        for i in (1..data.len()).step_by(2) {
+            let parent = queue.pop_front().unwrap();
+            for j in 0..2 {
+                if !data[i + j].eq("nil") {
+                    let val: i32 = data[i + j].parse().unwrap();
+                    let mut node = Some(Rc::new(RefCell::new(TreeNode::new(val))));
+                    queue.push_back(node.as_ref().unwrap().clone());
+                    //该节点挂在哪个下面
+                    if j == 0 {
+                        parent.borrow_mut().left = node;
+                    } else {
+                        parent.borrow_mut().right = node;
+                    }
+                }
+            }
+        }
+        root
+    }
+}
+
 struct Solution;

@@ -1,4 +1,50 @@
 class Solution {
+    //54. 螺旋矩阵
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> res = new ArrayList();
+        int count = 0;
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int x = 0;
+        int y = 0;
+        int cycle = 0;
+        while(true){
+            //往右走
+            while(y < n - cycle){
+                res.add(matrix[x][y++]);
+                count ++;
+                if(count == m * n) return res;
+            }
+            //往下走，此时y已经越界，注意
+            y --;
+            x ++;
+            while(x < m - cycle){
+                res.add(matrix[x++][y]);
+                count ++;
+                if(count == m * n) return res;
+            }
+            //往左走
+            x --;
+            y --;
+            while (y >= cycle){
+                res.add(matrix[x][y --]);
+                count ++;
+                if(count == m * n) return res;
+            }
+            //往上
+            y++;
+            x --;
+            while(x >= cycle + 1){
+                res.add(matrix[x--][y]);
+                count ++;
+                if(count == m * n) return res;
+            }
+            //第二圈的开始位置
+            x++;
+            y++;
+            cycle ++;
+        }
+    }
     //48. 旋转图像
     public void rotate(int[][] matrix) {
         for(int i = 0;i < matrix.length/2;i ++){

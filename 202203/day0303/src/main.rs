@@ -6,6 +6,31 @@ fn main() {
 }
 
 impl Solution {
+    //剑指 Offer II 044. 二叉树每层的最大值
+    pub fn largest_values(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        let mut res = vec![];
+        let mut queue = std::collections::VecDeque::new();
+        if root.is_none() {
+            return res;
+        }
+        queue.push_back(root.as_ref().unwrap().clone());
+        while !queue.is_empty() {
+            let len = queue.len();
+            let mut max = i32::MIN;
+            for _ in 0..len {
+                let node = queue.pop_front().unwrap();
+                max = max.max(node.borrow().val);
+                if node.borrow().left.is_some() {
+                    queue.push_back(node.borrow().left.as_ref().unwrap().clone());
+                }
+                if node.borrow().right.is_some() {
+                    queue.push_back(node.borrow().right.as_ref().unwrap().clone());
+                }
+            }
+            res.push(max);
+        }
+        res
+    }
     //973. 最接近原点的 K 个点
     pub fn k_closest(mut points: Vec<Vec<i32>>, k: i32) -> Vec<Vec<i32>> {
         points.sort_unstable_by_key(|v| v[0] * v[0] + v[1] * v[1]);

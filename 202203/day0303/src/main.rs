@@ -6,6 +6,25 @@ fn main() {
 }
 
 impl Solution {
+    //238. 除自身以外数组的乘积
+    pub fn product_except_self(nums: Vec<i32>) -> Vec<i32> {
+        // 1  2  3  4
+        // 1  1  2  6
+        // 24 12  4  1
+        let mut v1 = vec![1; nums.len()];
+        for i in 1..nums.len() {
+            v1[i] = v1[i - 1] * nums[i - 1];
+        }
+        let mut v2 = vec![1; nums.len()];
+        for i in (0..nums.len() - 1).rev() {
+            v2[i] = v2[i + 1] * nums[i + 1]
+        }
+        v1
+            .into_iter()
+            .zip(v2.into_iter())
+            .map(|(i, j)| i * j)
+            .collect()
+    }
     //剑指 Offer II 050. 向下的路径节点之和
     pub fn path_sum(root: Option<Rc<RefCell<TreeNode>>>, target_sum: i32) -> i32 {
         Self::path_sum_parent(&root, target_sum, vec![])

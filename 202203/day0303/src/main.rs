@@ -3,6 +3,16 @@ fn main() {
 }
 
 impl Solution {
+    //122. 买卖股票的最佳时机 II
+    pub fn max_profit2(prices: Vec<i32>) -> i32 {
+        let mut res = 0;
+        let mut buy_res = -prices[0];
+        for i in 0..prices.len() {
+            buy_res = buy_res.max(res - prices[i]);
+            res = res.max(buy_res + prices[i]);
+        }
+        res
+    }
     //121. 买卖股票的最佳时机
     pub fn max_profit(prices: Vec<i32>) -> i32 {
         //写一个dp,表示后面的最大值

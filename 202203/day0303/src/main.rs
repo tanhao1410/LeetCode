@@ -6,6 +6,22 @@ fn main() {
 }
 
 impl Solution {
+    //剑指 Offer II 047. 二叉树剪枝
+    pub fn prune_tree(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
+        //什么样的节点删除呢？值为0 ，所有子节点都是0.
+        if let Some(node) = root {
+            //看它的左子树会不会被删
+            let left = Self::prune_tree(node.borrow_mut().left.take());
+            let right = Self::prune_tree(node.borrow_mut().right.take());
+            if left.is_none() && right.is_none() && node.borrow().val == 0 {
+                return None;
+            }
+            node.borrow_mut().left = left;
+            node.borrow_mut().right = right;
+            return Some(node);
+        }
+        None
+    }
     //剑指 Offer II 045. 二叉树最底层最左边的值
     pub fn find_bottom_left_value(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
         use std::collections::VecDeque;

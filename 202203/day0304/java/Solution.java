@@ -1,4 +1,30 @@
 class Solution {
+
+    //1987. 不同的好子序列数目
+    public int numberOfUniqueGoodSubsequences(String binary) {
+        int[] dp0 =  new int[binary.length()];
+        int[] dp1 = new int[binary.length()];
+        int containsZero = 0;
+        if(binary.charAt(binary.length() - 1) == '0'){
+            containsZero = 1;
+            dp0[binary.length() - 1] = 1;
+        }else{
+            dp1[binary.length() - 1] = 1;
+        }
+        System.out.println(binary.length());
+        //以0,1开头的子序列的个数
+        for(int i = binary.length() - 2;i >= 0;i --){
+            if (binary.charAt(i) == '0'){
+                containsZero = 1;
+                dp0[i] = (dp0[i + 1] + dp1[i + 1] + 1) % 1000000007;
+                dp1[i] = dp1[i + 1];
+            }else{
+                dp1[i] = (dp1[i + 1] + dp0[i + 1] + 1)%1000000007;
+                dp0[i] = dp0[i + 1];
+            }
+        }
+        return dp1[0] + containsZero;
+    }
     //297. 二叉树的序列化与反序列化
     public class Codec {
         // Encodes a tree to a single string.

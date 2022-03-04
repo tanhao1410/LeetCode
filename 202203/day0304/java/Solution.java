@@ -1,4 +1,61 @@
 class Solution {
+    //297. 二叉树的序列化与反序列化
+    public class Codec {
+        // Encodes a tree to a single string.
+        public String serialize(TreeNode root) {
+            StringBuilder res = new StringBuilder();
+            res.append("[");
+            LinkedList<TreeNode> queue = new LinkedList();
+            queue.add(root);
+            while(queue.size() > 0){
+                int size = queue.size();
+                for(int i = 0;i < size;i ++){
+                    TreeNode head = queue.remove(0);
+                    if (head == null){
+                        res.append("nil");
+                    }else{
+                        queue.add(head.left);
+                        queue.add(head.right);
+                        res.append(head.val);
+                    }
+                    res.append(",");
+                }
+            }
+            res.deleteCharAt(res.length() - 1);
+            res.append("]");
+            return res.toString();
+        }
+
+        // Decodes your encoded data to tree.
+        public TreeNode deserialize(String data) {
+            String[] datas = data.substring(1,data.length() - 1).split(",");
+            if(datas[0].equals("nil")){
+                return null;
+            }
+            TreeNode root = new TreeNode(Integer.parseInt(datas[0]));
+            LinkedList<TreeNode> queue = new LinkedList();
+            boolean insertLeft = true;
+            queue.add(root);
+            for(int i = 1;i < datas.length;i ++){
+                if(!datas[i].equals("nil")){
+                    //需要把新的节点插入到对应的节点上
+                    TreeNode newNode = new TreeNode(Integer.parseInt(datas[i]));
+                    if(insertLeft){
+                        TreeNode parent = queue.get(0);
+                        parent.left = newNode;
+                    }else{
+                        TreeNode parent = queue.remove(0);
+                        parent.right = newNode;
+                    }
+                    queue.add(newNode);
+                }else if (!insertLeft){
+                    queue.remove(0);
+                }
+                insertLeft = !insertLeft;
+            }
+            return root;
+        }
+    }
     //429. N 叉树的层序遍历
     public List<List<Integer>> levelOrder(Node root) {
         List<List<Integer>> res = new ArrayList();

@@ -6,6 +6,20 @@ use std::rc::Rc;
 use std::cell::RefCell;
 
 impl Solution {
+    //2104. 子数组范围和
+    pub fn sub_array_ranges(nums: Vec<i32>) -> i64 {
+        let mut res = 0;
+        for i in 0..nums.len() - 1 {
+            let mut min = nums[i];
+            let mut max = nums[i];
+            for j in i + 1..nums.len() {
+                min = min.min(nums[j]);
+                max = max.max(nums[j]);
+                res += (max - min) as i64;
+            }
+        }
+        res
+    }
     //1987. 不同的好子序列数目
     pub fn number_of_unique_good_subsequences(binary: String) -> i32 {
         //动态规划，dp[i] 以binary[i] 以0开头的子序列数目。以1开头的子序列数目

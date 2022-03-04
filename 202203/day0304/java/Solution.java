@@ -1,5 +1,28 @@
 class Solution {
 
+    //1630. 等差子数组
+    public List<Boolean> checkArithmeticSubarrays(int[] nums, int[] l, int[] r) {
+        //判断是否是等差数列，排序，看差值是否相等。
+        List<Boolean> res = new ArrayList();
+        for(int i = 0;i < l.length;i ++){
+            int[] itemArray = new int[r[i] - l[i] + 1];
+            for(int j = l[i];j <= r[i];j ++) itemArray[j-l[i]] = nums[j];
+            res.add(isSubarrays(itemArray));
+        }
+        return res;
+    }
+
+    //判断一个数组是否是等差数列数组，排序，判断，nlogn；
+    private boolean isSubarrays(int[] nums){
+        if(nums.length < 2) return false;
+        Arrays.sort(nums);
+        int dis = nums[1] - nums[0];
+        for(int i = 2;i < nums.length;i ++){
+            if (nums[i] - nums[i - 1] != dis) return false;
+        }
+        return true;
+    }
+
     //1987. 不同的好子序列数目
     public int numberOfUniqueGoodSubsequences(String binary) {
         int[] dp0 =  new int[binary.length()];

@@ -6,6 +6,23 @@ use std::rc::Rc;
 use std::cell::RefCell;
 
 impl Solution {
+    //1630. 等差子数组
+    pub fn check_arithmetic_subarrays(nums: Vec<i32>, l: Vec<i32>, r: Vec<i32>) -> Vec<bool> {
+        let is_subarrays = |mut nums: Vec<i32>| {
+            nums.sort_unstable();
+            let mut dis = nums[1] - nums[0];
+            for i in 2..nums.len() {
+                if nums[i] - nums[i - 1] != dis {
+                    return false;
+                }
+            }
+            true
+        };
+        l.into_iter()
+            .zip(r.into_iter())
+            .map(|(i, j)| is_subarrays((&nums[i as usize..=j as usize]).to_vec()))
+            .collect()
+    }
     //2104. 子数组范围和
     pub fn sub_array_ranges(nums: Vec<i32>) -> i64 {
         let mut res = 0;

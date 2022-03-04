@@ -1,4 +1,27 @@
 class Solution {
+    //429. N 叉树的层序遍历
+    public List<List<Integer>> levelOrder(Node root) {
+        List<List<Integer>> res = new ArrayList();
+        LinkedList<Node> queue= new LinkedList();
+        if(root != null) queue.add(root);
+        while (queue.size() > 0){
+            int size = queue.size();
+            List<Integer> item = new ArrayList();
+            for (int i = 0;i < size;i ++){
+                Node node = queue.remove(0);
+                item.add(node.val);
+                for(Node n : node.children){
+                    if (n != null) queue.add(n);
+                }
+            }
+            res.add(item);
+        }
+        return res;
+    }
+    class Node {
+        public int val;
+        public List<Node> children;
+    };
 
     //124. 二叉树中的最大路径和
     public int maxPathSum(TreeNode root) {

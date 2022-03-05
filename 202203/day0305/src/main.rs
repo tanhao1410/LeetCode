@@ -3,6 +3,21 @@ fn main() {
 }
 
 impl Solution {
+    //1557. 可以到达所有点的最少点数目
+    pub fn find_smallest_set_of_vertices(n: i32, edges: Vec<Vec<i32>>) -> Vec<i32> {
+        let mut reached = vec![false; n as usize];
+        for edge in &edges {
+            //代表这个节点可以通过其他节点到达
+            let end = edge[1] as usize;
+            reached[end] = true;
+        }
+        reached
+            .into_iter()
+            .enumerate()
+            .filter(|&v| !v.1)
+            .map(|v| v.0 as i32)
+            .collect()
+    }
     //42. 接雨水
     pub fn trap(height: Vec<i32>) -> i32 {
         //它前面的最大值，它后面的最大值

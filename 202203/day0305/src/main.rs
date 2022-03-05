@@ -3,6 +3,23 @@ fn main() {
 }
 
 impl Solution {
+    //841. 钥匙和房间
+    pub fn can_visit_all_rooms(rooms: Vec<Vec<i32>>) -> bool {
+        //深度优先遍历
+        let mut stack = vec![0];
+        let mut used = vec![false; rooms.len()];
+        used[0] = true;
+        while let Some(room) = stack.pop() {
+            let new_rooms = &rooms[room];
+            for new_room in new_rooms {
+                if !used[*new_room as usize] {
+                    used[*new_room as usize] = true;
+                    stack.push(*new_room as usize);
+                }
+            }
+        }
+        used.into_iter().all(|e| e)
+    }
     //11. 盛最多水的容器
     pub fn max_area(height: Vec<i32>) -> i32 {
         //双指针
@@ -10,7 +27,7 @@ impl Solution {
         let mut end = height.len() - 1;
         let mut res = 0;
         while end > start {
-            res = res.max((end - start) * height[start].min(height[end]));
+            res = res.max((end - start) as i32 * height[start].min(height[end]));
             if height[start] < height[end] {
                 start += 1;
             } else {

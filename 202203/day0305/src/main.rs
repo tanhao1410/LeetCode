@@ -3,6 +3,22 @@ fn main() {
 }
 
 impl Solution {
+    //11. 盛最多水的容器
+    pub fn max_area(height: Vec<i32>) -> i32 {
+        //双指针
+        let mut start = 0;
+        let mut end = height.len() - 1;
+        let mut res = 0;
+        while end > start {
+            res = res.max((end - start) * height[start].min(height[end]));
+            if height[start] < height[end] {
+                start += 1;
+            } else {
+                end -= 1;
+            }
+        }
+        res
+    }
     //1557. 可以到达所有点的最少点数目
     pub fn find_smallest_set_of_vertices(n: i32, edges: Vec<Vec<i32>>) -> Vec<i32> {
         let mut reached = vec![false; n as usize];

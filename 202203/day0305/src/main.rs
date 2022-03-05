@@ -2,7 +2,33 @@ fn main() {
     println!("Hello, world!");
 }
 
+use std::rc::Rc;
+use std::cell::RefCell;
+
 impl Solution {
+    //剑指 Offer II 052. 展平二叉搜索树
+    pub fn increasing_bst(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
+        Self::create_tree(&Self::mid_read_tree(&root))
+    }
+
+    fn create_tree(nums: &[i32]) -> Option<Rc<RefCell<TreeNode>>> {
+        if nums.len() == 0 {
+            return None;
+        }
+        let mut root = TreeNode::new(nums[0]);
+        root.right = Self::create_tree(&nums[1..]);
+        Some(Rc::new(RefCell::new(root)))
+    }
+
+    fn mid_read_tree(root: &Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        let mut res = vec![];
+        if let Some(node) = root {
+            res.append(&mut Self::mid_read_tree(&node.borrow_mut().left));
+            res.push(node.borrow().val);
+            res.append(&mut Self::mid_read_tree(&node.borrow().right))
+        }
+        res
+    }
     //841. 钥匙和房间
     pub fn can_visit_all_rooms(rooms: Vec<Vec<i32>>) -> bool {
         //深度优先遍历
@@ -108,3 +134,21 @@ impl Solution {
 }
 
 struct Solution;
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct TreeNode {
+    pub val: i32,
+    pub left: Option<Rc<RefCell<TreeNode>>>,
+    pub right: Option<Rc<RefCell<TreeNode>>>,
+}
+
+impl TreeNode {
+    #[inline]
+    pub fn new(val: i32) -> Self {
+        TreeNode {
+            val,
+            left: None,
+            right: None,
+        }
+    }
+}

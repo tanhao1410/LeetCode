@@ -6,6 +6,49 @@ use std::rc::Rc;
 use std::cell::RefCell;
 
 impl Solution {
+    //剑指 Offer II 053. 二叉搜索树中的中序后继
+    pub fn inorder_successor(root: Option<Rc<RefCell<TreeNode>>>, p: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
+        let root = root.as_ref().unwrap();
+        let p_val = p.as_ref().unwrap().borrow().val;
+        if p_val == root.borrow().val {
+            //返回右子树的最小值
+            return Self::tree_min(root.borrow_mut().right.take());
+        } else if p_val < root.borrow().val {
+            //找左子树的最大值
+            if root.borrow().left.is_none() {
+                return None;
+            }
+            let left_max = Self::tree_max(Some(root.borrow().left.as_ref().unwrap().clone()));
+            if left_max.is_some() && left_max.as_ref().unwrap().borrow().val == p_val {
+                return Some(root.clone());
+            }
+            return Self::inorder_successor(root.borrow_mut().left.take(), p);
+        } else {
+            return Self::inorder_successor(root.borrow_mut().right.take(), p);
+        }
+    }
+
+    fn tree_max(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
+        if root.is_none() {
+            return None;
+        }
+        if root.as_ref().unwrap().borrow().right.is_none() {
+            return root;
+        }
+        Self::tree_max(Some(root.as_ref().unwrap().borrow().right.as_ref().unwrap().clone()))
+    }
+
+    fn tree_min(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
+        if root.is_none() {
+            return None;
+        }
+        if root.as_ref().unwrap().borrow().left.is_none() {
+            return root;
+        }
+        Self::tree_min(Some(root.as_ref().unwrap().borrow().left.as_ref().unwrap().clone()))
+    }
+
+
     //剑指 Offer II 052. 展平二叉搜索树
     pub fn increasing_bst(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
         Self::create_tree(&Self::mid_read_tree(&root))

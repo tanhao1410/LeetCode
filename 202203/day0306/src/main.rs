@@ -1,3 +1,6 @@
+use std::cell::RefCell;
+use std::rc::Rc;
+
 fn main() {
     println!("Hello, world!");
 }
@@ -78,3 +81,47 @@ impl Solution {
 }
 
 struct Solution;
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct TreeNode {
+    pub val: i32,
+    pub left: Option<Rc<RefCell<TreeNode>>>,
+    pub right: Option<Rc<RefCell<TreeNode>>>,
+}
+
+impl TreeNode {
+    #[inline]
+    pub fn new(val: i32) -> Self {
+        TreeNode {
+            val,
+            left: None,
+            right: None,
+        }
+    }
+}
+//剑指 Offer II 055. 二叉搜索树迭代器
+struct BSTIterator {
+    datas: Vec<i32>,
+}
+
+impl BSTIterator {
+    fn new(root: Option<Rc<RefCell<TreeNode>>>) -> Self {
+        let mut res = Self { datas: vec![] };
+        res.mid_read(root);
+        res
+    }
+    fn mid_read(&mut self, root: Option<Rc<RefCell<TreeNode>>>) {
+        if let Some(node) = root {
+            self.mid_read(node.borrow_mut().right.take());
+            self.datas.push(node.borrow().val);
+            self.mid_read(node.borrow_mut().left.take());
+        }
+    }
+    fn next(&mut self) -> i32 {
+        self.datas.pop().unwrap()
+    }
+
+    fn has_next(&self) -> bool {
+        self.datas.len() > 0
+    }
+}

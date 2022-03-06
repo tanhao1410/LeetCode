@@ -1,4 +1,38 @@
 class Solution {
+    //剑指 Offer II 028. 展平多级双向链表
+    public Node flatten(Node head) {
+        if (head == null) return null;
+        //优先将child放进来
+        if (head.child != null){
+            //处理head.child
+            Node next = head.next;
+            Node child = flatten(head.child);
+            head.child = null;
+
+            Node childTail = tail(child);
+            head.next = child;
+            if (child != null) child.prev = head;
+
+            childTail.next = flatten(next);
+            if (next != null) next.prev = childTail;
+        }else{
+            flatten(head.next);
+        }
+        return head;
+    }
+    private Node tail(Node head){
+        Node tail = head;
+        while(tail.next != null){
+            tail = tail.next;
+        }
+        return tail;
+    }
+    class Node {
+        public int val;
+        public Node prev;
+        public Node next;
+        public Node child;
+    };
     //1376. 通知所有员工所需的时间
     public int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
         //思路：用一个数组，表示员工的下级都有谁

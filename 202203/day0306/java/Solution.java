@@ -1,4 +1,33 @@
 class Solution {
+    //1376. 通知所有员工所需的时间
+    public int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+        //思路：用一个数组，表示员工的下级都有谁
+        ArrayList<Integer>[] subs = new ArrayList[n];
+        for(int i = 0;i < n;i ++) subs[i] = new ArrayList();
+        for(int i = 0;i < manager.length;i ++){
+            if (manager[i] >= 0 )subs[manager[i]].add(i);
+        }
+        //从headID开始广度优先遍历，需要记录到达每一个员工的时间
+        int[] times = new int[n];
+        Stack<Integer> stack = new Stack();
+        stack.push(headID);
+        while(stack.size() > 0){
+            //从中弹出一个人
+            int cur = stack.pop();
+            //通知到它的时候已经花费的时间为
+            int alreadyTime = times[cur];
+            //它的下级
+            for(Integer sub : subs[cur]){
+                times[sub] = alreadyTime + informTime[cur];
+                stack.push(sub);
+            }
+        }
+        int res = 0;
+        for(int i = 0;i < n;i ++){
+            res = Math.max(res,times[i]);
+        }
+        return res;
+    }
     //49. 字母异位词分组
     public List<List<String>> groupAnagrams(String[] strs) {
         //hashmap ,key 为字母排序后的

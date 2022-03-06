@@ -3,6 +3,32 @@ fn main() {
 }
 
 impl Solution {
+    //2100. 适合打劫银行的日子
+    pub fn good_days_to_rob_bank(security: Vec<i32>, time: i32) -> Vec<i32> {
+        //down[i] up[i]前面非递增的天数，后面非递减的数量
+        let mut down = vec![0; security.len()];
+        let mut up = vec![0; security.len()];
+        for i in 0..security.len() {
+            if i == 0 {
+                down[i] = 0;
+                up[security.len() - 1 - i] = 0;
+            } else {
+                if security[i] <= security[i - 1] {
+                    down[i] = down[i - 1] + 1;
+                }
+                if security[security.len() - 1 - i] <= security[security.len() - i] {
+                    up[security.len() - 1 - i] = up[security.len() - i] + 1;
+                }
+            }
+        }
+        let mut res = vec![];
+        for i in 0..up.len() {
+            if down[i] >= time && up[i] >= time {
+                res.push(i as i32);
+            }
+        }
+        res
+    }
     //215. 数组中的第K个最大元素
     pub fn find_kth_largest(mut nums: Vec<i32>, k: i32) -> i32 {
         //以第一个元素为开始，将大于它的放后面，小于它的放前面。然后递归的形式找出元素。

@@ -6,6 +6,51 @@ use std::rc::Rc;
 use std::cell::RefCell;
 
 impl Solution {
+    //剑指 Offer II 054. 所有大于等于节点的值之和
+    pub fn convert_bst(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
+        //如果节点左右都无，值不变。需要看上面是否有传递的值。
+        //右节点有值的话，先改变右节点。然后，将右子树的和+上
+        //对于左节点，每一个左节点。开始时加上上面传递来的值。
+        if root.is_none() {
+            return None;
+        }
+        Self::convert_bst_preval(Some(root.as_ref().unwrap().clone()), 0);
+        root
+    }
+    fn convert_bst_preval(root: Option<Rc<RefCell<TreeNode>>>, pre: i32) {
+        if let Some(node) = root {
+            if node.borrow().left.is_none() && node.borrow().right.is_none() {
+                node.borrow_mut().val += pre;
+                return;
+            }
+            if node.borrow().right.is_some() {
+                Self::convert_bst_preval(Some(node.borrow().right.as_ref().unwrap().clone()), pre);
+                //
+                let right_sum = Self::tree_max(&node.borrow().right);
+                node.borrow_mut().val += right_sum;
+            } else {
+                node.borrow_mut().val += pre;
+            }
+            let cur_val = node.borrow().val;
+            if node.borrow().left.is_some() {
+                Self::convert_bst_preval(Some(node.borrow().left.as_ref().unwrap().clone()), cur_val);
+                //求出left后，
+            }
+            //一个节点，它的值应该是自己+右子树的最大树
+        }
+    }
+
+    fn tree_max2(root: &Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut sum = 0;
+        if root.is_some() {
+            if root.as_ref().unwrap().borrow().left.is_some() {
+                return Self::tree_max2(&root.as_ref().unwrap().borrow().left);
+            }
+            sum = root.as_ref().unwrap().borrow().val;
+        }
+        sum
+    }
+
     //剑指 Offer II 053. 二叉搜索树中的中序后继
     pub fn inorder_successor(root: Option<Rc<RefCell<TreeNode>>>, p: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
         let root = root.as_ref().unwrap();

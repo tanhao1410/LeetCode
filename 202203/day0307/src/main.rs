@@ -3,6 +3,22 @@ fn main() {
 }
 
 impl Solution {
+    //剑指 Offer II 038. 每日温度
+    pub fn daily_temperatures(temperatures: Vec<i32>) -> Vec<i32> {
+        let mut stack: Vec<(i32, usize)> = vec![];
+        let mut res = vec![0; temperatures.len()];
+        for i in (0..temperatures.len()).rev() {
+            let cur = temperatures[i];
+            while !stack.is_empty() && stack[stack.len() - 1].0 <= cur {
+                stack.pop();
+            }
+            if !stack.is_empty() {
+                res[i] = stack[stack.len() - 1].0 as i32 - i as i32;
+            }
+            stack.push((cur, i));
+        }
+        res
+    }
     //剑指 Offer II 035. 最小时间差
     pub fn find_min_difference(time_points: Vec<String>) -> i32 {
         //每一分钟做个对应的话，也不过24*60个。需要注意的是存在循环。
@@ -11,8 +27,8 @@ impl Solution {
         let time_to_int = |time: &str| {
             let mut res = 0;
             let mut split = time.split(":");
-            res += split.next().unwrap().parse() * 60;
-            res += split.next().unwrap().parse();
+            res += split.next().unwrap().parse::<i32>().unwrap() * 60;
+            res += split.next().unwrap().parse::<i32>().unwrap();
             res
         };
         for time in time_points {

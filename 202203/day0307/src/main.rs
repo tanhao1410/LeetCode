@@ -3,6 +3,19 @@ fn main() {
 }
 
 impl Solution {
+    //剑指 Offer II 063. 替换单词
+    pub fn replace_words(dictionary: Vec<String>, sentence: String) -> String {
+        let mut trie = Trie::new();
+        for word in dictionary {
+            trie.insert(word);
+        }
+        sentence
+            .split(" ")
+            .map(|word| trie.preword(word))
+            .collect::<Vec<_>>()
+            .join(" ")
+    }
+
     //剑指 Offer II 056. 二叉搜索树中两个节点之和
     pub fn find_target(root: Option<Rc<RefCell<TreeNode>>>, k: i32) -> bool {
         let mut v = vec![];
@@ -197,5 +210,24 @@ impl Trie {
             }
         }
         true
+    }
+
+    pub fn preword(&self, word: &str) -> String {
+        let bytes = word.as_bytes();
+        let mut res = vec![];
+        let mut next = self;
+        for &b in bytes {
+            //找到了前缀词
+            if next.end_flag {
+                return String::from_utf8(res).unwrap();
+            }
+            if next.child[(b - b'a') as usize].is_some() {
+                res.push(b);
+                next = next.child[(b - b'a') as usize].as_ref().unwrap();
+            } else {
+                break;
+            }
+        }
+        word.to_string()
     }
 }

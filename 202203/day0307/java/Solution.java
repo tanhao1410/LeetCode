@@ -1,4 +1,34 @@
 class Solution {
+    //713. 乘积小于K的子数组
+    public int numSubarrayProductLessThanK(int[] nums, int k) {
+        //滑动窗口？先计算一个窗口，小于k,然后移动。每加入一个数，看是否可以，如果不可以了，减去一个数，直到小于或敞口为0
+        int start = 0;
+        int end = 0;
+        int res = 0;
+        int mul = nums[0];
+        while(end < nums.length){
+            //看窗口内的积是否大于k
+            if(mul < k){
+                //意思是这个数可以放进来，但要加几呢？
+                //
+                res += (end - start + 1);
+                end ++;
+                if(end < nums.length){
+                    mul *= nums[end];
+                }
+            }else{
+                //说明窗口内的积大于k,start向前走
+                mul /= nums[start];
+                start ++;
+                //如果此时start == end了，即
+                if (start > end){
+                    end = start;
+                    if(start < nums.length) mul = nums[start];
+                }
+            }
+        }
+        return res;
+    }
     //438. 找到字符串中所有字母异位词
     public List<Integer> findAnagrams(String s, String p) {
         List<Integer> res = new ArrayList();

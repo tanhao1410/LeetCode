@@ -3,6 +3,20 @@ fn main() {
 }
 
 impl Solution {
+    //剑指 Offer II 012. 左右两边子数组的和相等
+    pub fn pivot_index(nums: Vec<i32>) -> i32 {
+        //先求总和，然后从零开始依次求和sum，若sum = (sum2 - cur )/2。返回结果
+        let sum = nums.iter().sum::<i32>();
+        let mut s = 0;
+        for i in 0..nums.len() {
+            let cur = nums[i];
+            if s * 2 == sum - cur {
+                return i as i32;
+            }
+            s += cur;
+        }
+        -1
+    }
     //剑指 Offer II 038. 每日温度
     pub fn daily_temperatures(temperatures: Vec<i32>) -> Vec<i32> {
         let mut stack: Vec<(i32, usize)> = vec![];

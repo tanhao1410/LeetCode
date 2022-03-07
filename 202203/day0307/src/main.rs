@@ -3,6 +3,31 @@ fn main() {
 }
 
 impl Solution {
+    //剑指 Offer II 056. 二叉搜索树中两个节点之和
+    pub fn find_target(root: Option<Rc<RefCell<TreeNode>>>, k: i32) -> bool {
+        let mut v = vec![];
+        Self::read_tree(&root,&mut v);
+        let mut i = 0;
+        let mut j = v.len() - 1;
+        while j > i {
+            if v[i] + v[j] == k{
+                return true;
+            }else if v[i] + v[j] > k{
+                j -= 1;
+            }else{
+                i += 1;
+            }
+        }
+        return false;
+    }
+
+    fn read_tree(root:&Option<Rc<RefCell<TreeNode>>>,v:&mut Vec<i32>){
+        if root.is_some(){
+            Self::read_tree(&root.as_ref().unwrap().borrow().left,v);
+            v.push(root.as_ref().unwrap().borrow().val);
+            Self::read_tree(&root.as_ref().unwrap().borrow().right,v);
+        }
+    }
     //剑指 Offer II 012. 左右两边子数组的和相等
     pub fn pivot_index(nums: Vec<i32>) -> i32 {
         //先求总和，然后从零开始依次求和sum，若sum = (sum2 - cur )/2。返回结果
@@ -102,3 +127,23 @@ impl Solution {
 }
 
 struct Solution;
+
+#[derive(Debug, PartialEq, Eq)]
+pub struct TreeNode {
+    pub val: i32,
+    pub left: Option<Rc<RefCell<TreeNode>>>,
+    pub right: Option<Rc<RefCell<TreeNode>>>,
+}
+
+impl TreeNode {
+    #[inline]
+    pub fn new(val: i32) -> Self {
+        TreeNode {
+            val,
+            left: None,
+            right: None,
+        }
+    }
+}
+use std::rc::Rc;
+use std::cell::RefCell;

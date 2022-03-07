@@ -3,6 +3,34 @@ fn main() {
 }
 
 impl Solution {
+    //剑指 Offer II 005. 单词长度的最大乘积
+    pub fn max_product(words: Vec<String>) -> i32 {
+        //一个单词对应一个数，26位，分别表示是否含有a,b,c等等。如果两个单词生成的数 & == 0,说明不含同一个字母
+        let as_int = |word: &String| {
+            let mut res = 0;
+            let mut letters = vec![false; 26];
+            let bytes = word.as_bytes();
+            for &b in bytes {
+                letters[(b - b'a') as usize] = true;
+            }
+            for i in 0..26 {
+                if letters[i] {
+                    res |= (1 << i);
+                }
+            }
+            res
+        };
+        let word_ints = words.iter().map(as_int).collect::<Vec<_>>();
+        let mut res = 0;
+        for i in 0..words.len() - 1 {
+            for j in i..words.len() {
+                if word_ints[i] & word_ints[j] == 0 {
+                    res = res.max(words[i].len() * words[j].len())
+                }
+            }
+        }
+        res as i32
+    }
     //剑指 Offer II 063. 替换单词
     pub fn replace_words(dictionary: Vec<String>, sentence: String) -> String {
         let mut trie = Trie::new();

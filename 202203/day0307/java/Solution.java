@@ -1,4 +1,32 @@
 class Solution {
+    //438. 找到字符串中所有字母异位词
+    public List<Integer> findAnagrams(String s, String p) {
+        List<Integer> res = new ArrayList();
+        //用一个数组表示各位的情况。
+        int[] bits = new int[26];
+        byte[] pBytes = p.getBytes();
+        for(int i = 0;i < pBytes.length;i ++) bits[pBytes[i] - 'a']++;
+        for(int i = 0;i < p.length() && i < s.length();i ++) bits[s.charAt(i) - 'a'] --;
+        if(allZero(bits)) res.add(0);
+        //确定是否相同看的就是每位是否都是0
+        // 从0开始算起，进来一个词，减去一个词
+        for(int i = p.length();i < s.length();i ++){
+            //加上一个词，减去一个词
+            bits[s.charAt(i) - 'a'] --;
+            bits[s.charAt(i - p.length()) - 'a'] ++;
+            if(allZero(bits)){
+                res.add(i - p.length() + 1);
+            }
+        }
+        return res;
+    }
+
+    private boolean allZero(int[] bits){
+        for(int i = 0;i < bits.length;i ++){
+            if(bits[i] != 0) return false;
+        }
+        return true;
+    }
     //504. 七进制数
     public String convertToBase7(int num) {
         if (num == 0)return "0";

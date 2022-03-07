@@ -3,6 +3,33 @@ fn main() {
 }
 
 impl Solution {
+    //剑指 Offer II 035. 最小时间差
+    pub fn find_min_difference(time_points: Vec<String>) -> i32 {
+        //每一分钟做个对应的话，也不过24*60个。需要注意的是存在循环。
+        use std::collections::HashSet;
+        let mut set = HashSet::new();
+        let time_to_int = |time: &str| {
+            let mut res = 0;
+            let mut split = time.split(":");
+            res += split.next().unwrap().parse() * 60;
+            res += split.next().unwrap().parse();
+            res
+        };
+        for time in time_points {
+            let time = time_to_int(&time);
+            if set.contains(&time) {
+                return 0;
+            }
+            set.insert(time);
+        }
+        let mut times = set.into_iter().collect::<Vec<_>>();
+        times.sort_unstable();
+        let mut min = times[0] + 1440 - times[times.len() - 1];
+        for i in 1..times.len() {
+            min = min.min(times[i] - times[i - 1]);
+        }
+        min
+    }
     //剑指 Offer II 036. 后缀表达式
     pub fn eval_rpn(tokens: Vec<String>) -> i32 {
         use std::ops::Add;

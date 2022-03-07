@@ -6,26 +6,26 @@ impl Solution {
     //剑指 Offer II 056. 二叉搜索树中两个节点之和
     pub fn find_target(root: Option<Rc<RefCell<TreeNode>>>, k: i32) -> bool {
         let mut v = vec![];
-        Self::read_tree(&root,&mut v);
+        Self::read_tree(&root, &mut v);
         let mut i = 0;
         let mut j = v.len() - 1;
         while j > i {
-            if v[i] + v[j] == k{
+            if v[i] + v[j] == k {
                 return true;
-            }else if v[i] + v[j] > k{
+            } else if v[i] + v[j] > k {
                 j -= 1;
-            }else{
+            } else {
                 i += 1;
             }
         }
         return false;
     }
 
-    fn read_tree(root:&Option<Rc<RefCell<TreeNode>>>,v:&mut Vec<i32>){
-        if root.is_some(){
-            Self::read_tree(&root.as_ref().unwrap().borrow().left,v);
+    fn read_tree(root: &Option<Rc<RefCell<TreeNode>>>, v: &mut Vec<i32>) {
+        if root.is_some() {
+            Self::read_tree(&root.as_ref().unwrap().borrow().left, v);
             v.push(root.as_ref().unwrap().borrow().val);
-            Self::read_tree(&root.as_ref().unwrap().borrow().right,v);
+            Self::read_tree(&root.as_ref().unwrap().borrow().right, v);
         }
     }
     //剑指 Offer II 012. 左右两边子数组的和相等
@@ -145,5 +145,57 @@ impl TreeNode {
         }
     }
 }
+
 use std::rc::Rc;
 use std::cell::RefCell;
+
+//剑指 Offer II 062. 实现前缀树
+#[derive(Clone)]
+struct Trie {
+    child: Vec<Option<Trie>>,
+    end_flag: bool,
+}
+
+impl Trie {
+    fn new() -> Self {
+        Self { child: vec![None; 26], end_flag: false }
+    }
+
+    fn insert(&mut self, word: String) {
+        let bytes = word.as_bytes();
+        let mut next = self;
+        for &b in bytes {
+            if next.child[(b - b'a') as usize].is_none() {
+                next.child[(b - b'a') as usize] = Some(Trie::new());
+            }
+            next = next.child[(b - b'a') as usize].as_mut().unwrap();
+        }
+        next.end_flag = true;
+    }
+
+    fn search(&self, word: String) -> bool {
+        let bytes = word.as_bytes();
+        let mut next = self;
+        for &b in bytes {
+            if next.child[(b - b'a') as usize].is_some() {
+                next = next.child[(b - b'a') as usize].as_ref().unwrap();
+            } else {
+                return false;
+            }
+        }
+        next.end_flag
+    }
+
+    fn starts_with(&self, prefix: String) -> bool {
+        let bytes = prefix.as_bytes();
+        let mut next = self;
+        for &b in bytes {
+            if next.child[(b - b'a') as usize].is_some() {
+                next = next.child[(b - b'a') as usize].as_ref().unwrap();
+            } else {
+                return false;
+            }
+        }
+        true
+    }
+}

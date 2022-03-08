@@ -3,6 +3,34 @@ fn main() {
 }
 
 impl Solution {
+    //剑指 Offer II 018. 有效的回文
+    pub fn is_palindrome(s: String) -> bool {
+        let mut bytes = s.into_bytes();
+        let mut i = 0;
+        let mut j = bytes.len() - 1;
+        while j > i {
+            if !((bytes[i] >= b'a' && bytes[i] <= b'z') || (bytes[i] >= b'A' && bytes[i] <= b'Z') || (bytes[i] >= b'0' && bytes[i] <= b'9')) {
+                i += 1;
+                continue;
+            }
+            if !((bytes[j] >= b'a' && bytes[j] <= b'z') || (bytes[j] >= b'A' && bytes[j] <= b'Z') || (bytes[j] >= b'0' && bytes[j] <= b'9')) {
+                j -= 1;
+                continue;
+            }
+            if bytes[i] >= b'A' && bytes[i] <= b'Z' {
+                bytes[i] += b'a' - b'A';
+            }
+            if bytes[j] >= b'A' && bytes[j] <= b'Z' {
+                bytes[j] += b'a' - b'A';
+            }
+            if bytes[i] != bytes[j] {
+                return false;
+            }
+            i += 1;
+            j -= 1;
+        }
+        true
+    }
     //2055. 蜡烛之间的盘子
     pub fn plates_between_candles(s: String, queries: Vec<Vec<i32>>) -> Vec<i32> {
         //前面盘子的数量的，下一个蜡烛的为主，上一个蜡烛的位置

@@ -3,6 +3,22 @@ fn main() {
 }
 
 impl Solution {
+    //剑指 Offer II 032. 有效的变位词
+    pub fn is_anagram(s: String, t: String) -> bool {
+        if s == t {
+            return false;
+        }
+        let mut v = vec![0; 26];
+        let bytes = s.as_bytes();
+        for &b in bytes {
+            v[(b - 'a') as usize] += 1;
+        }
+        let bytes = t.as_bytes();
+        for &b in bytes {
+            v[(b - b'a') as usize] -= 1;
+        }
+        v.into_iter().all(|e| e == 0)
+    }
     //剑指 Offer II 018. 有效的回文
     pub fn is_palindrome(s: String) -> bool {
         let mut bytes = s.into_bytes();

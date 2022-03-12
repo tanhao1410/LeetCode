@@ -4,6 +4,32 @@ fn main() {
 
 
 impl Solution {
+    //剑指 Offer II 077. 链表排序
+    pub fn sort_list(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let list_to_vec = |mut head: &Option<Box<ListNode>>| {
+            let mut v = vec![];
+            while let Some(node) = head {
+                v.push(node.val);
+                head = &node.next;
+            }
+            v.sort_unstable();
+            v
+        };
+        let vec_to_list = |v: Vec<i32>| {
+            if v.len() == 0 {
+                return None;
+            }
+            let mut head = Box::new(ListNode::new(v[0]));
+            let mut p = head.as_mut();
+            for i in 1..v.len() {
+                p.next = Some(Box::new(ListNode::new(v[i])));
+                p = p.next.as_mut().unwrap();
+            }
+            Some(head)
+        };
+        vec_to_list(list_to_vec(&head))
+    }
+
     //61. 旋转链表
     pub fn rotate_right(mut head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
         if head.is_none() {

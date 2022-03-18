@@ -2,6 +2,24 @@ fn main() {
     println!("Hello, world!");
 }
 
+//3. 无重复字符的最长子串
+pub fn length_of_longest_substring(s: String) -> i32 {
+    use std::collections::HashMap;
+    let mut map = HashMap::new();
+    let bytes = s.as_bytes();
+    let mut res = 0;
+    let mut start = 0;
+    for i in 0..s.len() {
+        let byte = bytes[i];
+        if map.contains_key(&byte) {
+            start = start.max(map.get(&byte).unwrap() + 1);
+        }
+        map.insert(byte, i);
+        res = res.max((i + 1 - start) as i32);
+    }
+    res
+}
+
 //2043. 简易银行系统
 struct Bank {
     balance: Vec<i64>,

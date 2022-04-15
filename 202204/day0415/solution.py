@@ -13,6 +13,21 @@ class ListNode:
 
 class Solution:
 
+    # 3. 无重复字符的最长子串
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        # 思路，map ,记录每一个字母在之前出现的位置，如果前面没出现，
+        dic = {}
+        start = 0
+        res = 0
+        for i in range(len(s)):
+            c = s[i]
+            # 前面该字母出现过，则只能让start往前走一步
+            if dic.get(c) is not None and dic[c] + 1 > start:
+                start = dic.get(c) + 1
+            res = max(res, i - start + 1)
+            dic[c] = i
+        return res
+
     # 21. 合并两个有序链表
     def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
         head = ListNode()

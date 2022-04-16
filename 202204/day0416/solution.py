@@ -1,4 +1,18 @@
+from typing import List
+
+
 class Solution:
+
+    # 1. 两数之和
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        # 采用map的形式，返回的是下标
+        map = {}
+        for i in range(len(nums)):
+            # 看map中是否含有target-nums[i]
+            if map.get(target - nums[i]) is not None:
+                return [map[target - nums[i]], i]
+            map[nums[i]] = i
+
     # 479. 最大回文数乘积
     def largestPalindrome(self, n: int) -> int:
         if n == 1:

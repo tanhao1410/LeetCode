@@ -6,6 +6,30 @@ class TreeNode:
 
 
 class Solution:
+    # 103. 二叉树的锯齿形层序遍历
+    def zigzagLevelOrder(self, root: TreeNode) -> List[List[int]]:
+        queue = []
+        res = []
+        flag = True
+        if root:
+            queue.append(root)
+        while queue:
+            length = len(queue)
+            item = [0 for _ in range(length)]
+            for i in range(length):
+                if queue[i].left:
+                    queue.append(queue[i].left)
+                if queue[i].right:
+                    queue.append(queue[i].right)
+                if flag:
+                    item[i] = queue[i].val
+                else:
+                    item[length - 1 - i] = queue[i].val
+            queue = queue[length:]
+            flag = not flag
+            res.append(item)
+        return res
+
     # 53. 最大子数组和
     def maxSubArray(self, nums: List[int]) -> int:
         # 思路：

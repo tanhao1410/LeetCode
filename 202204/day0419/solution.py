@@ -6,6 +6,23 @@ class TreeNode:
 
 
 class Solution:
+    # 20. 有效的括号
+    def isValid(self, s: str) -> bool:
+        # 思路：左括号进栈，右括号出站，看是否对应，如果不对应，返回false，最后看栈是否为空
+        stack = []
+        map = {'(': ')', '{': '}', '[': ']'}
+        for i in range(len(s)):
+            if map.get(s[i]):
+                stack.append(s[i])
+            else:
+                # 出栈
+                if not stack:
+                    return False
+                top = stack.pop()
+                if s[i] != map[top]:
+                    return False
+        return len(stack) == 0
+
     # 103. 二叉树的锯齿形层序遍历
     def zigzagLevelOrder(self, root: TreeNode) -> List[List[int]]:
         queue = []

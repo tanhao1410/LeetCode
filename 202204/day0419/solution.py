@@ -6,6 +6,19 @@ class TreeNode:
 
 
 class Solution:
+    # 198. 打家劫舍
+    def rob(self, nums: List[int]) -> int:
+        # dp[i] 偷第i户人家能拿到的最大值，dp2[i]不偷第i户能拿到的最大值
+        dp, dp2 = [0 for _ in range(len(nums))], [0 for _ in nums]
+        dp[0] = nums[0]
+        for i in range(1, len(nums)):
+            dp[i] = nums[i] + dp2[i - 1]  # 偷第i家，说明不能偷i - 1家
+            if i > 1:
+                dp2[i] = max(dp[i - 1], dp[i - 2])
+            else:
+                dp2[i] = dp[i - 1]
+        return max(dp[-1], dp2[-1])
+
     # 20. 有效的括号
     def isValid(self, s: str) -> bool:
         # 思路：左括号进栈，右括号出站，看是否对应，如果不对应，返回false，最后看栈是否为空

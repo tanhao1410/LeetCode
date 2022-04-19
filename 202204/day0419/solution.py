@@ -6,6 +6,17 @@ class TreeNode:
 
 
 class Solution:
+    # 53. 最大子数组和
+    def maxSubArray(self, nums: List[int]) -> int:
+        # 思路：
+        dp = [nums[0]]
+        for i in range(1, len(nums)):
+            if dp[-1] > 0:
+                dp.append(dp[-1] + nums[i])
+            else:
+                dp.append(nums[i])
+        return max(dp)
+
     # 124. 二叉树中的最大路径和
     def maxPathSum(self, root: Optional[TreeNode]) -> int:
         # 思路：对于任意一个节点来说，以自己为末尾的链条。以自己为中心的链条。以自己为开始的链条。三种

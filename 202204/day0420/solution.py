@@ -2,6 +2,33 @@ from typing import List
 
 
 class Solution:
+    # 7. 整数反转
+    def reverse(self, x: int) -> int:
+        # 计算每一位数字，共32位，如何判断是否大于最大的数呢，或小于最小的数呢？
+        # 最大的正数 2**31 - 1
+        bits = []
+        flag = x > 0
+        x = abs(x)
+        while x > 0:
+            bits.append(x % 10)
+            x //= 10
+        # 需要判断是否越界
+        max_int = 2 ** 31 - 1
+        res = 0
+        for bit in bits:
+            res *= 10
+            res += bit
+        if flag:
+            if res > max_int:
+                return 0
+            else:
+                return res
+        else:
+            if res > max_int + 1:
+                return 0
+            else:
+                return -res
+
     # 64. 最小路径和
     def minPathSum(self, grid: List[List[int]]) -> int:
         for i in range(len(grid)):

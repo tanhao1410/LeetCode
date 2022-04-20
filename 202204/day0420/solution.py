@@ -1,4 +1,20 @@
+from typing import List
+
+
 class Solution:
+    # 64. 最小路径和
+    def minPathSum(self, grid: List[List[int]]) -> int:
+        for i in range(len(grid)):
+            for j in range(len(grid[0])):
+                if i == 0:
+                    if j > 0:
+                        grid[i][j] += grid[i][j - 1]
+                elif j == 0:
+                    grid[i][j] += grid[i - 1][j]
+                else:
+                    grid[i][j] += min(grid[i - 1][j], grid[i][j - 1])
+        return grid[-1][-1]
+
     # 5. 最长回文子串
     def longestPalindrome(self, s: str) -> str:
         # 动态规划，dp[i][j] 如果s[i] == s[j] 则看dp[i + 1][j - 1]是否是回文。

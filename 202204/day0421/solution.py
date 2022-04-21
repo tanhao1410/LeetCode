@@ -2,6 +2,24 @@ from typing import List
 
 
 class Solution:
+    # 22. 括号生成
+    def generateParenthesis(self, n: int) -> List[str]:
+        # n个括号，说名字符串长度是2n,生成字符串时，每一次可以选择的有左或右。最多是2**16个
+        return self.createStr('', 0, n)
+
+    def createStr(self, pre: str, left: int, n: int) -> List[str]:
+        res = []
+        if left == n:
+            # 左括号的数量达到了最大，则剩下的只能是右括号
+            res.append(pre + ')' * (2 * n - len(pre)))
+        else:
+            # 两种情况，可以选择左，也可以选择右括号，
+            res += self.createStr(pre + '(', left + 1, n)
+            # 右括号不能放在前面
+            if len(pre) - left < left:
+                res += self.createStr(pre + ')', left, n)
+        return res
+
     # 824. 山羊拉丁文
     def toGoatLatin(self, sentence: str) -> str:
         letters = {'a', 'e', 'i', 'o', 'u'}

@@ -3,6 +3,23 @@ fn main() {
 }
 
 impl Solution {
+    //396. 旋转函数
+    pub fn max_rotate_function(a: Vec<i32>) -> i32 {
+        let sum = a.iter().sum::<i32>();
+        let init = a
+            .iter()
+            .enumerate()
+            .fold(0, |pre, (i, &v)| pre + i as i32 * v);
+        a
+            .iter()
+            .enumerate()
+            .skip(1)
+            .fold((init, init), |(pre, res), (i, &v)| {
+                let cur = pre + sum - a.len() as i32 * a[a.len() - i];
+                (cur, res.max(cur))
+            })
+            .1
+    }
     //209. 长度最小的子数组
     pub fn min_sub_array_len(target: i32, nums: Vec<i32>) -> i32 {
         //思路：求累计和，然后根据target，找他的下一个，时间复杂度logN n

@@ -3,6 +3,22 @@ fn main() {
 }
 
 impl Solution {
+    //868. 二进制间距
+    pub fn binary_gap(n: i32) -> i32 {
+        let mut bits = vec![];
+        let mut n = n;
+        while n > 0 {
+            bits.push(n % 2);
+            n >>= 1;
+        }
+        bits
+            .into_iter()
+            .rev()
+            .enumerate()
+            .filter(|(_, v)| *v == 1)
+            .fold((0, 0), |(res, pre), (i, _)| (res.max(i - pre), i))
+            .0 as i32
+    }
     //396. 旋转函数
     pub fn max_rotate_function(a: Vec<i32>) -> i32 {
         let sum = a.iter().sum::<i32>();

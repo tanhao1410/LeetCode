@@ -1,7 +1,21 @@
+import collections
 from typing import List
 
 
 class Solution:
+
+    # 594. 最长和谐子序列
+    def findLHS(self, nums: List[int]) -> int:
+        counter = collections.Counter()
+        for num in nums:
+            counter[num] += 1
+        res = 0
+        for k in counter.keys():
+            if k - 1 in counter.keys():
+                res = max(res, counter[k - 1] + counter[k])
+            if k + 1 in counter.keys():
+                res = max(res, counter[k + 1] + counter[k])
+        return res
 
     # 946. 验证栈序列
     def validateStackSequences(self, pushed: List[int], popped: List[int]) -> bool:

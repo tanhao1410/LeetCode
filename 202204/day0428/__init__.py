@@ -2,7 +2,27 @@ import collections
 from typing import List
 
 
+class ListNode:
+    pass
+
+
 class Solution:
+
+    # 82. 删除排序链表中的重复元素 II
+    def deleteDuplicates(self, head: ListNode) -> ListNode:
+        # 思路：一次判断节点是否与前一个节点值相同，如果相同，则不加进来，先找到第一个节点。
+        res, pre_val = ListNode(-101), 101
+        pre = res
+        while head:
+            # 什么时候加入结果呢，与前一个值不相等，并且与后一个值也不相等的情况下加入
+            if head.val != pre_val and (head.next is None or head.next.val != head.val):
+                pre.next = head
+                pre = pre.next
+            pre_val = head.val
+            head = head.next
+            # 断开原来的联系
+            pre.next = None
+        return res.next
 
     # 594. 最长和谐子序列
     def findLHS(self, nums: List[int]) -> int:

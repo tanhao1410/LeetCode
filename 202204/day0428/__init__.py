@@ -2,6 +2,27 @@ from typing import List
 
 
 class Solution:
+
+    # 946. 验证栈序列
+    def validateStackSequences(self, pushed: List[int], popped: List[int]) -> bool:
+        # 思路：先看popped的第一个元素i，然后pushed元素一次入栈，直到遇到i，弹出i。
+        # 开始下一个元素i,如果i在栈顶或后面，则弹出或者一次压入直到该元素，否则返回false
+        stack = []
+        stack_set = set()
+        pushed_index = 0
+        for i in popped:
+            if len(stack) > 0 and stack[len(stack) - 1] == i:
+                stack.pop()
+            elif i in stack_set:
+                return False
+            else:
+                while pushed_index < len(pushed) and pushed[pushed_index] != i:
+                    stack.append(pushed[pushed_index])
+                    stack_set.add(pushed[pushed_index])
+                    pushed_index += 1
+                pushed_index += 1
+        return True
+
     # 921. 使括号有效的最少添加
     def minAddToMakeValid(self, s: str) -> int:
         # 思路：从左往右，依次添加括号，对于已经完成匹配的，删除掉。如果前面是)，则添加对应的（

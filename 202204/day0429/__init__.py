@@ -10,7 +10,38 @@ class TreeNode:
 
 
 class Solution:
-    #951. 翻转等价二叉树
+    # 1305. 两棵二叉搜索树中的所有元素
+    def getAllElements(self, root1: TreeNode, root2: TreeNode) -> List[int]:
+        l1 = self.readTree(root1)
+        l2 = self.readTree(root2)
+        # 合并两个列表
+        res = []
+        i, j = 0, 0
+        while i < len(l1) or j < len(l2):
+            if i < len(l1) and j < len(l2):
+                if l1[i] < l2[j]:
+                    res.append(l1[i])
+                    i += 1
+                else:
+                    res.append(l2[j])
+                    j += 1
+            elif i < len(l1):
+                res.append(l1[i])
+                i += 1
+            else:
+                res.append(l2[j])
+                j += 1
+        return res
+
+    def readTree(self, root: TreeNode) -> List[int]:
+        res = []
+        if root:
+            res += self.readTree(root.left)
+            res.append(root.val)
+            res += self.readTree(root.right)
+        return res
+
+    # 951. 翻转等价二叉树
     def flipEquiv(self, root1: Optional[TreeNode], root2: Optional[TreeNode]) -> bool:
         # 思路：如果根相同，则继续判断。根不同，则返回false
         # 判断左右子树是否相等。如果不相等，看交换后是否相等。交换后也不相等，返回false

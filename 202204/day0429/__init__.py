@@ -6,6 +6,25 @@ class Node:
 
 
 class Solution:
+
+    # 661. 图片平滑器
+    def imageSmoother(self, img: List[List[int]]) -> List[List[int]]:
+        res = [row.copy() for row in img]
+
+        def image_average(x, y) -> int:
+            sum_, count = 0, 0
+            for i in range(-1, 2):
+                for j in range(-1, 2):
+                    if 0 <= x + i < len(img) and 0 <= y + j < len(img[0]):
+                        sum_ += img[x + i][y + j]
+                        count += 1
+            return sum_ // count
+
+        for i in range(len(img)):
+            for j in range(len(img[0])):
+                res[i][j] = image_average(i, j)
+        return res
+
     # 427. 建立四叉树
     def construct(self, grid: List[List[int]]) -> 'Node':
         first = grid[0][0]

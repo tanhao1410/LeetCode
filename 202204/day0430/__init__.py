@@ -2,6 +2,15 @@ from typing import List
 
 
 class Solution:
+    # 2000. 反转单词前缀
+    def reversePrefix(self, word: str, ch: str) -> str:
+        index = word.find(ch)
+        if index > 0:
+            res = ch
+            for i in range(index - 1, -1, -1):
+                res += word[i]
+            return res + word[index + 1:]
+        return word
 
     # 1037. 有效的回旋镖
     def isBoomerang(self, points: List[List[int]]) -> bool:

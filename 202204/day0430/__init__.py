@@ -2,6 +2,12 @@ from typing import List
 
 
 class Solution:
+
+    # 1037. 有效的回旋镖
+    def isBoomerang(self, points: List[List[int]]) -> bool:
+        return not (points[1][1] - points[0][1]) * (points[2][0] - points[0][0]) == (points[1][0] - points[0][0]) * (
+                points[2][1] - points[0][1])
+
     # 812. 最大三角形面积
     def largestTriangleArea(self, points: List[List[int]]) -> float:
         def triangleArea(p1, p2, p3) -> float:

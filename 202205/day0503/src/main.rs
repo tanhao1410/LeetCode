@@ -5,6 +5,15 @@ fn main() {
 }
 
 impl Solution {
+    //1281. 整数的各位积和之差
+    pub fn subtract_product_and_sum(mut n: i32) -> i32 {
+        let mut nums = vec![];
+        while n != 0 {
+            nums.push(n % 10);
+            n /= 10;
+        }
+        nums.iter().fold(1, |p, num| p * *num) - nums.iter().sum::<i32>()
+    }
     //937. 重新排列日志文件
     pub fn reorder_log_files(mut logs: Vec<String>) -> Vec<String> {
         let is_num_log = |s: &String| {

@@ -5,6 +5,21 @@ fn main() {
 }
 
 impl Solution {
+    //1295. 统计位数为偶数的数字
+    pub fn find_numbers(nums: Vec<i32>) -> i32 {
+        nums
+            .into_iter()
+            .map(|mut num| {
+                let mut res = 0;
+                while num > 0 {
+                    res += 1;
+                    num /= 10;
+                }
+                res
+            })
+            .filter(|num| num % 2 == 0)
+            .count() as i32
+    }
     //1281. 整数的各位积和之差
     pub fn subtract_product_and_sum(mut n: i32) -> i32 {
         let mut nums = vec![];

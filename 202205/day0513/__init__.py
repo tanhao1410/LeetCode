@@ -1,4 +1,26 @@
+from typing import List
+
+
 class Solution:
+    # 1324. 竖直打印单词
+    def printVertically(self, s: str) -> List[str]:
+        words = s.split(' ')
+        max_len = 0
+        for word in words:
+            max_len = max(max_len, len(word))
+        res = []
+        for i in range(max_len):
+            # 生成每一个单词，单词的首字母是什么呢，后面是什么呢，可以部空格
+            new_word = ''
+            for word in words:
+                if i < len(word):
+                    new_word += word[i]
+                else:
+                    new_word += ' '
+            new_word = new_word.rstrip(' ')
+            res.append(new_word)
+        return res
+
     # 991. 坏了的计算器
     def brokenCalc(self, startValue: int, target: int) -> int:
         # 广度遍历+剪枝

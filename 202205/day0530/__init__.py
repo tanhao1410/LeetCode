@@ -9,6 +9,27 @@ class TreeNode:
 
 
 class Solution:
+    # 696. 计数二进制子串
+    def countBinarySubstrings(self, s: str) -> int:
+        res = 0
+        one, zero = 0, 0
+        pre_one, pre_zero = 0, 0
+        for i in s:
+            # 每次循环计算以当前数为序列结束时是否为合适的
+            if i == '0':
+                zero += 1
+                one = 0
+                pre_zero = zero
+                if zero <= pre_one:
+                    res += 1
+            else:
+                one += 1
+                zero = 0
+                pre_one = one
+                if one <= pre_zero:
+                    res += 1
+        return res
+
     # 682. 棒球比赛
     def calPoints(self, ops: List[str]) -> int:
         scores = []

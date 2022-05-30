@@ -1,9 +1,30 @@
+#![feature(destructuring_assignment)]
+
 fn main() {
     println!("Hello, world!");
 }
 
 
 impl Solution {
+    //696. 计数二进制子串
+    pub fn count_binary_substrings(s: String) -> i32 {
+        let mut res = 0;
+        let (mut one, mut pre_one, mut zero, mut pre_zero) = (0, 0, 0, 0);
+        for i in s.bytes() {
+            if i == b'0' {
+                (zero, pre_zero, one) = (zero + 1, zero + 1, 0);
+                if zero <= pre_one {
+                    res += 1;
+                }
+            } else {
+                (one, pre_one, zero) = (one + 1, one + 1, 0);
+                if one <= pre_zero {
+                    res += 1;
+                }
+            }
+        }
+        res
+    }
     //682. 棒球比赛
     pub fn cal_points(ops: Vec<String>) -> i32 {
         let mut scores: Vec<i32> = vec![];

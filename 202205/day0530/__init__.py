@@ -9,6 +9,20 @@ class TreeNode:
 
 
 class Solution:
+    # 682. 棒球比赛
+    def calPoints(self, ops: List[str]) -> int:
+        scores = []
+        for x in ops:
+            if x == '+':
+                scores.append(scores[-1] + scores[-2])
+            elif x == 'D':
+                scores.append(scores[-1] * 2)
+            elif x == 'C':
+                scores = scores[:-1]
+            else:
+                scores.append(int(x))
+        return sum(scores)
+
     # 655. 输出二叉树
     def printTree(self, root: TreeNode, height=0) -> List[List[str]]:
         m = max(self.treeHeight(root), height)

@@ -4,6 +4,22 @@ fn main() {
 
 
 impl Solution {
+    //682. 棒球比赛
+    pub fn cal_points(ops: Vec<String>) -> i32 {
+        let mut scores: Vec<i32> = vec![];
+        for i in ops {
+            match i.as_str() {
+                "+" => scores.push(scores[scores.len() - 1] + scores[scores.len() - 2]),
+                "D" => scores.push(scores[scores.len() - 1] * 2),
+                "C" => {
+                    scores.remove(scores.len() - 1);
+                }
+                i => scores.push(i.parse::<i32>().unwrap())
+            }
+        }
+        scores.into_iter().sum()
+    }
+
     //655. 输出二叉树
     pub fn print_tree(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<String>> {
         Self::print_tree_height(&root, 0)

@@ -1,3 +1,5 @@
+#![feature(is_sorted)]
+
 fn main() {
     println!("Hello, world!");
 }
@@ -5,6 +7,28 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //953. 验证外星语词典
+    pub fn is_alien_sorted(words: Vec<String>, order: String) -> bool {
+        use std::collections::HashMap;
+        let map = order.into_bytes().into_iter().zip(b'a'..=b'z').collect::<HashMap<_, _>>();
+        //每一个字母对应的是什么呢？
+        let mut new_words = words
+            .into_iter()
+            .map(|word| String::from_utf8(word
+                .as_bytes()
+                .into_iter()
+                .map(|l| *map.get(l).unwrap())
+                .collect::<Vec<_>>()
+            ).unwrap())
+            .collect::<Vec<_>>();
+        // for i in 1..new_words.len() {
+        //     if new_words[i] < new_words[i - 1] {
+        //         return false;
+        //     }
+        // }
+        // true
+        new_words.is_sorted()
+    }
     //1071. 字符串的最大公因子
     pub fn gcd_of_strings(str1: String, str2: String) -> String {
         let is_child_str = |parent: &str, child: &str| {

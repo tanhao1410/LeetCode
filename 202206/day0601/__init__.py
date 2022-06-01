@@ -2,6 +2,20 @@ from typing import List
 
 
 class Solution:
+    # 953. 验证外星语词典
+    def isAlienSorted(self, words: List[str], order: str) -> bool:
+        order2 = 'abcdefghijklmnopqrstuvwxyz'
+        letter_dict = dict(zip(order, order2))
+
+        def change_word(word):
+            res = ''
+            for l in word:
+                res += letter_dict.get(l)
+            return res
+
+        not_sorted = list(map(change_word, words))
+        return sorted(not_sorted) == not_sorted
+
     # 1071. 字符串的最大公因子
     def gcdOfStrings(self, str1: str, str2: str) -> str:
         # 思路：如果是子串，直接返回一个结果。否则，从短的哪个中寻找，可以是循环一次，可以是循环两次，可以是循环n次。

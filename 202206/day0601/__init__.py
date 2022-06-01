@@ -2,6 +2,23 @@ from typing import List
 
 
 class Solution:
+    # 1071. 字符串的最大公因子
+    def gcdOfStrings(self, str1: str, str2: str) -> str:
+        # 思路：如果是子串，直接返回一个结果。否则，从短的哪个中寻找，可以是循环一次，可以是循环两次，可以是循环n次。
+        for i in range(1, len(str1) + 1):
+            if len(str1) % i == 0 and self.isChildStr(str1, str1[:len(str1) // i]):
+                if self.isChildStr(str2, str1[:len(str1) // i]):
+                    return str1[:len(str1) // i]
+        return ''
+
+    def isChildStr(self, parent: str, child: str) -> bool:
+        if len(parent) % len(child) != 0:
+            return False
+        for i in range(len(parent) // len(child)):
+            if parent[i * len(child):(1 + i) * len(child)] != child:
+                return False
+        return True
+
     # 473. 火柴拼正方形
     def makesquare(self, matchsticks: List[int], edges=None, cur=0) -> bool:
         if cur == len(matchsticks):

@@ -2,11 +2,30 @@
 
 fn main() {
     println!("Hello, world!");
+    println!("{}", Solution::has_groups_size_x(vec![1, 1, 1, 2, 2, 2, 3, 3]));
 }
 
 struct Solution;
 
 impl Solution {
+    //914. 卡牌分组
+    pub fn has_groups_size_x(deck: Vec<i32>) -> bool {
+        use std::collections::HashMap;
+        let mut map = HashMap::new();
+        for num in deck {
+            *map.entry(num).or_insert(0) += 1;
+        }
+        for i in 2.. {
+            if map.values().all(|&v| v % i == 0) {
+                return true;
+            }
+            if map.values().any(|&v| i > v) {
+                return false;
+            }
+        }
+        unreachable!()
+    }
+
     //953. 验证外星语词典
     pub fn is_alien_sorted(words: Vec<String>, order: String) -> bool {
         use std::collections::HashMap;

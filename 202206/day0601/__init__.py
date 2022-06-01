@@ -1,7 +1,17 @@
 from typing import List
+from collections import Counter
 
 
 class Solution:
+    # 914. 卡牌分组
+    def hasGroupsSizeX(self, deck: List[int]) -> bool:
+        counter = Counter(deck)
+        for i in range(2, 10001):
+            if all(map(lambda v: v % i == 0, counter.values())):
+                return True
+            if any(map(lambda v: i > v, counter.values())):
+                return False
+
     # 953. 验证外星语词典
     def isAlienSorted(self, words: List[str], order: str) -> bool:
         order2 = 'abcdefghijklmnopqrstuvwxyz'

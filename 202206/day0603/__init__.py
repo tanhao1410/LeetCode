@@ -1,3 +1,6 @@
+from typing import List
+
+
 class Solution:
     # 829. 连续整数求和
     def consecutiveNumbersSum(self, n: int) -> int:
@@ -17,3 +20,24 @@ class Solution:
                     res += 1
             count += 1
         return res
+
+    # 690. 员工的重要性
+    def getImportance(self, employees: List['Employee'], id: int) -> int:
+        id_employ = {}
+        for employ in employees:
+            id_employ[employ.id] = employ
+        return self.getImprtance2(id_employ, id)
+
+    def getImprtance2(self, employees, id) -> int:
+        res = employees[id].importance
+        subordinates = employees[id].subordinates
+        for sub in subordinates:
+            res += self.getImprtance2(employees, id)
+        return res
+
+
+class Employee:
+    def __init__(self, id: int, importance: int, subordinates: List[int]):
+        self.id = id
+        self.importance = importance
+        self.subordinates = subordinates

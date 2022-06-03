@@ -2,6 +2,37 @@ from typing import List
 
 
 class Solution:
+    # 885. 螺旋矩阵 III
+    def spiralMatrixIII(self, rows: int, cols: int, rStart: int, cStart: int) -> List[List[int]]:
+        res = [[rStart, cStart]]
+
+        def append(r, c):
+            if 0 <= c < cols and 0 <= r < rows:
+                res.append([r, c])
+
+        step = 1
+        while len(res) < rows * cols:
+
+            # 向右走
+            for _ in range(step):
+                cStart += 1
+                append(rStart, cStart)
+            # 向下走
+            for _ in range(step):
+                rStart += 1
+                append(rStart, cStart)
+            # 向左走
+            step += 1
+            for _ in range(step):
+                cStart -= 1
+                append(rStart, cStart)
+            # 向上走
+            for _ in range(step):
+                rStart -= 1
+                append(rStart, cStart)
+            step += 1
+        return res
+
     # 829. 连续整数求和
     def consecutiveNumbersSum(self, n: int) -> int:
         # 思路：一个，两个，三个，四个数，五个数。。。

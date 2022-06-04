@@ -2,6 +2,17 @@ from typing import List
 
 
 class Solution:
+    # 779. 第K个语法符号
+    def kthGrammar(self, n: int, k: int) -> int:
+        if n == 1:
+            return 0
+        if k <= 2 ** (n - 2):
+            return self.kthGrammar(n - 1, k)
+        # n是偶数式，不对称，是反过来的
+        if n % 2 == 1:
+            return self.kthGrammar(n - 1, 2 ** (n - 1) - k + 1)
+        return self.kthGrammar(n - 1, 2 ** (n - 1) - k + 1) ^ 1
+
     # 1544. 整理字符串
     def makeGood(self, s: str) -> str:
         for i in range(len(s) - 1):

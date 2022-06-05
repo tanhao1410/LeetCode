@@ -6,6 +6,12 @@ fn main() {
 
 
 impl Solution {
+    //1528. 重新排列字符串
+    pub fn restore_string(s: String, indices: Vec<i32>) -> String {
+        let mut zip = s.chars().zip(indices.into_iter()).collect::<Vec<_>>();
+        zip.sort_by_key(|(_, i)| *i);
+        zip.into_iter().map(|e| e.1).collect()
+    }
     //1417. 重新格式化字符串
     pub fn reformat(s: String) -> String {
         let letters = s.chars().filter(|c| c.is_ascii_alphabetic()).collect::<Vec<_>>();

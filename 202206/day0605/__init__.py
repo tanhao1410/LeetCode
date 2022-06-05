@@ -3,6 +3,13 @@ from random import random
 
 
 class Solution:
+    # 1528. 重新排列字符串
+    def restoreString(self, s: str, indices: List[int]) -> str:
+        res = ''
+        for i in sorted(zip(s, indices), key=lambda e: e[1]):
+            res += i[0]
+        return res
+
     # 1417. 重新格式化字符串
     def reformat(self, s: str) -> str:
         letters, nums = [], []

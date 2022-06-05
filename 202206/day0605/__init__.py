@@ -3,6 +3,25 @@ from random import random
 
 
 class Solution:
+    # 1417. 重新格式化字符串
+    def reformat(self, s: str) -> str:
+        letters, nums = [], []
+        for i in s:
+            if '0' <= i <= '9':
+                nums.append(i)
+            else:
+                letters.append(i)
+        if abs(len(letters) - len(nums)) > 1:
+            return ''
+        res = ''
+        for i in range(min(len(letters), len(nums))):
+            res += letters[i] + nums[i]
+        if len(letters) > len(nums):
+            res += letters[-1]
+        elif len(letters) < len(nums):
+            res = nums[-1] + res
+        return res
+
     # 375. 猜数字大小 II
     def getMoneyAmount(self, n: int) -> int:
         dp = [[0 for _ in range(n + 1)] for _ in range(n + 1)]
@@ -35,7 +54,3 @@ class Solution:
         if self.pointInCircle(rand_point[0], rand_point[1]):
             return rand_point
         return self.randPoint()
-
-
-s = Solution(1.0, 2.0, 3.0)
-print(s.select_num(1, 25))

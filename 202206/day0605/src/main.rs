@@ -6,6 +6,25 @@ fn main() {
 
 
 impl Solution {
+    //1417. 重新格式化字符串
+    pub fn reformat(s: String) -> String {
+        let letters = s.chars().filter(|c| c.is_ascii_alphabetic()).collect::<Vec<_>>();
+        let nums = s.chars().filter(|c| !c.is_ascii_alphabetic()).collect::<Vec<_>>();
+        if (letters.len() as i32 - nums.len() as i32).abs() > 1 {
+            return "".to_string();
+        }
+        let mut res = letters
+            .iter()
+            .zip(nums.iter())
+            .flat_map(|(i, j)| vec![i, j].into_iter())
+            .collect::<String>();
+        if letters.len() > nums.len() {
+            res.push(*letters.last().unwrap());
+        } else if nums.len() > letters.len() {
+            res.insert(0, *nums.last().unwrap());
+        }
+        res
+    }
     //375. 猜数字大小 II
     pub fn get_money_amount(n: i32) -> i32 {
         let n = n + 1;

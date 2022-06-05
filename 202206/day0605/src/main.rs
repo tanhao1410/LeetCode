@@ -6,6 +6,30 @@ fn main() {
 
 
 impl Solution {
+    //375. 猜数字大小 II
+    pub fn get_money_amount(n: i32) -> i32 {
+        let n = n + 1;
+        let mut dp = vec![vec![0; n as usize]; n as usize];
+        for start in (0..n as usize).rev() {
+            for end in start + 1..n as usize {
+                let mut max_spend = i32::MAX;
+                for i in start..=end {
+                    let mut cur_spend = 0;
+                    //选择了i后，有三种可能性
+                    if i > start {
+                        cur_spend = cur_spend.max(i as i32 + dp[start][i - 1])
+                    }
+                    if i < end {
+                        cur_spend = cur_spend.max(i as i32 + dp[i + 1][end])
+                    }
+                    max_spend = max_spend.min(cur_spend);
+                }
+                dp[start][end] = max_spend;
+            }
+        }
+        dp[0][n as usize - 1]
+    }
+
     //478. 在圆内随机生成点
     fn new(radius: f64, x_center: f64, y_center: f64) -> Self {
         Self { radius, x_center, y_center }

@@ -5,6 +5,24 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //1025. 除数博弈
+    pub fn divisor_game(n: i32) -> bool {
+        //可以选择哪些数，或者这样说，选择哪些数，爱丽丝会赢。 1的时候，爱丽丝输，2的时候赢，3 的时候输，
+        //4的时候，可以选择的数有 1 2 ，选择1 的话，
+        //爱丽丝可以赢的数有：
+        let mut win_num = vec![2];
+        'outer: for i in 3..1000 {
+            for j in 1..i {
+                if i % j == 0 && !win_num.contains(&(i - j)) {
+                    //看i - j是否在里面，如果不在里面，则必赢
+                    win_num.push(i);
+                    continue 'outer;
+                }
+            }
+        }
+        win_num.contains(&n)
+    }
+
     //2119. 反转两次的数字
     pub fn is_same_after_reversals(num: i32) -> bool {
         num == 0 || num % 10 != 0

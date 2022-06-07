@@ -5,6 +5,11 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //2119. 反转两次的数字
+    pub fn is_same_after_reversals(num: i32) -> bool {
+        num == 0 || num % 10 != 0
+    }
+
     //875. 爱吃香蕉的珂珂
     pub fn min_eating_speed(piles: Vec<i32>, h: i32) -> i32 {
         let mut min = 1;

@@ -2,6 +2,10 @@ from typing import List
 
 
 class Solution:
+    # 2119. 反转两次的数字
+    def isSameAfterReversals(self, num: int) -> bool:
+        return num == 0 or num % 10 != 0
+
     # 875. 爱吃香蕉的珂珂
     def minEatingSpeed(self, piles: List[int], h: int) -> int:
         l, r = 1, max(piles)

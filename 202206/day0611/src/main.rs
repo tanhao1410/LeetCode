@@ -30,4 +30,25 @@ impl Solution {
             .unwrap()
             - 1
     }
+    //476. 数字的补数
+    pub fn find_complement(mut num: i32) -> i32 {
+        let mut bits = vec![];
+        while num > 0 {
+            bits.push(1 - (num & 1));
+            num >>= 1;
+        }
+
+        // let mut res = 0;
+        // for i in bits.into_iter().rev() {
+        //     res <<= 1;
+        //     res += i;
+        // }
+        // res
+        bits.into_iter()
+            .rev()
+            .fold(0, |mut res, bit| {
+                res <<= 1;
+                res + bit
+            })
+    }
 }

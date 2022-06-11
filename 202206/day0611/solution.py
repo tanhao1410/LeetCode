@@ -12,3 +12,15 @@ class Solution:
             pre_one[i] += pre_one[i - 1]
             post_zero[len(s) - 1 - i] += post_zero[len(s) - i]
         return min(map(lambda e: e[0] + e[1], zip(pre_one, post_zero))) - 1
+
+    # 476. 数字的补数
+    def findComplement(self, num: int) -> int:
+        bits = []
+        while num > 0:
+            bits.append(1 - (num & 1))
+            num >>= 1
+        res = 0
+        for i in reversed(bits):
+            res <<= 1
+            res += i
+        return res

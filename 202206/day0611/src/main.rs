@@ -51,4 +51,14 @@ impl Solution {
                 res + bit
             })
     }
+    //762. 二进制表示中质数个计算置位
+    pub fn count_prime_set_bits(left: i32, right: i32) -> i32 {
+        use std::collections::HashSet;
+        let is_prime = |num: &i32| {
+            *num == 2 || !(2..*num).any(|i| *num % i == 0)
+        };
+        let prime_num = (2..32).filter(is_prime).collect::<HashSet<i32>>();
+        prime_num.iter().for_each(|i| println!("{},", i));
+        (left..=right).filter(|i| prime_num.contains(&(i.count_ones() as i32))).count() as i32
+    }
 }

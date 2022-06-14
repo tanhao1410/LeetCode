@@ -5,6 +5,49 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //1093. 大样本统计
+    pub fn sample_stats(count: Vec<i32>) -> Vec<f64> {
+        let (mut num_count, mut sum) = (0, 0i64);
+        let mut mode_count = 0;
+        let mut mode = 0;
+        let (mut min, mut max) = (256, 0);
+        for i in 0..count.len() {
+            num_count += count[i];
+            sum += i as i64 * count[i] as i64;
+            if count[i] > mode_count {
+                mode_count = count[i];
+                mode = i;
+            }
+            if count[i] > 0 {
+                if i < min {
+                    min = i;
+                }
+                if i > max {
+                    max = i;
+                }
+            }
+        }
+
+        //求中间数,取 num_count/2,num_count/2 -1这两个数，跳过多少个呢
+        let mut median = 0;
+        let mut median2 = 256;
+        let mut skip_num = 0;
+        for i in 0..count.len() {
+            skip_num += count[i];
+            if skip_num > num_count / 2 - 1 && median2 == 256 {
+                median2 = i;
+            }
+            if skip_num > num_count / 2 {
+                median = i;
+                break;
+            }
+        }
+        if num_count % 2 == 1 {
+            median2 = median;
+        }
+        vec![min as f64, max as f64, sum as f64 / num_count as f64, (median + median2) as f64 / 2.0, mode as f64]
+    }
+
     //1161. 最大层内元素和
     pub fn max_level_sum(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
         let mut queue = std::collections::VecDeque::new();
@@ -34,6 +77,7 @@ impl Solution {
         }
         res
     }
+
     //498. 对角线遍历
     pub fn find_diagonal_order(mat: Vec<Vec<i32>>) -> Vec<i32> {
         let mut res = vec![];

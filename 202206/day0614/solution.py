@@ -1,4 +1,5 @@
 from typing import List, Optional
+from collections import deque
 
 
 class TreeNode:
@@ -9,6 +10,27 @@ class TreeNode:
 
 
 class Solution:
+    # 1161. 最大层内元素和
+    def maxLevelSum(self, root: Optional[TreeNode]) -> int:
+        q = deque()
+        q.append(root)
+        res, max, layer = 1, -99999999, 0
+        while len(q) > 0:
+            layer += 1
+            l = len(q)
+            cur_sum = 0
+            for _ in range(l):
+                head = q.popleft()
+                cur_sum += head.val
+                if head.left:
+                    q.append(head.left)
+                if head.right:
+                    q.append(head.right)
+            if cur_sum > max:
+                max = cur_sum
+                res = layer
+        return res
+
     # 1123. 最深叶节点的最近公共祖先
     def lcaDeepestLeaves(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
         # 层级遍历法

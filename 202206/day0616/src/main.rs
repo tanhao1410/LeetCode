@@ -5,6 +5,15 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //1848. 到目标元素的最小距离
+    pub fn get_min_distance(nums: Vec<i32>, target: i32, start: i32) -> i32 {
+        nums.into_iter()
+            .enumerate()
+            .filter(|e| e.1 == target)
+            .map(|e| (e.0 as i32 - start).abs())
+            .min()
+            .unwrap()
+    }
     //532. 数组中的 k-diff 数对
     pub fn find_pairs(nums: Vec<i32>, k: i32) -> i32 {
         let mut nums = nums;

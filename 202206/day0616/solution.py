@@ -3,6 +3,13 @@ from collections import Counter
 
 
 class Solution:
+    # 1848. 到目标元素的最小距离
+    def getMinDistance(self, nums: List[int], target: int, start: int) -> int:
+        # 以start为中心向两边扩散，找到了target就返回
+        for i in range(len(nums)):
+            if (start + i < len(nums) and nums[start + i] == target) or (start - i >= 0 and nums[start - i] == target):
+                return i
+
     # 1169. 查询无效交易
     def invalidTransactions(self, transactions: List[str]) -> List[str]:
         # 先按交易名稱進行分类，名称->交易(城市，时间，金额)

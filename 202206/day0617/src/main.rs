@@ -5,6 +5,17 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //2221. 数组的三角和
+    pub fn triangular_sum(nums: Vec<i32>) -> i32 {
+        let mut nums = nums;
+        for i in (0..nums.len()).rev() {
+            for j in 0..i {
+                nums[j] = (nums[j] + nums[j + 1]) % 10
+            }
+        }
+        nums[0]
+    }
+
     //1577 数的平方等于两数乘积的方法数
     pub fn num_triplets(nums1: Vec<i32>, nums2: Vec<i32>) -> i32 {
         let triplets = |nums1: &[i32], nums2: &[i32]| -> i32{

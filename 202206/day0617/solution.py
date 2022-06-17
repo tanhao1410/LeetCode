@@ -3,6 +3,13 @@ from typing import List
 
 
 class Solution:
+    # 2221. 数组的三角和
+    def triangularSum(self, nums: List[int]) -> int:
+        for i in reversed(range(len(nums))):
+            for j in range(0, i):
+                nums[j] = (nums[j] + nums[j + 1]) % 10
+        return nums[0]
+
     # 1577 数的平方等于两数乘积的方法数
     def numTriplets(self, nums1: List[int], nums2: List[int]) -> int:
         return self.numTriplets2(nums2, nums1) + self.numTriplets2(nums1, nums2)

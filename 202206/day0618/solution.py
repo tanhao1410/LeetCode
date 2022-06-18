@@ -1,3 +1,6 @@
+from typing import List
+
+
 class Node:
     def __init__(self, val=None, next=None):
         self.val = val
@@ -5,6 +8,20 @@ class Node:
 
 
 class Solution:
+    # 1828. 统计一个圆中点的数目
+    def countPoints(self, points: List[List[int]], queries: List[List[int]]) -> List[int]:
+        def distace_double(p1, p2):
+            return (p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2
+
+        res = []
+        for query in queries:
+            count = 0
+            for point in points:
+                if distace_double(query, point) <= query[2] * query[2]:
+                    count += 1
+            res.append(count)
+        return res
+
     # 剑指 Offer II 029. 排序的循环链表
     def insert(self, head: 'Node', insertVal: int) -> 'Node':
         new_node = Node(val=insertVal)

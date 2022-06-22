@@ -10,6 +10,27 @@ class TreeNode:
 
 
 class Solution:
+    # 1382. 将二叉搜索树变平衡
+    def balanceBST(self, root: TreeNode) -> TreeNode:
+        # 重新构造树，从中间开始构造，
+        l = list()
+        self.midReadTree(root, l)
+        return self.sortedListBST(l)
+
+    def midReadTree(self, root: TreeNode, l):
+        if root:
+            self.midReadTree(root.left, l)
+            l.append(root.val)
+            self.midReadTree(root.right, l)
+
+    def sortedListBST(self, l) -> TreeNode:
+        root = None
+        if l:
+            root = TreeNode(val=l[len(l) // 2])
+            root.left = self.sortedListBST(l[:len(l) // 2])
+            root.right = self.sortedListBST(l[len(l) // 2 + 1:])
+        return root
+
     # 1315. 祖父节点值为偶数的节点和
     def sumEvenGrandparent(self, root: TreeNode) -> int:
         # 思路：递归法：一个节点是偶数的话，那么它的所有孙节点应该加入结果，如果不是，答案为其子节点

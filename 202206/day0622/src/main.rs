@@ -3,6 +3,33 @@ fn main() {
 }
 
 impl Solution {
+    //1382. 将二叉搜索树变平衡
+    pub fn balance_bst(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
+        let mut list = vec![];
+        Self::mid_read_tree(root, &mut list);
+        Self::sorted_list_bst(&list)
+    }
+
+    fn mid_read_tree(root: Option<Rc<RefCell<TreeNode>>>, list: &mut Vec<Rc<RefCell<TreeNode>>>) {
+        if let Some(node) = root {
+            Self::mid_read_tree(node.borrow_mut().left.take(), list);
+            let right = node.borrow_mut().right.take();
+            list.push(node.clone());
+            Self::mid_read_tree(right, list);
+        }
+    }
+
+    fn sorted_list_bst(list: &[Rc<RefCell<TreeNode>>]) -> Option<Rc<RefCell<TreeNode>>> {
+        let mut res = None;
+        if list.len() > 0 {
+            let mut root = list[list.len() / 2].clone();
+            root.borrow_mut().left = Self::sorted_list_bst(&list[..list.len() / 2]);
+            root.borrow_mut().right = Self::sorted_list_bst(&list[list.len() / 2 + 1..]);
+            res = Some(root);
+        }
+        res
+    }
+
     //1315. 祖父节点值为偶数的节点和
     pub fn sum_even_grandparent(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
         let sum_son = |root: Rc<RefCell<TreeNode>>| {

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from collections import deque
 
 
@@ -10,6 +10,19 @@ class TreeNode:
 
 
 class Solution:
+    # 面试题 17.19. 消失的两个数字
+    def missingTwo(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        num_sum = sum(nums)
+        all_sum = (n + 2) * (n + 3) // 2
+        # 即 a + b == all_sum - num_sum
+        # 理论上来说，a ,b 应该一个大于 （a + b)//2 ,有一个小于等于，找到这个小于等于的即可
+        two_num_sum = (all_sum - num_sum) // 2
+        num_sum2 = sum(filter(lambda e: e <= two_num_sum, nums))
+        all_sum2 = two_num_sum * (two_num_sum + 1) // 2
+        one = all_sum2 - num_sum2
+        return [one, two_num_sum - one]
+
     # 1382. 将二叉搜索树变平衡
     def balanceBST(self, root: TreeNode) -> TreeNode:
         # 重新构造树，从中间开始构造，

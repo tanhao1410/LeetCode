@@ -3,6 +3,16 @@ fn main() {
 }
 
 impl Solution {
+    //面试题 17.19. 消失的两个数字
+    pub fn missing_two(nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len() as i32;
+        let nums_sum = nums.iter().sum::<i32>();
+        let diff = (n + 2) * (n + 3) / 2 - nums_sum;
+        //有一个数小于等于diff / 2
+        let nums_sum2 = nums.iter().filter(|&e| *e <= diff / 2).sum::<i32>();
+        let one = diff / 2 * (diff / 2 + 1) / 2 - nums_sum2;
+        vec![one, diff - one]
+    }
     //1382. 将二叉搜索树变平衡
     pub fn balance_bst(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
         let mut list = vec![];

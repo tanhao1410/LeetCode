@@ -1,4 +1,36 @@
+from collections import Counter
+from typing import List
+
+
 class Solution:
+    # 30. 串联所有单词的子串
+    def findSubstring(self, s: str, words: List[str]) -> List[int]:
+        word_count = Counter(words)
+        word_len = len(words[0])
+        # 窗口的大小，单词的数量
+        window = len(words)
+        res = []
+        for i in range(word_len):
+            # i即窗口开始的位置。加入len(words)个单词，
+            start = i
+            window_count = Counter()
+            for j in range(window):
+                window_count[s[start + j * word_len:start + (j + 1) * word_len]] += 1
+            if word_count == window_count:
+                res.append(i)
+
+            # 开始移动窗口，j代表窗口的尾部，每次移动一个单词的长度，直到s结尾
+            for j in range(i + word_len * (window + 1), len(s) + 1, word_len):
+                # 减去前面一个单词
+                window_count[s[start:start + word_len]] -= 1
+                # 开始位置移动了一个单词
+                start += word_len
+                # 加上新加进来的单词
+                window_count[s[j - word_len:j]] += 1
+                if word_count == window_count:
+                    res.append(start)
+        return res
+
     # 1387. 将整数按权重排序
     def getKth(self, lo: int, hi: int, k: int) -> int:
         map_count = {1 << i: i for i in range(32)}

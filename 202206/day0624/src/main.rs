@@ -5,6 +5,26 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //2265. 统计值等于子树平均值的节点数
+    pub fn average_of_subtree(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        Self::sum_count_res(root.unwrap()).2
+    }
+
+    //返回总和，节点数，答案
+    fn sum_count_res(root: Rc<RefCell<TreeNode>>) -> (i32, i32, i32) {
+        let root = root.borrow();
+        let left_res = root.left.as_ref().map_or((0, 0, 0), |e| Self::sum_count_res(e.clone()));
+        let right_res = root.right.as_ref().map_or((0, 0, 0), |e| Self::sum_count_res(e.clone()));
+
+        let mut res = (root.val + left_res.0 + right_res.0,
+                       1 + left_res.1 + right_res.1,
+                       left_res.2 + right_res.2);
+        if res.0 / res.1 == root.val {
+            res.2 += 1;
+        }
+        res
+    }
+
     //1026. 节点与其祖先之间的最大差值
     pub fn max_ancestor_diff(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
         Self::max_min_maxdiff(root.as_ref().unwrap().clone()).2

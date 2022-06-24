@@ -10,6 +10,24 @@ class TreeNode:
 
 
 class Solution:
+    # 2265. 统计值等于子树平均值的节点数
+    def averageOfSubtree(self, root: Optional[TreeNode]) -> int:
+        return self.sumCountRes(root)[2]
+
+    def sumCountRes(self, root: TreeNode) -> List[int]:
+        res = [0, 0, 0]
+        if root:
+            left_res = self.sumCountRes(root.left)
+            right_res = self.sumCountRes(root.right)
+            # 个数等于左子树个数+右子树个数+1
+            res[0] = 1 + left_res[0] + right_res[0]
+            # 总和
+            res[1] = root.val + left_res[1] + right_res[1]
+            res[2] = left_res[2] + right_res[2]
+            if res[1] // res[0] == root.val:
+                res[2] += 1
+        return res
+
     # 1026. 节点与其祖先之间的最大差值
     def maxAncestorDiff(self, root: Optional[TreeNode]) -> int:
         return self.maxAndMinValue(root)[2]

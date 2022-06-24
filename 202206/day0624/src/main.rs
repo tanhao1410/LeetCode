@@ -5,6 +5,29 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //剑指 Offer II 046. 二叉树的右侧视图
+    pub fn right_side_view(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        use std::collections::VecDeque;
+        let mut res = vec![];
+        if let Some(node) = root {
+            let mut queue = VecDeque::new();
+            queue.push_back(node);
+            while !queue.is_empty() {
+                let queue_len = queue.len();
+                let mut item = 0;
+                for _ in 0..queue_len {
+                    let head = queue.pop_front().unwrap();
+                    let head_ref = head.borrow();
+                    head_ref.left.as_ref().map_or((), |e| queue.push_back(e.clone()));
+                    head_ref.right.as_ref().map_or((), |e| queue.push_back(e.clone()));
+                    item = head_ref.val;
+                }
+                res.push(item);
+            }
+        }
+        res
+    }
+
     //2265. 统计值等于子树平均值的节点数
     pub fn average_of_subtree(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
         Self::sum_count_res(root.unwrap()).2

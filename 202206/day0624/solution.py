@@ -10,6 +10,25 @@ class TreeNode:
 
 
 class Solution:
+    # 剑指 Offer II 046. 二叉树的右侧视图
+    def rightSideView(self, root: TreeNode) -> List[int]:
+        queue = deque()
+        res = []
+        if root:
+            queue.append(root)
+            while queue:
+                queue_len = len(queue)
+                item = 0
+                for _ in range(queue_len):
+                    head = queue.popleft()
+                    if head.left:
+                        queue.append(head.left)
+                    if head.right:
+                        queue.append(head.right)
+                    item = head.val
+                res.append(item)
+        return res
+
     # 2265. 统计值等于子树平均值的节点数
     def averageOfSubtree(self, root: Optional[TreeNode]) -> int:
         return self.sumCountRes(root)[2]

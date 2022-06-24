@@ -5,6 +5,24 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //1026. 节点与其祖先之间的最大差值
+    pub fn max_ancestor_diff(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        Self::max_min_maxdiff(root.as_ref().unwrap().clone()).2
+    }
+
+    fn max_min_maxdiff(root: Rc<RefCell<TreeNode>>) -> (i32, i32, i32) {
+        let root = root.borrow();
+        let mut res = (root.val, root.val, 0);
+        let process_inner = |e: Rc<RefCell<TreeNode>>, res: &mut (i32, i32, i32)| {
+            let inner_res = Self::max_min_maxdiff(e);
+            res.0 = res.0.max(inner_res.0);
+            res.1 = res.1.min(inner_res.1);
+            res.2 = res.2.max(inner_res.2).max((root.val - res.0).abs()).max((root.val - res.1).abs());
+        };
+        root.left.as_ref().map_or((), |e| process_inner(e.clone(), &mut res));
+        root.right.as_ref().map_or((), |e| process_inner(e.clone(), &mut res));
+        res
+    }
     //515. 在每个树行中找最大值
     pub fn largest_values(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
         use std::collections::VecDeque;

@@ -5,6 +5,18 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    pub fn max_coins(piles: Vec<i32>) -> i32 {
+        let mut piles = piles;
+        piles.sort_unstable();
+        let n = piles.len();
+        piles.into_iter()
+            .skip(n / 3)
+            .enumerate()
+            .filter(|(i, _)| i % 2 == 0)
+            .map(|(_, n)| n)
+            .sum()
+    }
+
     //剑指 Offer II 091. 粉刷房子
     pub fn min_cost(costs: Vec<Vec<i32>>) -> i32 {
         let mut dp = costs.clone();

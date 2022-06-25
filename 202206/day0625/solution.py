@@ -2,6 +2,11 @@ from typing import List
 
 
 class Solution:
+
+    def maxCoins(self, piles: List[int]) -> int:
+        piles = sorted(piles)[len(piles) // 3:]
+        return sum([piles[n] for n in range(len(piles)) if n % 2 == 0])
+
     # 剑指 Offer II 091. 粉刷房子
     def minCost(self, costs: List[List[int]]) -> int:
         dp = [[n for n in x] for x in costs]

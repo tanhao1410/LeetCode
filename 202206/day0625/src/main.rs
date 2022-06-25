@@ -5,6 +5,20 @@ fn main() {
 struct Solution;
 
 impl Solution {
+    //1903. 字符串中的最大奇数
+    pub fn largest_odd_number(num: String) -> String {
+        let bytes = num.as_bytes();
+        let mut last_odd = bytes.len() as i32 - 1;
+        while last_odd >= 0 {
+            if (bytes[last_odd as usize] - b'0') % 2 == 1 {
+                break;
+            }
+            last_odd -= 1;
+        }
+        String::from_utf8_lossy(&bytes[..(last_odd + 1) as usize]).to_string()
+    }
+
+    //1561. 你可以获得的最大硬币数目
     pub fn max_coins(piles: Vec<i32>) -> i32 {
         let mut piles = piles;
         piles.sort_unstable();

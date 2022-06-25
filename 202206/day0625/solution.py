@@ -2,7 +2,16 @@ from typing import List
 
 
 class Solution:
+    # 1903. 字符串中的最大奇数
+    def largestOddNumber(self, num: str) -> str:
+        i = len(num) - 1
+        while i >= 0:
+            if int(num[i]) % 2 == 1:
+                break
+            i -= 1
+        return num[:i + 1]
 
+    # 1561. 你可以获得的最大硬币数目
     def maxCoins(self, piles: List[int]) -> int:
         piles = sorted(piles)[len(piles) // 3:]
         return sum([piles[n] for n in range(len(piles)) if n % 2 == 0])

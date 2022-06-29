@@ -2,6 +2,23 @@ fn main() {
     println!("Hello, world!");
 }
 
+struct Solution;
+
+impl Solution {
+    //2239. 找到最接近 0 的数字
+    pub fn find_closest_number(nums: Vec<i32>) -> i32 {
+        let mut distance = i32::MAX;
+        let mut res = i32::MIN;
+        for num in nums {
+            if num.abs() < distance || (num.abs() == distance && num > res) {
+                distance = num.abs();
+                res = num;
+            }
+        }
+        res
+    }
+}
+
 use std::collections::HashMap;
 
 extern crate rand;
